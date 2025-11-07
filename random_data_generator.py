@@ -258,6 +258,86 @@ class RandomDataGenerator:
         
         return result
     
+    def generate_grouped_bar_data(
+        self,
+        num_categories: int = None,
+        num_groups: int = 3,
+        category_type: str = None,
+        group_type: str = None,
+        value_range: tuple = (20, 100)
+    ) -> Dict[str, Any]:
+        """
+        Generate data for grouped bar charts (multi-dimensional data).
+        Perfect for: Products over Time, Products by Region, etc.
+        
+        Args:
+            num_categories: Number of categories on x-axis (auto-determined if None)
+            num_groups: Number of groups/series to compare (default: 3)
+            category_type: Type of x-axis ('quarters', 'months', 'regions', 'years') - random if None
+            group_type: Type of groups ('products', 'regions', 'departments') - random if None
+            value_range: Range for values (min, max)
+            
+        Returns:
+            Dictionary with 'categories', 'groups', and 'values' keys
+        """
+        # Randomize category_type if not specified
+        if category_type is None:
+            category_type = random.choice(['quarters', 'months', 'regions', 'years', 'products', 'departments'])
+        
+        # Randomize group_type if not specified (ensure it's different from category_type)
+        if group_type is None:
+            # All possible group types
+            all_types = ['quarters', 'months', 'regions', 'years', 'products', 'departments']
+            # Remove the category_type to avoid duplication
+            available_types = [t for t in all_types if t != category_type]
+            group_type = random.choice(available_types)
+        
+        # Determine categories (x-axis)
+        if category_type == 'quarters':
+            categories = self.QUARTERS[:num_categories] if num_categories else self.QUARTERS
+        elif category_type == 'months':
+            categories = self.MONTHS[:num_categories] if num_categories else self.MONTHS[:6]
+        elif category_type == 'regions':
+            categories = self.REGIONS[:num_categories] if num_categories else self.REGIONS[:5]
+        elif category_type == 'years':
+            categories = self.YEARS[:num_categories] if num_categories else self.YEARS[-4:]
+        elif category_type == 'products':
+            categories = self.PRODUCTS[:num_categories] if num_categories else self.PRODUCTS[:4]
+        elif category_type == 'departments':
+            categories = self.DEPARTMENTS[:num_categories] if num_categories else self.DEPARTMENTS[:5]
+        else:
+            count = num_categories or 4
+            categories = [f'Period {i+1}' for i in range(count)]
+        
+        # Determine groups (series to compare)
+        if group_type == 'products':
+            groups = self.PRODUCTS[:num_groups]
+        elif group_type == 'regions':
+            groups = self.REGIONS[:num_groups]
+        elif group_type == 'departments':
+            groups = self.DEPARTMENTS[:num_groups]
+        elif group_type == 'quarters':
+            groups = self.QUARTERS[:num_groups]
+        elif group_type == 'months':
+            groups = self.MONTHS[:num_groups]
+        elif group_type == 'years':
+            groups = self.YEARS[:num_groups] if num_groups <= len(self.YEARS) else self.YEARS
+        else:
+            groups = [f'Group {i+1}' for i in range(num_groups)]
+        
+        # Generate values for each group across all categories
+        values = []
+        for _ in range(num_groups):
+            group_values = [random.randint(value_range[0], value_range[1]) 
+                          for _ in categories]
+            values.append(group_values)
+        
+        return {
+            'categories': categories,
+            'groups': groups,
+            'values': values
+        }
+    
     def _generate_series(
         self,
         num_points: int,
@@ -304,7 +384,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -331,17 +411,27 @@ class RandomDataGenerator:
             }
         
         elif chart_type == 'bar':
-            data = self.generate_bar_data(
-                x_type=random.choice(['regions', 'products', 'departments', 'categories'])
-            )
+            x_type = random.choice(['regions', 'products', 'departments', 'categories'])
+            data = self.generate_bar_data(x_type=x_type)
+            
+            # Map x_type to appropriate labels - automatically matches data to labels
+            label_map = {
+                'regions': ('Regional Performance', 'Region'),
+                'products': ('Product Performance', 'Product'),
+                'departments': ('Department Performance', 'Department'),
+                'categories': ('Category Performance', 'Category'),
+                'months': ('Monthly Performance', 'Month')
+            }
+            title, xlabel = label_map.get(x_type, ('Category Performance', 'Category'))
+            
             return {
                 'chart_type': 'bar',
                 'data': data,
                 'filename_root': filename_root,
-                'title': f'{random.choice(["Regional", "Product", "Department", "Category"])} Performance',
-                'xlabel': random.choice(['Category', 'Region', 'Product', 'Department']),
+                'title': title,
+                'xlabel': xlabel,
                 'ylabel': random.choice(['Sales ($K)', 'Revenue', 'Units Sold', 'Value']),
-                'metadata': {'generated': 'random', 'bar_count': len(data['x'])}
+                'metadata': {'generated': 'random', 'bar_count': len(data['x']), 'x_type': x_type}
             }
         
         elif chart_type == 'horizontal_bar':
@@ -383,6 +473,135 @@ class RandomDataGenerator:
                 'xlabel': random.choice(['Variable X', 'Age', 'Time', 'Input']),
                 'ylabel': random.choice(['Variable Y', 'Score', 'Value', 'Output']),
                 'metadata': {'generated': 'random', 'point_count': len(data['x'])}
+            }
+        
+        elif chart_type == 'grouped_bar':
+            # Generate with random category and group types
+            data = self.generate_grouped_bar_data(
+                num_groups=random.choice([2, 3, 3, 4]),  # Bias toward 3 groups
+                value_range=(30, 120)
+            )
+            
+            # Create adaptive title and xlabel based on what was randomly chosen
+            # Extract the types from the generated data
+            first_category = data['categories'][0]
+            first_group = data['groups'][0]
+            
+            # Determine category type from first category
+            if first_category in self.QUARTERS:
+                category_label = 'Quarter'
+                title_prefix = 'Quarterly'
+            elif first_category in self.MONTHS:
+                category_label = 'Month'
+                title_prefix = 'Monthly'
+            elif first_category in self.REGIONS:
+                category_label = 'Region'
+                title_prefix = 'Regional'
+            elif first_category in self.YEARS:
+                category_label = 'Year'
+                title_prefix = 'Annual'
+            elif first_category in self.PRODUCTS:
+                category_label = 'Product'
+                title_prefix = 'Product'
+            elif first_category in self.DEPARTMENTS:
+                category_label = 'Department'
+                title_prefix = 'Department'
+            else:
+                category_label = 'Category'
+                title_prefix = 'Category'
+            
+            # Determine group type from first group
+            if first_group in self.PRODUCTS:
+                group_label = 'Product'
+            elif first_group in self.REGIONS:
+                group_label = 'Regional'
+            elif first_group in self.DEPARTMENTS:
+                group_label = 'Department'
+            elif first_group in self.QUARTERS:
+                group_label = 'Quarterly'
+            elif first_group in self.MONTHS:
+                group_label = 'Monthly'
+            elif first_group in self.YEARS:
+                group_label = 'Annual'
+            else:
+                group_label = 'Group'
+            
+            return {
+                'chart_type': 'grouped_bar',
+                'data': data,
+                'filename_root': filename_root,
+                'title': f'{group_label} Performance by {category_label}',
+                'xlabel': category_label,
+                'ylabel': random.choice(['Sales ($K)', 'Revenue', 'Units', 'Performance Score']),
+                'metadata': {
+                    'generated': 'random',
+                    'num_groups': len(data['groups']),
+                    'num_categories': len(data['categories'])
+                }
+            }
+        
+        elif chart_type == 'stacked_bar':
+            # Generate with random category and group types (same as grouped_bar)
+            data = self.generate_grouped_bar_data(
+                num_groups=random.choice([2, 3, 3, 4]),  # Bias toward 3 groups
+                value_range=(30, 120)
+            )
+            
+            # Create adaptive title and xlabel (same logic as grouped_bar)
+            first_category = data['categories'][0]
+            first_group = data['groups'][0]
+            
+            # Determine category type from first category
+            if first_category in self.QUARTERS:
+                category_label = 'Quarter'
+                title_prefix = 'Quarterly'
+            elif first_category in self.MONTHS:
+                category_label = 'Month'
+                title_prefix = 'Monthly'
+            elif first_category in self.REGIONS:
+                category_label = 'Region'
+                title_prefix = 'Regional'
+            elif first_category in self.YEARS:
+                category_label = 'Year'
+                title_prefix = 'Annual'
+            elif first_category in self.PRODUCTS:
+                category_label = 'Product'
+                title_prefix = 'Product'
+            elif first_category in self.DEPARTMENTS:
+                category_label = 'Department'
+                title_prefix = 'Department'
+            else:
+                category_label = 'Category'
+                title_prefix = 'Category'
+            
+            # Determine group type from first group
+            if first_group in self.PRODUCTS:
+                group_label = 'Product'
+            elif first_group in self.REGIONS:
+                group_label = 'Regional'
+            elif first_group in self.DEPARTMENTS:
+                group_label = 'Department'
+            elif first_group in self.QUARTERS:
+                group_label = 'Quarterly'
+            elif first_group in self.MONTHS:
+                group_label = 'Monthly'
+            elif first_group in self.YEARS:
+                group_label = 'Annual'
+            else:
+                group_label = 'Group'
+            
+            return {
+                'chart_type': 'stacked_bar',
+                'data': data,
+                'filename_root': filename_root,
+                'title': f'{group_label} Distribution by {category_label}',
+                'xlabel': category_label,
+                'ylabel': random.choice(['Total Sales ($K)', 'Total Revenue', 'Total Units', 'Combined Performance']),
+                'metadata': {
+                    'generated': 'random',
+                    'num_groups': len(data['groups']),
+                    'num_categories': len(data['categories'])
+                }
             }
         
         return {}

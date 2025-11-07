@@ -10,7 +10,7 @@ matplotlib.use('Agg')  # Use non-interactive backend
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime
-
+import numpy as np
 
 class ChartGenerator:
     """
@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -70,6 +70,8 @@ class ChartGenerator:
         # Save PNG
         png_path = self.output_dir / f"{filename_root}.png"
         plt.tight_layout()
+        # Add extra space at bottom for rotated labels
+        plt.subplots_adjust(bottom=0.15)
         plt.savefig(png_path, dpi=kwargs.get('dpi', 300), bbox_inches='tight')
         plt.close(fig)
         
@@ -143,8 +145,12 @@ class ChartGenerator:
         ax.grid(True, alpha=0.3, axis='y')
         
         # Rotate x-axis labels if they're strings and there are many
-        if len(x) > 5:
+        if len(x) > 5 or any(len(str(label)) > 8 for label in x):
             plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
+        
+        # Add extra bottom padding if labels are rotated
+        if len(x) > 5:
+            plt.gcf().subplots_adjust(bottom=0.2)
     
     def _create_horizontal_bar_chart(
         self,
@@ -211,6 +217,114 @@ class ChartGenerator:
         ax.set_xlabel(xlabel, fontsize=12)
         ax.set_ylabel(ylabel, fontsize=12)
         ax.grid(True, alpha=0.3)
+    
+    def _create_grouped_bar_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a grouped bar chart for multi-dimensional data.
+        
+        Data format:
+        {
+            'categories': ['Q1', 'Q2', 'Q3', 'Q4'],  # x-axis categories (e.g., time periods, regions)
+            'groups': ['Product A', 'Product B', 'Product C'],  # different groups
+            'values': [
+                [100, 120, 115, 140],  # Product A values for each category
+                [80, 95, 110, 105],     # Product B values
+                [60, 70, 85, 95]        # Product C values
+            ]
+        }
+        """
+        
+        categories = data.get('categories', [])
+        groups = data.get('groups', [])
+        values = data.get('values', [])
+        
+        x = np.arange(len(categories))
+        width = 0.8 / len(groups)  # Width of bars
+        
+        colors = kwargs.get('colors', None)
+        if not colors:
+            # Default color palette
+            colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
+                     '#FFD93D', '#6BCB77', '#C56CF0', '#17C0EB', '#F8B739']
+        
+        # Plot each group
+        for i, (group_name, group_values) in enumerate(zip(groups, values)):
+            offset = (i - len(groups)/2 + 0.5) * width
+            ax.bar(x + offset, group_values, width, label=group_name,
+                  color=colors[i % len(colors)], alpha=0.8, edgecolor='black', linewidth=0.5)
+        
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel(xlabel, fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        ax.set_xticks(x)
+        ax.set_xticklabels(categories)
+        ax.legend(loc='best', fontsize=10)
+        ax.grid(True, alpha=0.3, axis='y')
+        
+        # Rotate labels if needed
+        if len(categories) > 5 or any(len(str(cat)) > 8 for cat in categories):
+            plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
+            plt.gcf().subplots_adjust(bottom=0.2)
+    
+    def _create_stacked_bar_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a stacked bar chart for multi-dimensional data.
+        
+        Data format:
+        {
+            'categories': ['Q1', 'Q2', 'Q3', 'Q4'],  # x-axis categories (e.g., time periods, regions)
+            'groups': ['Product A', 'Product B', 'Product C'],  # different groups
+            'values': [
+                [100, 120, 115, 140],  # Product A values for each category
+                [80, 95, 110, 105],     # Product B values
+                [60, 70, 85, 95]        # Product C values
+            ]
+        }
+        """
+        
+        categories = data.get('categories', [])
+        groups = data.get('groups', [])
+        values = data.get('values', [])
+        
+        x = np.arange(len(categories))
+        
+        colors = kwargs.get('colors', None)
+        if not colors:
+            # Default color palette
+            colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
+                     '#FFD93D', '#6BCB77', '#C56CF0', '#17C0EB', '#F8B739']
+        
+        # Plot each group
+        bottom = np.zeros(len(categories))
+        for i, (group_name, group_values) in enumerate(zip(groups, values)):
+            ax.bar(x, group_values, bottom=bottom, label=group_name,
+                  color=colors[i % len(colors)], alpha=0.8, edgecolor='black', linewidth=0.5)
+            bottom += np.array(group_values)
+        
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel(xlabel, fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        ax.set_xticks(x)
+        ax.set_xticklabels(categories)
+        ax.legend(loc='best', fontsize=10)
+        ax.grid(True, alpha=0.3, axis='y'
+    )
     
     def batch_generate(
         self,

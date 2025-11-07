@@ -10,7 +10,7 @@ matplotlib.use('Agg')  # Use non-interactive backend
 from pathlib import Path
 from typing import Dict, List, Any, Optional
 from datetime import datetime
-import numpy as np
+
 
 class ChartGenerator:
     """
@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -241,6 +241,7 @@ class ChartGenerator:
             ]
         }
         """
+        import numpy as np
         
         categories = data.get('categories', [])
         groups = data.get('groups', [])
@@ -297,6 +298,7 @@ class ChartGenerator:
             ]
         }
         """
+        import numpy as np
         
         categories = data.get('categories', [])
         groups = data.get('groups', [])
@@ -310,7 +312,7 @@ class ChartGenerator:
             colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
                      '#FFD93D', '#6BCB77', '#C56CF0', '#17C0EB', '#F8B739']
         
-        # Plot each group
+        # Plot each group as a stacked segment
         bottom = np.zeros(len(categories))
         for i, (group_name, group_values) in enumerate(zip(groups, values)):
             ax.bar(x, group_values, bottom=bottom, label=group_name,
@@ -323,8 +325,12 @@ class ChartGenerator:
         ax.set_xticks(x)
         ax.set_xticklabels(categories)
         ax.legend(loc='best', fontsize=10)
-        ax.grid(True, alpha=0.3, axis='y'
-    )
+        ax.grid(True, alpha=0.3, axis='y')
+        
+        # Rotate labels if needed
+        if len(categories) > 5 or any(len(str(cat)) > 8 for cat in categories):
+            plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
+            plt.gcf().subplots_adjust(bottom=0.2)
     
     def batch_generate(
         self,

@@ -1,0 +1,27 @@
+{
+  "filename_root": "chart_030",
+  "chart_type": "line",
+  "title": "Growth Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Amount ($K)",
+  "data": {
+    "x": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "y": [
+      12,
+      29,
+      59,
+      82
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:19.220849",
+  "png_file": "chart_030.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

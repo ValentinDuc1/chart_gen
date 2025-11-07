@@ -1,0 +1,54 @@
+{
+  "filename_root": "chart_010",
+  "chart_type": "grouped_bar",
+  "title": "Group Performance by Period",
+  "xlabel": "Period",
+  "ylabel": "Revenue",
+  "data": {
+    "categories": [
+      "Period 1",
+      "Period 2",
+      "Period 3",
+      "Period 4"
+    ],
+    "groups": [
+      "Group 1",
+      "Group 2",
+      "Group 3",
+      "Group 4"
+    ],
+    "values": [
+      [
+        119,
+        103,
+        55,
+        48
+      ],
+      [
+        85,
+        92,
+        99,
+        40
+      ],
+      [
+        64,
+        47,
+        95,
+        119
+      ],
+      [
+        65,
+        69,
+        113,
+        57
+      ]
+    ]
+  },
+  "generated_at": "2025-11-06T17:56:06.584795",
+  "png_file": "chart_010.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 4
+  }
+}

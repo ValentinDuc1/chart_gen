@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_006",
+  "chart_type": "grouped_bar",
+  "title": "Product Performance by Year",
+  "xlabel": "Year",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "categories": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "groups": [
+      "Product A",
+      "Product B"
+    ],
+    "values": [
+      [
+        52,
+        103,
+        37,
+        46
+      ],
+      [
+        115,
+        101,
+        47,
+        73
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:44.313186",
+  "png_file": "chart_006.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_009",
+  "chart_type": "grouped_bar",
+  "title": "Regional Performance by Year",
+  "xlabel": "Year",
+  "ylabel": "Revenue",
+  "data": {
+    "categories": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "groups": [
+      "North",
+      "South"
+    ],
+    "values": [
+      [
+        90,
+        80,
+        72,
+        45
+      ],
+      [
+        119,
+        30,
+        75,
+        105
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:45.076316",
+  "png_file": "chart_009.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

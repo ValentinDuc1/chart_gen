@@ -1,0 +1,33 @@
+{
+  "filename_root": "chart_023",
+  "chart_type": "bar",
+  "title": "Department Performance",
+  "xlabel": "Region",
+  "ylabel": "Revenue",
+  "data": {
+    "x": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance",
+      "Operations",
+      "Customer Service"
+    ],
+    "y": [
+      17,
+      76,
+      32,
+      84,
+      52,
+      28,
+      60
+    ]
+  },
+  "generated_at": "2025-11-06T16:57:53.671378",
+  "png_file": "chart_023.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 7
+  }
+}

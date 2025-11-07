@@ -1,0 +1,70 @@
+{
+  "filename_root": "chart_012",
+  "chart_type": "line",
+  "title": "Performance Over Time",
+  "xlabel": "Quarter",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "y": [
+      [
+        33,
+        42,
+        17,
+        51,
+        35,
+        51,
+        19,
+        89,
+        38,
+        84
+      ],
+      [
+        74,
+        79,
+        58,
+        91,
+        78,
+        26,
+        82,
+        88,
+        20,
+        37
+      ],
+      [
+        45,
+        16,
+        49,
+        40,
+        100,
+        49,
+        73,
+        20,
+        91,
+        37
+      ]
+    ],
+    "labels": [
+      "Product B",
+      "Product A",
+      "Product E"
+    ]
+  },
+  "generated_at": "2025-11-06T16:57:50.578002",
+  "png_file": "chart_012.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 3
+  }
+}

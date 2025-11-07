@@ -1,0 +1,64 @@
+{
+  "filename_root": "chart_010",
+  "chart_type": "grouped_bar",
+  "title": "Department Performance by Month",
+  "xlabel": "Month",
+  "ylabel": "Units",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR"
+    ],
+    "values": [
+      [
+        83,
+        112,
+        62,
+        78,
+        42,
+        52
+      ],
+      [
+        62,
+        106,
+        104,
+        109,
+        114,
+        65
+      ],
+      [
+        114,
+        85,
+        40,
+        36,
+        88,
+        107
+      ],
+      [
+        67,
+        92,
+        93,
+        118,
+        51,
+        56
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:45.333834",
+  "png_file": "chart_010.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 6
+  }
+}

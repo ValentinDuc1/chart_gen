@@ -1,0 +1,39 @@
+{
+  "filename_root": "chart_021",
+  "chart_type": "pie",
+  "title": "Share Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Desktop",
+      "Mobile",
+      "Tablet",
+      "Smart TV",
+      "Gaming Console",
+      "Wearable"
+    ],
+    "values": [
+      19.5,
+      9.4,
+      28.9,
+      26.2,
+      11.4,
+      4.7
+    ],
+    "explode": [
+      0,
+      0,
+      0.1,
+      0,
+      0,
+      0
+    ]
+  },
+  "generated_at": "2025-11-06T16:57:53.095000",
+  "png_file": "chart_021.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 6
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "filename_root": "chart_041",
+  "chart_type": "pie",
+  "title": "Market Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Desktop",
+      "Mobile",
+      "Tablet",
+      "Smart TV",
+      "Gaming Console",
+      "Wearable"
+    ],
+    "values": [
+      13.3,
+      17.0,
+      3.7,
+      24.5,
+      19.7,
+      21.8
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0.1,
+      0,
+      0
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:21.821068",
+  "png_file": "chart_041.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 6
+  }
+}

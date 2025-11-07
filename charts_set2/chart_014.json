@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_014",
+  "chart_type": "grouped_bar",
+  "title": "Regional Performance by Product",
+  "xlabel": "Product",
+  "ylabel": "Units",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "North",
+      "South"
+    ],
+    "values": [
+      [
+        47,
+        52,
+        58,
+        105
+      ],
+      [
+        116,
+        80,
+        98,
+        54
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:46.300500",
+  "png_file": "chart_014.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

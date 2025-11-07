@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_002",
+  "chart_type": "grouped_bar",
+  "title": "Group Performance by Period",
+  "xlabel": "Period",
+  "ylabel": "Units",
+  "data": {
+    "categories": [
+      "Period 1",
+      "Period 2",
+      "Period 3",
+      "Period 4"
+    ],
+    "groups": [
+      "Group 1",
+      "Group 2"
+    ],
+    "values": [
+      [
+        38,
+        85,
+        51,
+        42
+      ],
+      [
+        68,
+        105,
+        31,
+        110
+      ]
+    ]
+  },
+  "generated_at": "2025-11-06T17:56:04.664917",
+  "png_file": "chart_002.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

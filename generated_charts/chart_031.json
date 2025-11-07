@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_031",
+  "chart_type": "horizontal_bar",
+  "title": "Performance Metrics",
+  "xlabel": "Rating",
+  "ylabel": "Department",
+  "data": {
+    "categories": [
+      "Product Quality",
+      "Customer Service",
+      "Delivery Speed",
+      "Pricing",
+      "User Experience"
+    ],
+    "values": [
+      3.9,
+      1.5,
+      3.4,
+      4.9,
+      4.0
+    ]
+  },
+  "generated_at": "2025-11-06T16:57:55.843222",
+  "png_file": "chart_031.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 5
+  }
+}

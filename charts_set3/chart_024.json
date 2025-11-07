@@ -1,0 +1,36 @@
+{
+  "filename_root": "chart_024",
+  "chart_type": "pie",
+  "title": "Usage Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "values": [
+      20.6,
+      13.1,
+      19.6,
+      13.1,
+      33.6
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0,
+      0.1
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:17.770080",
+  "png_file": "chart_024.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 5
+  }
+}

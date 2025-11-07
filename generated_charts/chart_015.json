@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_015",
+  "chart_type": "bar",
+  "title": "Product Performance",
+  "xlabel": "Region",
+  "ylabel": "Units Sold",
+  "data": {
+    "x": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "y": [
+      80,
+      61,
+      89,
+      28,
+      59
+    ]
+  },
+  "generated_at": "2025-11-06T16:57:51.391480",
+  "png_file": "chart_015.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 5
+  }
+}

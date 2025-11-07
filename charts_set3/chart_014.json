@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_014",
+  "chart_type": "horizontal_bar",
+  "title": "Customer Satisfaction Ratings",
+  "xlabel": "Score",
+  "ylabel": "Department",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "values": [
+      1,
+      1,
+      5,
+      4,
+      1
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:15.386233",
+  "png_file": "chart_014.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 5
+  }
+}

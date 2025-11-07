@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_004",
+  "chart_type": "grouped_bar",
+  "title": "Monthly Performance by Region",
+  "xlabel": "Region",
+  "ylabel": "Units",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "Jan",
+      "Feb",
+      "Mar"
+    ],
+    "values": [
+      [
+        71,
+        116,
+        53,
+        82,
+        109
+      ],
+      [
+        95,
+        111,
+        71,
+        114,
+        102
+      ],
+      [
+        71,
+        37,
+        73,
+        120,
+        64
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:43.819410",
+  "png_file": "chart_004.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

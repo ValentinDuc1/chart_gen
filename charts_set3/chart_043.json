@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_043",
+  "chart_type": "grouped_bar",
+  "title": "Quarterly Performance by Product",
+  "xlabel": "Product",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "Q1",
+      "Q2"
+    ],
+    "values": [
+      [
+        116,
+        51,
+        79,
+        61
+      ],
+      [
+        66,
+        40,
+        115,
+        99
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:22.313009",
+  "png_file": "chart_043.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

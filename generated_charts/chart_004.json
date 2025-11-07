@@ -1,0 +1,39 @@
+{
+  "filename_root": "chart_004",
+  "chart_type": "pie",
+  "title": "Usage Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Desktop",
+      "Mobile",
+      "Tablet",
+      "Smart TV",
+      "Gaming Console",
+      "Wearable"
+    ],
+    "values": [
+      12.2,
+      13.4,
+      18.9,
+      15.2,
+      23.8,
+      16.5
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0,
+      0.1,
+      0
+    ]
+  },
+  "generated_at": "2025-11-06T17:44:03.286942",
+  "png_file": "chart_004.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 6
+  }
+}

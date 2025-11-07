@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_049",
+  "chart_type": "bar",
+  "title": "Department Performance",
+  "xlabel": "Region",
+  "ylabel": "Units Sold",
+  "data": {
+    "x": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "y": [
+      15,
+      49,
+      96,
+      68,
+      72
+    ]
+  },
+  "generated_at": "2025-11-06T16:58:00.832659",
+  "png_file": "chart_049.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 5
+  }
+}

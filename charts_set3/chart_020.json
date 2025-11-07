@@ -1,0 +1,64 @@
+{
+  "filename_root": "chart_020",
+  "chart_type": "grouped_bar",
+  "title": "Annual Performance by Month",
+  "xlabel": "Month",
+  "ylabel": "Performance Score",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022",
+      "2023"
+    ],
+    "values": [
+      [
+        85,
+        72,
+        110,
+        75,
+        90,
+        55
+      ],
+      [
+        53,
+        76,
+        72,
+        44,
+        47,
+        81
+      ],
+      [
+        60,
+        76,
+        87,
+        104,
+        99,
+        115
+      ],
+      [
+        117,
+        95,
+        82,
+        30,
+        60,
+        43
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:16.824421",
+  "png_file": "chart_020.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 6
+  }
+}

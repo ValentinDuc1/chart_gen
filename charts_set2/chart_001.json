@@ -1,0 +1,59 @@
+{
+  "filename_root": "chart_001",
+  "chart_type": "grouped_bar",
+  "title": "Product Performance by Region",
+  "xlabel": "Region",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "values": [
+      [
+        76,
+        96,
+        69,
+        113,
+        63
+      ],
+      [
+        72,
+        64,
+        50,
+        74,
+        36
+      ],
+      [
+        38,
+        105,
+        86,
+        105,
+        73
+      ],
+      [
+        72,
+        85,
+        48,
+        115,
+        101
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:43.105041",
+  "png_file": "chart_001.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 5
+  }
+}

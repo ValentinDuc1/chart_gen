@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_037",
+  "chart_type": "horizontal_bar",
+  "title": "Performance Metrics",
+  "xlabel": "Rating",
+  "ylabel": "Metric",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "values": [
+      2,
+      4,
+      4,
+      2,
+      5
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:20.851783",
+  "png_file": "chart_037.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 5
+  }
+}

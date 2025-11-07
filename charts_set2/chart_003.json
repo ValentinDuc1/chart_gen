@@ -1,0 +1,47 @@
+{
+  "filename_root": "chart_003",
+  "chart_type": "grouped_bar",
+  "title": "Annual Performance by Quarter",
+  "xlabel": "Quarter",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "categories": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "values": [
+      [
+        35,
+        54,
+        93,
+        113
+      ],
+      [
+        36,
+        32,
+        107,
+        45
+      ],
+      [
+        78,
+        68,
+        56,
+        57
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:43.582227",
+  "png_file": "chart_003.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 4
+  }
+}

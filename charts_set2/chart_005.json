@@ -1,0 +1,54 @@
+{
+  "filename_root": "chart_005",
+  "chart_type": "grouped_bar",
+  "title": "Annual Performance by Product",
+  "xlabel": "Product",
+  "ylabel": "Units",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022",
+      "2023"
+    ],
+    "values": [
+      [
+        96,
+        62,
+        67,
+        106
+      ],
+      [
+        79,
+        31,
+        67,
+        99
+      ],
+      [
+        52,
+        106,
+        105,
+        76
+      ],
+      [
+        67,
+        106,
+        78,
+        64
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:44.079005",
+  "png_file": "chart_005.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 4
+  }
+}

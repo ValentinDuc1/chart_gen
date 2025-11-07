@@ -1,0 +1,54 @@
+{
+  "filename_root": "chart_016",
+  "chart_type": "grouped_bar",
+  "title": "Regional Performance by Year",
+  "xlabel": "Year",
+  "ylabel": "Performance Score",
+  "data": {
+    "categories": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "groups": [
+      "North",
+      "South",
+      "East",
+      "West"
+    ],
+    "values": [
+      [
+        65,
+        67,
+        74,
+        39
+      ],
+      [
+        51,
+        95,
+        113,
+        61
+      ],
+      [
+        119,
+        66,
+        55,
+        99
+      ],
+      [
+        74,
+        67,
+        73,
+        40
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:46.813541",
+  "png_file": "chart_016.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 4
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_002",
+  "chart_type": "grouped_bar",
+  "title": "Annual Performance by Region",
+  "xlabel": "Region",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "values": [
+      [
+        89,
+        87,
+        51,
+        116,
+        49
+      ],
+      [
+        56,
+        58,
+        45,
+        83,
+        61
+      ],
+      [
+        61,
+        103,
+        93,
+        62,
+        93
+      ]
+    ]
+  },
+  "generated_at": "2025-11-07T13:41:43.345917",
+  "png_file": "chart_002.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

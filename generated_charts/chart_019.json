@@ -1,0 +1,37 @@
+{
+  "filename_root": "chart_019",
+  "chart_type": "bar",
+  "title": "Department Performance",
+  "xlabel": "Department",
+  "ylabel": "Revenue",
+  "data": {
+    "x": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central",
+      "Northeast",
+      "Southeast",
+      "Northwest",
+      "Southwest"
+    ],
+    "y": [
+      27,
+      82,
+      29,
+      66,
+      39,
+      56,
+      47,
+      39,
+      48
+    ]
+  },
+  "generated_at": "2025-11-06T16:57:52.543087",
+  "png_file": "chart_019.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 9
+  }
+}

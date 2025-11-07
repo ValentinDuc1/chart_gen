@@ -1,0 +1,30 @@
+{
+  "filename_root": "chart_001",
+  "chart_type": "bar",
+  "title": "Product Performance",
+  "xlabel": "Product",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "x": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "y": [
+      18,
+      52,
+      45,
+      91,
+      81
+    ]
+  },
+  "generated_at": "2025-11-07T13:43:12.244005",
+  "png_file": "chart_001.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 5,
+    "x_type": "products"
+  }
+}

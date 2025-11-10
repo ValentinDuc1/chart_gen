@@ -43,7 +43,7 @@ Examples:
     parser.add_argument(
         '-t', '--types',
         nargs='+',
-        choices=['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar'],
+        choices=['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box'],
         help='Specific chart types to generate (random if not specified)'
     )
     
@@ -84,7 +84,7 @@ Examples:
     
     # Determine which charts to generate
     if args.one_of_each:
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box']
         print(f"Generating one chart of each type...")
     elif args.types:
         chart_types = args.types * ((args.num // len(args.types)) + 1)

@@ -338,6 +338,91 @@ class RandomDataGenerator:
             'values': values
         }
     
+    def generate_box_data(
+        self,
+        num_boxes: int = None,
+        label_type: str = None,
+        value_range: tuple = (10, 100),
+        num_samples: int = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for box plots (distribution analysis).
+        
+        Args:
+            num_boxes: Number of boxes to create (auto-determined if None)
+            label_type: Type of labels ('products', 'regions', 'departments', 'quarters', 'months')
+            value_range: Range for values (min, max)
+            num_samples: Number of data points per box (default: random 15-30)
+            
+        Returns:
+            Dictionary with 'labels' and 'data' keys
+        """
+        # Randomize label_type if not specified
+        if label_type is None:
+            label_type = random.choice(['products', 'regions', 'departments', 'quarters', 'months'])
+        
+        # Determine labels
+        if label_type == 'products':
+            labels = self.PRODUCTS[:num_boxes] if num_boxes else self.PRODUCTS[:4]
+        elif label_type == 'regions':
+            labels = self.REGIONS[:num_boxes] if num_boxes else self.REGIONS[:5]
+        elif label_type == 'departments':
+            labels = self.DEPARTMENTS[:num_boxes] if num_boxes else self.DEPARTMENTS[:5]
+        elif label_type == 'quarters':
+            labels = self.QUARTERS[:num_boxes] if num_boxes else self.QUARTERS
+        elif label_type == 'months':
+            labels = self.MONTHS[:num_boxes] if num_boxes else self.MONTHS[:6]
+        else:
+            count = num_boxes or 4
+            labels = [f'Group {i+1}' for i in range(count)]
+        
+        # Generate data points for each box
+        data = []
+        for _ in labels:
+            # Random number of samples per box (or use specified)
+            n_samples = num_samples if num_samples else random.randint(15, 30)
+            
+            # Generate data with some distribution characteristics
+            # Use normal distribution for more realistic box plots
+            range_size = value_range[1] - value_range[0]
+            
+            # Adjust mean calculation based on range size
+            if range_size > 40:
+                mean = random.randint(value_range[0] + 20, value_range[1] - 20)
+            else:
+                # For smaller ranges, use middle portion
+                margin = max(int(range_size * 0.2), 1)
+                mean = random.randint(value_range[0] + margin, value_range[1] - margin)
+            
+            std_dev = range_size / 6  # About 1/6 of range
+            
+            samples = []
+            for _ in range(n_samples):
+                # Generate value with normal distribution
+                value = random.gauss(mean, std_dev)
+                # Clamp to range
+                value = max(value_range[0], min(value_range[1], value))
+                samples.append(round(value, 1))
+            
+            # Add a few potential outliers (10% chance)
+            if random.random() < 0.3:
+                n_outliers = random.randint(1, 2)
+                for _ in range(n_outliers):
+                    if random.random() < 0.5:
+                        # High outlier
+                        outlier = random.randint(int(mean + 2*std_dev), value_range[1])
+                    else:
+                        # Low outlier
+                        outlier = random.randint(value_range[0], int(mean - 2*std_dev))
+                    samples.append(outlier)
+            
+            data.append(samples)
+        
+        return {
+            'labels': labels,
+            'data': data
+        }
+    
     def _generate_series(
         self,
         num_points: int,
@@ -384,7 +469,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -601,6 +686,49 @@ class RandomDataGenerator:
                     'generated': 'random',
                     'num_groups': len(data['groups']),
                     'num_categories': len(data['categories'])
+                }
+            }
+        
+        elif chart_type == 'box':
+            # Generate box plot data
+            data = self.generate_box_data(
+                num_boxes=random.choice([3, 4, 5]),
+                value_range=(20, 100)
+            )
+            
+            # Determine label type from first label
+            first_label = data['labels'][0]
+            
+            if first_label in self.PRODUCTS:
+                label_type = 'Product'
+                title_suffix = 'Product Performance Distribution'
+            elif first_label in self.REGIONS:
+                label_type = 'Region'
+                title_suffix = 'Regional Performance Distribution'
+            elif first_label in self.DEPARTMENTS:
+                label_type = 'Department'
+                title_suffix = 'Department Performance Distribution'
+            elif first_label in self.QUARTERS:
+                label_type = 'Quarter'
+                title_suffix = 'Quarterly Performance Distribution'
+            elif first_label in self.MONTHS:
+                label_type = 'Month'
+                title_suffix = 'Monthly Performance Distribution'
+            else:
+                label_type = 'Group'
+                title_suffix = 'Performance Distribution'
+            
+            return {
+                'chart_type': 'box',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_suffix,
+                'xlabel': label_type,
+                'ylabel': random.choice(['Value', 'Performance Score', 'Sales ($K)', 'Response Time (ms)', 'Rating']),
+                'metadata': {
+                    'generated': 'random',
+                    'num_boxes': len(data['labels']),
+                    'samples_per_box': [len(d) for d in data['data']]
                 }
             }
         

@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -329,6 +329,66 @@ class ChartGenerator:
         
         # Rotate labels if needed
         if len(categories) > 5 or any(len(str(cat)) > 8 for cat in categories):
+            plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
+            plt.gcf().subplots_adjust(bottom=0.2)
+    
+    def _create_box_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a box plot (box and whisker chart) for distribution analysis.
+        
+        Data format:
+        {
+            'labels': ['Group A', 'Group B', 'Group C'],  # Category labels
+            'data': [
+                [10, 15, 13, 17, 20, 25, 18, 16],  # Group A data points
+                [8, 12, 11, 14, 19, 16, 13, 15],    # Group B data points
+                [12, 18, 15, 20, 22, 19, 17, 21]    # Group C data points
+            ]
+        }
+        """
+        labels = data.get('labels', [])
+        values = data.get('data', [])
+        
+        # Create box plot
+        box_parts = ax.boxplot(
+            values,
+            labels=labels,
+            patch_artist=True,  # Fill boxes with color
+            notch=kwargs.get('notch', False),  # Add notch for median confidence interval
+            showmeans=kwargs.get('showmeans', True),  # Show mean as well as median
+            meanline=kwargs.get('meanline', False)  # Show mean as line or point
+        )
+        
+        # Color the boxes
+        colors = kwargs.get('colors', None)
+        if not colors:
+            colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
+                     '#FFD93D', '#6BCB77', '#C56CF0', '#17C0EB', '#F8B739']
+        
+        for patch, color in zip(box_parts['boxes'], colors):
+            patch.set_facecolor(color)
+            patch.set_alpha(0.7)
+        
+        # Style the other elements
+        for element in ['whiskers', 'fliers', 'means', 'medians', 'caps']:
+            if element in box_parts:
+                plt.setp(box_parts[element], color='black', linewidth=1.5)
+        
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel(xlabel, fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        ax.grid(True, alpha=0.3, axis='y')
+        
+        # Rotate labels if needed
+        if len(labels) > 5 or any(len(str(label)) > 8 for label in labels):
             plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
             plt.gcf().subplots_adjust(bottom=0.2)
     

@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -391,6 +391,78 @@ class ChartGenerator:
         if len(labels) > 5 or any(len(str(label)) > 8 for label in labels):
             plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
             plt.gcf().subplots_adjust(bottom=0.2)
+    
+    def _create_area_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create an area chart using fill_between.
+        
+        Data format:
+        {
+            'x': [1, 2, 3, 4, 5],  # x-axis values
+            'y': [10, 15, 13, 17, 20],  # Single area (fills from 0)
+            
+            # OR for range/band:
+            'y1': [10, 12, 11, 14, 16],  # Lower bound
+            'y2': [15, 18, 16, 20, 22]   # Upper bound
+            
+            # OR for multiple areas (stacked):
+            'areas': [
+                {'y': [10, 15, 13, 17, 20], 'label': 'Series 1'},
+                {'y': [5, 8, 7, 9, 11], 'label': 'Series 2'}
+            ]
+        }
+        """
+        x = data.get('x', [])
+        
+        colors = kwargs.get('colors', None)
+        if not colors:
+            colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
+                     '#FFD93D', '#6BCB77', '#C56CF0', '#17C0EB', '#F8B739']
+        
+        # Check which type of area chart
+        if 'areas' in data:
+            # Multiple stacked areas
+            areas = data['areas']
+            for i, area in enumerate(areas):
+                y = area['y']
+                label = area.get('label', f'Series {i+1}')
+                ax.fill_between(x, y, alpha=0.7, color=colors[i % len(colors)], label=label)
+                ax.plot(x, y, color=colors[i % len(colors)], linewidth=2)
+            ax.legend(loc='best', fontsize=10)
+            
+        elif 'y1' in data and 'y2' in data:
+            # Range/band chart (between y1 and y2)
+            y1 = data['y1']
+            y2 = data['y2']
+            ax.fill_between(x, y1, y2, alpha=0.3, color=colors[0], label='Range')
+            ax.plot(x, y1, color=colors[0], linewidth=2, linestyle='--', label='Lower Bound')
+            ax.plot(x, y2, color=colors[1], linewidth=2, linestyle='--', label='Upper Bound')
+            # Calculate and plot average
+            avg = [(a + b) / 2 for a, b in zip(y1, y2)]
+            ax.plot(x, avg, color='black', linewidth=2.5, label='Average')
+            ax.legend(loc='best', fontsize=10)
+            
+        else:
+            # Single area (from 0 to y)
+            y = data.get('y', [])
+            ax.fill_between(x, 0, y, alpha=0.6, color=colors[0])
+            ax.plot(x, y, color=colors[0], linewidth=2.5)
+        
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel(xlabel, fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        ax.grid(True, alpha=0.3)
+        
+        # Start y-axis at 0 for better visualization
+        ax.set_ylim(bottom=0)
     
     def batch_generate(
         self,

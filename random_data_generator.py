@@ -442,6 +442,78 @@ class RandomDataGenerator:
             'data': data
         }
     
+    def generate_area_data(
+        self,
+        num_points: int = None,
+        area_type: str = 'single',
+        x_type: str = 'months',
+        y_range: tuple = (10, 100),
+        num_series: int = 2
+    ) -> Dict[str, Any]:
+        """
+        Generate data for area charts (fill_between).
+        
+        Args:
+            num_points: Number of data points (auto-determined if None)
+            area_type: 'single', 'range', or 'stacked'
+            x_type: Type of x-axis ('months', 'quarters', 'numeric', 'years')
+            y_range: Range for y values (min, max)
+            num_series: Number of series for stacked areas
+            
+        Returns:
+            Dictionary with appropriate keys for area chart type
+        """
+        # Determine x-axis values
+        if x_type == 'months':
+            x = self.MONTHS[:num_points] if num_points else self.MONTHS[:6]
+        elif x_type == 'quarters':
+            x = self.QUARTERS[:num_points] if num_points else self.QUARTERS
+        elif x_type == 'years':
+            x = self.YEARS[:num_points] if num_points else self.YEARS[-5:]
+        elif x_type == 'numeric':
+            count = num_points or 10
+            x = list(range(1, count + 1))
+        else:
+            count = num_points or 8
+            x = [f'Period {i+1}' for i in range(count)]
+        
+        actual_num_points = len(x)
+        
+        if area_type == 'single':
+            # Single area from 0 to y
+            y = self._generate_series(actual_num_points, y_range, 'fluctuating')
+            return {'x': x, 'y': y}
+            
+        elif area_type == 'range':
+            # Range/band chart with y1 and y2
+            mid_range = (y_range[0] + y_range[1]) / 2
+            spread = (y_range[1] - y_range[0]) / 4
+            
+            # Generate middle line (convert to int for _generate_series)
+            middle = self._generate_series(actual_num_points, 
+                                          (int(mid_range - spread), int(mid_range + spread)), 
+                                          'fluctuating')
+            
+            # Create range around it
+            y1 = [max(y_range[0], m - random.randint(5, 15)) for m in middle]
+            y2 = [min(y_range[1], m + random.randint(5, 15)) for m in middle]
+            
+            return {'x': x, 'y1': y1, 'y2': y2}
+            
+        else:  # stacked
+            # Multiple stacked areas
+            areas = []
+            for i in range(num_series):
+                # Generate smaller values for stacking
+                adjusted_range = (y_range[0] // num_series, y_range[1] // num_series)
+                y = self._generate_series(actual_num_points, adjusted_range, 'fluctuating')
+                areas.append({
+                    'y': y,
+                    'label': random.choice(self.PRODUCTS) if i < len(self.PRODUCTS) else f'Series {i+1}'
+                })
+            
+            return {'x': x, 'areas': areas}
+    
     def _generate_series(
         self,
         num_points: int,
@@ -488,7 +560,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -748,6 +820,62 @@ class RandomDataGenerator:
                     'generated': 'random',
                     'num_boxes': len(data['labels']),
                     'samples_per_box': [len(d) for d in data['data']]
+                }
+            }
+        
+        elif chart_type == 'area':
+            # Generate area chart data
+            area_type = random.choice(['single', 'range', 'stacked'])
+            x_type = random.choice(['months', 'quarters', 'numeric'])
+            
+            if area_type == 'stacked':
+                num_series = random.choice([2, 3])
+                data = self.generate_area_data(
+                    area_type='stacked',
+                    x_type=x_type,
+                    num_series=num_series,
+                    y_range=(20, 80)
+                )
+                title = 'Stacked Performance Over Time'
+                ylabel = random.choice(['Total Value', 'Combined Sales ($K)', 'Cumulative Score'])
+            elif area_type == 'range':
+                data = self.generate_area_data(
+                    area_type='range',
+                    x_type=x_type,
+                    y_range=(30, 100)
+                )
+                title = random.choice(['Performance Range', 'Confidence Interval', 'Value Range Over Time'])
+                ylabel = random.choice(['Value', 'Sales ($K)', 'Performance Score', 'Metric'])
+            else:  # single
+                data = self.generate_area_data(
+                    area_type='single',
+                    x_type=x_type,
+                    y_range=(30, 120)
+                )
+                title = random.choice(['Cumulative Performance', 'Growth Over Time', 'Trend Analysis'])
+                ylabel = random.choice(['Value', 'Sales ($K)', 'Revenue', 'Performance'])
+            
+            # Determine xlabel based on x_type
+            if x_type == 'months':
+                xlabel = 'Month'
+            elif x_type == 'quarters':
+                xlabel = 'Quarter'
+            elif x_type == 'years':
+                xlabel = 'Year'
+            else:
+                xlabel = 'Time Period'
+            
+            return {
+                'chart_type': 'area',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': xlabel,
+                'ylabel': ylabel,
+                'metadata': {
+                    'generated': 'random',
+                    'area_type': area_type,
+                    'num_points': len(data.get('x', []))
                 }
             }
         

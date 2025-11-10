@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_029",
+  "chart_type": "stacked_bar",
+  "title": "Annual Distribution by Product",
+  "xlabel": "Product",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "2020",
+      "2021"
+    ],
+    "values": [
+      [
+        90,
+        71,
+        114,
+        100
+      ],
+      [
+        54,
+        42,
+        115,
+        97
+      ]
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:05.333425",
+  "png_file": "chart_029.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

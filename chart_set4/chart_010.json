@@ -1,0 +1,33 @@
+{
+  "filename_root": "chart_010",
+  "chart_type": "horizontal_bar",
+  "title": "Customer Satisfaction Ratings",
+  "xlabel": "Value",
+  "ylabel": "Department",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance",
+      "Operations",
+      "Customer Service"
+    ],
+    "values": [
+      5,
+      1,
+      4,
+      5,
+      5,
+      3,
+      2
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:00.558776",
+  "png_file": "chart_010.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 7
+  }
+}

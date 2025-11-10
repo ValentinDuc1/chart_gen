@@ -1,0 +1,46 @@
+{
+  "filename_root": "chart_036",
+  "chart_type": "stacked_bar",
+  "title": "Regional Distribution by Month",
+  "xlabel": "Month",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "North",
+      "South"
+    ],
+    "values": [
+      [
+        60,
+        36,
+        94,
+        102,
+        59,
+        31
+      ],
+      [
+        62,
+        105,
+        50,
+        40,
+        36,
+        31
+      ]
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:07.072472",
+  "png_file": "chart_036.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 6
+  }
+}

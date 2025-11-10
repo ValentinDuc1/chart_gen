@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_046",
+  "chart_type": "stacked_bar",
+  "title": "Annual Distribution by Region",
+  "xlabel": "Region",
+  "ylabel": "Total Units",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "values": [
+      [
+        77,
+        104,
+        73,
+        85,
+        47
+      ],
+      [
+        37,
+        38,
+        47,
+        62,
+        117
+      ],
+      [
+        90,
+        114,
+        120,
+        79,
+        109
+      ]
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:09.466552",
+  "png_file": "chart_046.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

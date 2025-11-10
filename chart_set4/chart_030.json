@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_030",
+  "chart_type": "stacked_bar",
+  "title": "Annual Distribution by Department",
+  "xlabel": "Department",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "values": [
+      [
+        90,
+        84,
+        42,
+        86,
+        93
+      ],
+      [
+        99,
+        118,
+        38,
+        91,
+        116
+      ],
+      [
+        68,
+        56,
+        60,
+        110,
+        108
+      ]
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:05.601575",
+  "png_file": "chart_030.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

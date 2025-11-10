@@ -1,0 +1,48 @@
+{
+  "filename_root": "chart_050",
+  "chart_type": "pie",
+  "title": "Market Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central",
+      "Northeast",
+      "Southeast",
+      "Northwest",
+      "Southwest"
+    ],
+    "values": [
+      16.1,
+      18.6,
+      15.7,
+      10.6,
+      6.8,
+      11.4,
+      8.5,
+      3.8,
+      8.5
+    ],
+    "explode": [
+      0,
+      0.1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:10.455495",
+  "png_file": "chart_050.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 9
+  }
+}

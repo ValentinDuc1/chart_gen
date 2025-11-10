@@ -1,0 +1,70 @@
+{
+  "filename_root": "chart_013",
+  "chart_type": "line",
+  "title": "Growth Over Time",
+  "xlabel": "Month",
+  "ylabel": "Score",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "y": [
+      [
+        52,
+        46,
+        56,
+        68,
+        55,
+        67,
+        68,
+        54,
+        56,
+        41
+      ],
+      [
+        54,
+        63,
+        53,
+        66,
+        67,
+        73,
+        62,
+        75,
+        81,
+        86
+      ],
+      [
+        22,
+        14,
+        29,
+        31,
+        44,
+        38,
+        30,
+        35,
+        35,
+        45
+      ]
+    ],
+    "labels": [
+      "Product B",
+      "Product C",
+      "Product B"
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:01.279033",
+  "png_file": "chart_013.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 3
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "filename_root": "chart_015",
+  "chart_type": "line",
+  "title": "Revenue Over Time",
+  "xlabel": "Quarter",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "y": [
+      [
+        56,
+        53,
+        64,
+        55,
+        60,
+        54,
+        51,
+        50,
+        56,
+        64,
+        76,
+        87
+      ],
+      [
+        75,
+        77,
+        86,
+        99,
+        91,
+        94,
+        80,
+        78,
+        88,
+        79,
+        87,
+        91
+      ]
+    ],
+    "labels": [
+      "Product E",
+      "Product A"
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:01.801096",
+  "png_file": "chart_015.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 2
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_022",
+  "chart_type": "grouped_bar",
+  "title": "Annual Performance by Department",
+  "xlabel": "Department",
+  "ylabel": "Performance Score",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "values": [
+      [
+        33,
+        94,
+        63,
+        52,
+        68
+      ],
+      [
+        97,
+        89,
+        95,
+        53,
+        75
+      ],
+      [
+        66,
+        32,
+        32,
+        73,
+        34
+      ]
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:03.570960",
+  "png_file": "chart_022.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

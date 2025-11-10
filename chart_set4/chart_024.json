@@ -1,0 +1,59 @@
+{
+  "filename_root": "chart_024",
+  "chart_type": "stacked_bar",
+  "title": "Quarterly Distribution by Region",
+  "xlabel": "Region",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "values": [
+      [
+        115,
+        74,
+        72,
+        99,
+        65
+      ],
+      [
+        30,
+        60,
+        43,
+        72,
+        102
+      ],
+      [
+        74,
+        59,
+        110,
+        72,
+        84
+      ],
+      [
+        42,
+        116,
+        112,
+        103,
+        43
+      ]
+    ]
+  },
+  "generated_at": "2025-11-10T17:37:04.053635",
+  "png_file": "chart_024.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 5
+  }
+}

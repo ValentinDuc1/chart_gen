@@ -21,6 +21,8 @@ class RandomDataGenerator:
     CATEGORIES = ['Category A', 'Category B', 'Category C', 'Category D', 'Category E']
     DEVICE_TYPES = ['Desktop', 'Mobile', 'Tablet', 'Smart TV', 'Gaming Console', 'Wearable']
     SATISFACTION_METRICS = ['Product Quality', 'Customer Service', 'Delivery Speed', 'Pricing', 'User Experience']
+    RATING_LABELS = ['Excellent', 'Very Good', 'Good', 'Fair', 'Poor']
+    SCORE_LABELS = ['A', 'B', 'C', 'D', 'F']
     
     def __init__(self, seed: Optional[int] = None):
         """
@@ -514,6 +516,149 @@ class RandomDataGenerator:
             
             return {'x': x, 'areas': areas}
     
+    def generate_discrete_distribution_data(
+        self,
+        distribution_type: str = 'binomial',
+        num_values: int = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """
+        Generate data for discrete probability distributions.
+        
+        Args:
+            distribution_type: Type of distribution 
+                - 'binomial': Binomial distribution (n trials, p probability)
+                - 'poisson': Poisson distribution (lambda rate)
+                - 'uniform': Discrete uniform distribution
+                - 'custom': Custom distribution with specified probabilities
+                - 'dice': Dice roll (standard 6-sided die)
+                - 'rating': Rating distribution (1-5 stars)
+                - 'score': Letter grade distribution (A, B, C, D, F)
+            num_values: Number of discrete values (auto-determined for most types)
+            **kwargs: Distribution-specific parameters
+            
+        Returns:
+            Dictionary with 'values'/'categories' and 'probabilities' keys
+        """
+        import math
+        
+        if distribution_type == 'binomial':
+            n = kwargs.get('n', 10)
+            p = kwargs.get('p', 0.5)
+            values = list(range(n + 1))
+            probabilities = []
+            for k in values:
+                prob = (math.comb(n, k) * (p ** k) * ((1 - p) ** (n - k)))
+                probabilities.append(prob)
+            total = sum(probabilities)
+            probabilities = [p / total for p in probabilities]
+            return {
+                'values': values,
+                'probabilities': probabilities,
+                'labels': [f'X={k}' for k in values],
+                'distribution_params': {'type': 'binomial', 'n': n, 'p': p}
+            }
+        
+        elif distribution_type == 'poisson':
+            lambda_rate = kwargs.get('lambda_rate', 3.0)
+            max_value = kwargs.get('max_value', 15)
+            values = list(range(max_value + 1))
+            probabilities = []
+            for k in values:
+                prob = ((lambda_rate ** k) * math.exp(-lambda_rate)) / math.factorial(k)
+                probabilities.append(prob)
+            total = sum(probabilities)
+            probabilities = [p / total for p in probabilities]
+            return {
+                'values': values,
+                'probabilities': probabilities,
+                'labels': [f'X={k}' for k in values],
+                'distribution_params': {'type': 'poisson', 'lambda': lambda_rate}
+            }
+        
+        elif distribution_type == 'uniform':
+            min_val = kwargs.get('min_val', 1)
+            max_val = kwargs.get('max_val', 6)
+            values = list(range(min_val, max_val + 1))
+            n = len(values)
+            probabilities = [1.0 / n] * n
+            return {
+                'values': values,
+                'probabilities': probabilities,
+                'labels': [f'X={v}' for v in values],
+                'distribution_params': {'type': 'uniform', 'min': min_val, 'max': max_val}
+            }
+        
+        elif distribution_type == 'dice':
+            values = list(range(1, 7))
+            probabilities = [1/6] * 6
+            return {
+                'values': values,
+                'probabilities': probabilities,
+                'labels': [f'Roll {i}' for i in values],
+                'distribution_params': {'type': 'dice'}
+            }
+        
+        elif distribution_type == 'rating':
+            categories = ['1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars']
+            skew_type = kwargs.get('skew', 'positive')
+            if skew_type == 'positive':
+                base_probs = [0.05, 0.08, 0.15, 0.35, 0.37]
+            elif skew_type == 'negative':
+                base_probs = [0.37, 0.35, 0.15, 0.08, 0.05]
+            else:
+                base_probs = [0.15, 0.20, 0.30, 0.20, 0.15]
+            probabilities = []
+            for p in base_probs:
+                variation = random.uniform(-0.05, 0.05)
+                probabilities.append(max(0.01, p + variation))
+            total = sum(probabilities)
+            probabilities = [p / total for p in probabilities]
+            return {
+                'categories': categories,
+                'probabilities': probabilities,
+                'values': list(range(1, 6)),
+                'distribution_params': {'type': 'rating', 'skew': skew_type}
+            }
+        
+        elif distribution_type == 'score':
+            categories = ['A', 'B', 'C', 'D', 'F']
+            grade_type = kwargs.get('grade_type', 'normal')
+            if grade_type == 'easy':
+                base_probs = [0.35, 0.35, 0.20, 0.07, 0.03]
+            elif grade_type == 'hard':
+                base_probs = [0.10, 0.20, 0.35, 0.25, 0.10]
+            else:
+                base_probs = [0.20, 0.30, 0.30, 0.15, 0.05]
+            probabilities = []
+            for p in base_probs:
+                variation = random.uniform(-0.03, 0.03)
+                probabilities.append(max(0.01, p + variation))
+            total = sum(probabilities)
+            probabilities = [p / total for p in probabilities]
+            return {
+                'categories': categories,
+                'probabilities': probabilities,
+                'distribution_params': {'type': 'score', 'grade_type': grade_type}
+            }
+        
+        elif distribution_type == 'custom':
+            categories = kwargs.get('categories', self.CATEGORIES[:5])
+            probabilities = kwargs.get('probabilities', None)
+            if probabilities is None:
+                n = len(categories)
+                probabilities = [random.uniform(0.1, 1.0) for _ in range(n)]
+            total = sum(probabilities)
+            probabilities = [p / total for p in probabilities]
+            return {
+                'categories': categories,
+                'probabilities': probabilities,
+                'distribution_params': {'type': 'custom'}
+            }
+        
+        else:
+            return self.generate_discrete_distribution_data('binomial', **kwargs)
+    
     def _generate_series(
         self,
         num_points: int,
@@ -560,7 +705,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -876,6 +1021,38 @@ class RandomDataGenerator:
                     'generated': 'random',
                     'area_type': area_type,
                     'num_points': len(data.get('x', []))
+                }
+            }
+        
+        elif chart_type == 'discrete_distribution':
+            dist_type = random.choice(['binomial', 'poisson', 'uniform', 'rating', 'score'])
+            
+            if dist_type == 'binomial':
+                data = self.generate_discrete_distribution_data('binomial', n=random.choice([8, 10, 12, 15]), p=round(random.uniform(0.3, 0.7), 1))
+                title = f'Binomial Distribution'
+            elif dist_type == 'poisson':
+                data = self.generate_discrete_distribution_data('poisson', lambda_rate=round(random.uniform(2.0, 6.0), 1))
+                title = f'Poisson Distribution'
+            elif dist_type == 'uniform':
+                data = self.generate_discrete_distribution_data('uniform', min_val=1, max_val=random.choice([6, 8, 10]))
+                title = f'Discrete Uniform Distribution'
+            elif dist_type == 'rating':
+                data = self.generate_discrete_distribution_data('rating', skew=random.choice(['positive', 'neutral']))
+                title = 'Customer Rating Distribution'
+            else:  # score
+                data = self.generate_discrete_distribution_data('score', grade_type=random.choice(['normal', 'easy', 'hard']))
+                title = 'Grade Distribution'
+            
+            return {
+                'chart_type': 'discrete_distribution',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': 'Probability',
+                'ylabel': random.choice(['Value', 'Outcome', 'Category']),
+                'metadata': {
+                    'generated': 'random',
+                    'distribution_type': dist_type
                 }
             }
         

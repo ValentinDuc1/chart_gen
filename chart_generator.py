@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -45,7 +45,7 @@ class ChartGenerator:
         Generate a chart and save both PNG and JSON files.
         
         Args:
-            chart_type: Type of chart ('line', 'bar', 'pie', 'scatter', 'horizontal_bar')
+            chart_type: Type of chart ('line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution')
             data: Chart data dictionary (format depends on chart_type)
             filename_root: Base filename without extension
             title: Chart title
@@ -173,6 +173,111 @@ class ChartGenerator:
         ax.set_xlabel(xlabel, fontsize=12)
         ax.set_ylabel(ylabel, fontsize=12)
         ax.grid(True, alpha=0.3, axis='x')
+    
+    def _create_discrete_distribution_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a discrete probability distribution chart as horizontal bars.
+        Perfect for showing probability mass functions, frequency distributions,
+        or categorical probability distributions.
+        
+        Data format:
+        {
+            'values': [0, 1, 2, 3, 4, 5],  # Discrete values (x-axis in vertical orientation)
+            'probabilities': [0.05, 0.15, 0.25, 0.30, 0.20, 0.05],  # P(X=x)
+            'labels': ['X=0', 'X=1', 'X=2', 'X=3', 'X=4', 'X=5']  # Optional custom labels
+        }
+        
+        OR for named categories:
+        {
+            'categories': ['Excellent', 'Good', 'Fair', 'Poor'],
+            'probabilities': [0.30, 0.40, 0.20, 0.10]
+        }
+        """
+        import numpy as np
+        
+        # Check if we have categories or numeric values
+        if 'categories' in data:
+            categories = data['categories']
+            labels = categories
+        else:
+            values = data.get('values', [])
+            labels = data.get('labels', [f'X={v}' for v in values])
+            categories = labels
+        
+        probabilities = data.get('probabilities', [])
+        
+        # Validate probabilities sum to approximately 1.0 (allow small rounding errors)
+        prob_sum = sum(probabilities)
+        if not (0.99 <= prob_sum <= 1.01):
+            # Normalize if not already normalized
+            probabilities = [p / prob_sum for p in probabilities]
+        
+        # Create color gradient based on probability values
+        colors = kwargs.get('colors', None)
+        if colors is None:
+            # Create a color gradient from light to dark blue based on probability
+            cmap = plt.cm.Blues
+            norm = plt.Normalize(vmin=min(probabilities), vmax=max(probabilities))
+            colors = [cmap(norm(p)) for p in probabilities]
+        
+        # Create horizontal bars
+        y_positions = np.arange(len(categories))
+        bars = ax.barh(y_positions, probabilities, color=colors, alpha=0.8, 
+                       edgecolor='black', linewidth=1)
+        
+        # Add probability labels on the bars
+        show_values = kwargs.get('show_values', True)
+        if show_values:
+            for i, (bar, prob) in enumerate(zip(bars, probabilities)):
+                width = bar.get_width()
+                # Position label inside bar if it's wide enough, otherwise outside
+                if width > 0.1:
+                    ax.text(width - 0.02, bar.get_y() + bar.get_height()/2,
+                           f'{prob:.3f}',
+                           ha='right', va='center', fontsize=10, fontweight='bold',
+                           color='white' if prob > 0.5 else 'black')
+                else:
+                    ax.text(width + 0.01, bar.get_y() + bar.get_height()/2,
+                           f'{prob:.3f}',
+                           ha='left', va='center', fontsize=10, fontweight='bold')
+        
+        # Set labels
+        ax.set_yticks(y_positions)
+        ax.set_yticklabels(labels)
+        ax.set_xlabel(xlabel or 'Probability', fontsize=12, fontweight='bold')
+        ax.set_ylabel(ylabel or 'Value', fontsize=12, fontweight='bold')
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        
+        # Set x-axis limits to show full probability range
+        ax.set_xlim(0, max(1.0, max(probabilities) * 1.1))
+        
+        # Add grid for readability
+        ax.grid(True, alpha=0.3, axis='x')
+        
+        # Add a vertical line at x=1.0 to show the full probability
+        ax.axvline(x=1.0, color='red', linestyle='--', linewidth=1, alpha=0.5, label='Total = 1.0')
+        
+        # Invert y-axis so highest value is at top (optional, controlled by kwargs)
+        if kwargs.get('invert_y', False):
+            ax.invert_yaxis()
+        
+        # Add mean/expected value line if requested
+        if kwargs.get('show_expected_value', False) and 'values' in data:
+            values = data['values']
+            expected_value = sum(v * p for v, p in zip(values, probabilities))
+            # Add as text annotation
+            ax.text(0.98, 0.02, f'E[X] = {expected_value:.2f}',
+                   transform=ax.transAxes, ha='right', va='bottom',
+                   bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5),
+                   fontsize=10)
     
     def _create_pie_chart(
         self,

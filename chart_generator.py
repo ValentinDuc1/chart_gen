@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -45,7 +45,7 @@ class ChartGenerator:
         Generate a chart and save both PNG and JSON files.
         
         Args:
-            chart_type: Type of chart ('line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution')
+            chart_type: Type of chart ('line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d')
             data: Chart data dictionary (format depends on chart_type)
             filename_root: Base filename without extension
             title: Chart title
@@ -568,6 +568,65 @@ class ChartGenerator:
         
         # Start y-axis at 0 for better visualization
         ax.set_ylim(bottom=0)
+    
+    def _create_hist2d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 2D histogram (heatmap) showing the density of points in 2D space.
+        Perfect for visualizing the distribution and concentration of bivariate data.
+        
+        Data format:
+        {
+            'x': [1, 2, 3, 4, ...],  # x-coordinates of points
+            'y': [5, 6, 7, 8, ...],  # y-coordinates of points
+            'bins': [20, 20]  # Optional: number of bins for x and y (default: [20, 20])
+        }
+        """
+        x = data.get('x', [])
+        y = data.get('y', [])
+        bins = data.get('bins', kwargs.get('bins', [20, 20]))
+        
+        # Get colormap
+        cmap = kwargs.get('cmap', 'YlOrRd')  # Yellow-Orange-Red by default
+        
+        # Create 2D histogram
+        hist, xedges, yedges, image = ax.hist2d(
+            x, y, 
+            bins=bins,
+            cmap=cmap,
+            alpha=0.9,
+            edgecolors='none'
+        )
+        
+        # Add colorbar to show density scale
+        from matplotlib import pyplot as plt
+        cbar = plt.colorbar(image, ax=ax)
+        cbar.set_label('Count', rotation=270, labelpad=20, fontsize=11, fontweight='bold')
+        
+        # Set labels and title
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel(xlabel, fontsize=12, fontweight='bold')
+        ax.set_ylabel(ylabel, fontsize=12, fontweight='bold')
+        
+        # Add grid for better readability (behind the heatmap)
+        ax.grid(True, alpha=0.2, linestyle='--', linewidth=0.5, zorder=0)
+        
+        # Add statistics as text annotation if requested
+        if kwargs.get('show_stats', True):
+            import numpy as np
+            stats_text = f'n = {len(x)}\nμx = {np.mean(x):.1f}\nμy = {np.mean(y):.1f}'
+            ax.text(0.02, 0.98, stats_text,
+                   transform=ax.transAxes, ha='left', va='top',
+                   bbox=dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='gray'),
+                   fontsize=9, family='monospace')
+
     
     def batch_generate(
         self,

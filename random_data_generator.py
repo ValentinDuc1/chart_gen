@@ -659,6 +659,141 @@ class RandomDataGenerator:
         else:
             return self.generate_discrete_distribution_data('binomial', **kwargs)
     
+    def generate_hist2d_data(
+        self,
+        num_points: int = None,
+        x_range: tuple = (0, 100),
+        y_range: tuple = (0, 100),
+        distribution: str = 'random',
+        bins: list = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for 2D histogram charts.
+        
+        Args:
+            num_points: Number of data points (default: 200)
+            x_range: Range for x values (min, max)
+            y_range: Range for y values (min, max)
+            distribution: Type of distribution 
+                - 'random': Uniform random distribution
+                - 'clustered': Multiple clusters/concentrations
+                - 'diagonal': Concentrated along diagonal
+                - 'circular': Circular/radial pattern
+                - 'normal': Bivariate normal distribution
+            bins: Number of bins [x_bins, y_bins] (default: [20, 20])
+            
+        Returns:
+            Dictionary with 'x', 'y', and 'bins' keys
+        """
+        import math
+        
+        count = num_points or 200
+        bins = bins or [20, 20]
+        
+        x = []
+        y = []
+        
+        if distribution == 'random':
+            # Uniform random distribution
+            x = [random.uniform(x_range[0], x_range[1]) for _ in range(count)]
+            y = [random.uniform(y_range[0], y_range[1]) for _ in range(count)]
+            
+        elif distribution == 'clustered':
+            # Multiple clusters
+            num_clusters = random.randint(2, 4)
+            points_per_cluster = count // num_clusters
+            
+            for _ in range(num_clusters):
+                # Random cluster center
+                cx = random.uniform(x_range[0] + 10, x_range[1] - 10)
+                cy = random.uniform(y_range[0] + 10, y_range[1] - 10)
+                
+                # Generate points around cluster center
+                for _ in range(points_per_cluster):
+                    # Use Gaussian distribution around center
+                    px = random.gauss(cx, (x_range[1] - x_range[0]) / 10)
+                    py = random.gauss(cy, (y_range[1] - y_range[0]) / 10)
+                    
+                    # Clamp to range
+                    px = max(x_range[0], min(x_range[1], px))
+                    py = max(y_range[0], min(y_range[1], py))
+                    
+                    x.append(px)
+                    y.append(py)
+            
+            # Fill remaining points
+            remaining = count - len(x)
+            for _ in range(remaining):
+                x.append(random.uniform(x_range[0], x_range[1]))
+                y.append(random.uniform(y_range[0], y_range[1]))
+        
+        elif distribution == 'diagonal':
+            # Concentrated along diagonal with noise
+            for _ in range(count):
+                t = random.uniform(0, 1)
+                px = x_range[0] + t * (x_range[1] - x_range[0])
+                py = y_range[0] + t * (y_range[1] - y_range[0])
+                
+                # Add noise
+                noise_x = random.gauss(0, (x_range[1] - x_range[0]) / 15)
+                noise_y = random.gauss(0, (y_range[1] - y_range[0]) / 15)
+                
+                px = max(x_range[0], min(x_range[1], px + noise_x))
+                py = max(y_range[0], min(y_range[1], py + noise_y))
+                
+                x.append(px)
+                y.append(py)
+        
+        elif distribution == 'circular':
+            # Circular/radial pattern
+            cx = (x_range[0] + x_range[1]) / 2
+            cy = (y_range[0] + y_range[1]) / 2
+            max_radius = min(x_range[1] - cx, y_range[1] - cy) * 0.8
+            
+            for _ in range(count):
+                # Random angle and radius
+                angle = random.uniform(0, 2 * math.pi)
+                radius = random.uniform(0, max_radius)
+                
+                # Add some clustering at certain radii
+                if random.random() < 0.3:
+                    radius = random.uniform(max_radius * 0.6, max_radius * 0.9)
+                
+                px = cx + radius * math.cos(angle)
+                py = cy + radius * math.sin(angle)
+                
+                x.append(px)
+                y.append(py)
+        
+        elif distribution == 'normal':
+            # Bivariate normal distribution
+            mean_x = (x_range[0] + x_range[1]) / 2
+            mean_y = (y_range[0] + y_range[1]) / 2
+            std_x = (x_range[1] - x_range[0]) / 6
+            std_y = (y_range[1] - y_range[0]) / 6
+            
+            for _ in range(count):
+                px = random.gauss(mean_x, std_x)
+                py = random.gauss(mean_y, std_y)
+                
+                # Clamp to range
+                px = max(x_range[0], min(x_range[1], px))
+                py = max(y_range[0], min(y_range[1], py))
+                
+                x.append(px)
+                y.append(py)
+        
+        else:
+            # Default to random
+            x = [random.uniform(x_range[0], x_range[1]) for _ in range(count)]
+            y = [random.uniform(y_range[0], y_range[1]) for _ in range(count)]
+        
+        return {
+            'x': x,
+            'y': y,
+            'bins': bins
+        }
+    
     def _generate_series(
         self,
         num_points: int,
@@ -705,7 +840,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -1053,6 +1188,44 @@ class RandomDataGenerator:
                 'metadata': {
                     'generated': 'random',
                     'distribution_type': dist_type
+                }
+            }
+        
+        elif chart_type == 'hist2d':
+            # Generate 2D histogram data
+            dist_type = random.choice(['random', 'clustered', 'diagonal', 'circular', 'normal'])
+            num_points = random.choice([150, 200, 250, 300])
+            
+            data = self.generate_hist2d_data(
+                num_points=num_points,
+                x_range=(0, 100),
+                y_range=(0, 100),
+                distribution=dist_type,
+                bins=[random.choice([15, 20, 25]), random.choice([15, 20, 25])]
+            )
+            
+            # Create title based on distribution type
+            dist_names = {
+                'random': 'Uniform Distribution',
+                'clustered': 'Clustered Distribution',
+                'diagonal': 'Linear Correlation',
+                'circular': 'Radial Distribution',
+                'normal': 'Bivariate Normal Distribution'
+            }
+            title = f'2D Histogram: {dist_names.get(dist_type, "Distribution")}'
+            
+            return {
+                'chart_type': 'hist2d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': random.choice(['Variable X', 'Feature 1', 'Measurement A', 'X-Axis']),
+                'ylabel': random.choice(['Variable Y', 'Feature 2', 'Measurement B', 'Y-Axis']),
+                'metadata': {
+                    'generated': 'random',
+                    'distribution': dist_type,
+                    'num_points': num_points,
+                    'bins': data['bins']
                 }
             }
         

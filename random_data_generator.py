@@ -386,15 +386,25 @@ class RandomDataGenerator:
             # Use normal distribution for more realistic box plots
             range_size = value_range[1] - value_range[0]
             
-            # Adjust mean calculation based on range size
-            if range_size > 40:
-                mean = random.randint(value_range[0] + 20, value_range[1] - 20)
+            # Calculate mean safely for any range size
+            if range_size <= 1:
+                # Very small range, use midpoint
+                mean = (value_range[0] + value_range[1]) / 2
+            elif range_size <= 10:
+                # Small range, use uniform random
+                mean = random.uniform(value_range[0], value_range[1])
             else:
-                # For smaller ranges, use middle portion
+                # Larger range, use middle portion with margin
                 margin = max(int(range_size * 0.2), 1)
-                mean = random.randint(value_range[0] + margin, value_range[1] - margin)
+                # Ensure start < stop for randint
+                start = value_range[0] + margin
+                stop = value_range[1] - margin
+                if start >= stop:
+                    mean = (value_range[0] + value_range[1]) / 2
+                else:
+                    mean = random.randint(start, stop)
             
-            std_dev = range_size / 6  # About 1/6 of range
+            std_dev = max(range_size / 6, 0.5)  # At least 0.5 std dev
             
             samples = []
             for _ in range(n_samples):
@@ -404,17 +414,26 @@ class RandomDataGenerator:
                 value = max(value_range[0], min(value_range[1], value))
                 samples.append(round(value, 1))
             
-            # Add a few potential outliers (10% chance)
+            # Add a few potential outliers (30% chance)
             if random.random() < 0.3:
                 n_outliers = random.randint(1, 2)
                 for _ in range(n_outliers):
-                    if random.random() < 0.5:
-                        # High outlier
-                        outlier = random.randint(int(mean + 2*std_dev), value_range[1])
-                    else:
-                        # Low outlier
-                        outlier = random.randint(value_range[0], int(mean - 2*std_dev))
-                    samples.append(outlier)
+                    try:
+                        if random.random() < 0.5:
+                            # High outlier
+                            high_val = int(mean + 2*std_dev)
+                            if high_val < value_range[1]:
+                                outlier = random.randint(high_val, value_range[1])
+                                samples.append(outlier)
+                        else:
+                            # Low outlier
+                            low_val = int(mean - 2*std_dev)
+                            if low_val > value_range[0]:
+                                outlier = random.randint(value_range[0], low_val)
+                                samples.append(outlier)
+                    except (ValueError, OverflowError):
+                        # Skip outlier if range is too small
+                        pass
             
             data.append(samples)
         

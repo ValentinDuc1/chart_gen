@@ -1,0 +1,27 @@
+{
+  "filename_root": "chart_014",
+  "chart_type": "line",
+  "title": "Sales Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Score",
+  "data": {
+    "x": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "y": [
+      30,
+      24,
+      66,
+      69
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:21.635511",
+  "png_file": "chart_014.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

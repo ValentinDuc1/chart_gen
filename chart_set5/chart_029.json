@@ -1,0 +1,46 @@
+{
+  "filename_root": "chart_029",
+  "chart_type": "stacked_bar",
+  "title": "Department Distribution by Month",
+  "xlabel": "Month",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "Sales",
+      "Marketing"
+    ],
+    "values": [
+      [
+        94,
+        119,
+        119,
+        87,
+        90,
+        98
+      ],
+      [
+        102,
+        72,
+        55,
+        46,
+        63,
+        94
+      ]
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:25.625258",
+  "png_file": "chart_029.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 6
+  }
+}

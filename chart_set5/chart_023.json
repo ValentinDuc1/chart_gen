@@ -1,0 +1,78 @@
+{
+  "filename_root": "chart_023",
+  "chart_type": "line",
+  "title": "Sales Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Amount ($K)",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "y": [
+      [
+        19,
+        22,
+        35,
+        47,
+        44,
+        58,
+        45,
+        48,
+        52,
+        47,
+        61,
+        74
+      ],
+      [
+        23,
+        37,
+        39,
+        25,
+        15,
+        27,
+        29,
+        41,
+        26,
+        18,
+        22,
+        26
+      ],
+      [
+        34,
+        39,
+        48,
+        52,
+        43,
+        55,
+        56,
+        52,
+        57,
+        67,
+        81,
+        75
+      ]
+    ],
+    "labels": [
+      "Product D",
+      "Product B",
+      "Product B"
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:23.998146",
+  "png_file": "chart_023.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 3
+  }
+}

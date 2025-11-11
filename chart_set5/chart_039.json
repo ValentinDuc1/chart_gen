@@ -1,0 +1,43 @@
+{
+  "filename_root": "chart_039",
+  "chart_type": "timeline",
+  "title": "Project Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2024-01-16",
+      "2024-01-18",
+      "2024-01-19",
+      "2024-04-17",
+      "2024-06-21",
+      "2024-07-08",
+      "2024-10-21"
+    ],
+    "events": [
+      "Deadline Extended",
+      "Beta Release",
+      "Development Phase",
+      "Design Review",
+      "Production Launch",
+      "Project Kickoff",
+      "Milestone Achieved"
+    ],
+    "categories": [
+      "Planning",
+      "Release",
+      "Development",
+      "Release",
+      "Marketing",
+      "Release",
+      "Development"
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:28.222472",
+  "png_file": "chart_039.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 7,
+    "event_type": "project"
+  }
+}

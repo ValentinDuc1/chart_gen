@@ -1,0 +1,37 @@
+{
+  "filename_root": "chart_027",
+  "chart_type": "timeline",
+  "title": "Company Milestones",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2024-01-16",
+      "2024-01-27",
+      "2024-03-09",
+      "2024-04-01",
+      "2024-07-15"
+    ],
+    "events": [
+      "CEO Appointed",
+      "New Office Opened",
+      "Strategic Partnership",
+      "Series A Funding",
+      "Acquisition Completed"
+    ],
+    "categories": [
+      "Planning",
+      "Development",
+      "Release",
+      "Marketing",
+      "Marketing"
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:25.015150",
+  "png_file": "chart_027.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 5,
+    "event_type": "company"
+  }
+}

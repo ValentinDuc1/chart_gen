@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_005",
+  "chart_type": "stacked_bar",
+  "title": "Monthly Distribution by Department",
+  "xlabel": "Department",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "Jan",
+      "Feb",
+      "Mar"
+    ],
+    "values": [
+      [
+        114,
+        119,
+        119,
+        54,
+        43
+      ],
+      [
+        42,
+        89,
+        33,
+        87,
+        61
+      ],
+      [
+        41,
+        117,
+        57,
+        120,
+        103
+      ]
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:19.244577",
+  "png_file": "chart_005.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_047",
+  "chart_type": "stacked_bar",
+  "title": "Monthly Distribution by Product",
+  "xlabel": "Product",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "Jan",
+      "Feb"
+    ],
+    "values": [
+      [
+        77,
+        56,
+        89,
+        118
+      ],
+      [
+        106,
+        56,
+        48,
+        66
+      ]
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:30.424167",
+  "png_file": "chart_047.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

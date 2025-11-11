@@ -1,0 +1,39 @@
+{
+  "filename_root": "chart_037",
+  "chart_type": "line",
+  "title": "Performance Over Time",
+  "xlabel": "Month",
+  "ylabel": "Units",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "y": [
+      11,
+      24,
+      23,
+      32,
+      47,
+      57,
+      61,
+      68,
+      79,
+      88
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:27.665049",
+  "png_file": "chart_037.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

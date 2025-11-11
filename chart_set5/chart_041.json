@@ -1,0 +1,32 @@
+{
+  "filename_root": "chart_041",
+  "chart_type": "area",
+  "title": "Trend Analysis",
+  "xlabel": "Month",
+  "ylabel": "Revenue",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "y": [
+      49,
+      48,
+      62,
+      57,
+      43,
+      56
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:28.705566",
+  "png_file": "chart_041.png",
+  "metadata": {
+    "generated": "random",
+    "area_type": "single",
+    "num_points": 6
+  }
+}

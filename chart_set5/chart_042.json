@@ -1,0 +1,39 @@
+{
+  "filename_root": "chart_042",
+  "chart_type": "line",
+  "title": "Growth Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "y": [
+      10,
+      18,
+      28,
+      42,
+      44,
+      52,
+      68,
+      78,
+      85,
+      87
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:28.953129",
+  "png_file": "chart_042.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "filename_root": "chart_031",
+  "chart_type": "horizontal_bar",
+  "title": "Performance Metrics",
+  "xlabel": "Rating",
+  "ylabel": "Department",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance",
+      "Operations",
+      "Customer Service"
+    ],
+    "values": [
+      2,
+      3,
+      4,
+      3,
+      5,
+      3,
+      2
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:26.097766",
+  "png_file": "chart_031.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 7
+  }
+}

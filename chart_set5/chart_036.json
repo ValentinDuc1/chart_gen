@@ -1,0 +1,55 @@
+{
+  "filename_root": "chart_036",
+  "chart_type": "stacked_bar",
+  "title": "Quarterly Distribution by Month",
+  "xlabel": "Month",
+  "ylabel": "Total Revenue",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "Q1",
+      "Q2",
+      "Q3"
+    ],
+    "values": [
+      [
+        64,
+        97,
+        43,
+        117,
+        112,
+        50
+      ],
+      [
+        43,
+        115,
+        69,
+        90,
+        97,
+        56
+      ],
+      [
+        107,
+        100,
+        101,
+        117,
+        49,
+        97
+      ]
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:27.412161",
+  "png_file": "chart_036.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 6
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_049",
+  "chart_type": "grouped_bar",
+  "title": "Monthly Performance by Department",
+  "xlabel": "Department",
+  "ylabel": "Units",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "Jan",
+      "Feb",
+      "Mar"
+    ],
+    "values": [
+      [
+        120,
+        34,
+        86,
+        69,
+        33
+      ],
+      [
+        92,
+        120,
+        100,
+        34,
+        32
+      ],
+      [
+        43,
+        113,
+        41,
+        113,
+        106
+      ]
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:30.941787",
+  "png_file": "chart_049.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

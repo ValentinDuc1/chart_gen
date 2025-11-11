@@ -1,0 +1,33 @@
+{
+  "filename_root": "chart_021",
+  "chart_type": "discrete_distribution",
+  "title": "Grade Distribution",
+  "xlabel": "Probability",
+  "ylabel": "Outcome",
+  "data": {
+    "categories": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "F"
+    ],
+    "probabilities": [
+      0.3344145108132427,
+      0.34288270382047564,
+      0.1955459174496265,
+      0.08249942374961888,
+      0.044657444167036264
+    ],
+    "distribution_params": {
+      "type": "score",
+      "grade_type": "easy"
+    }
+  },
+  "generated_at": "2025-11-11T14:59:23.467019",
+  "png_file": "chart_021.png",
+  "metadata": {
+    "generated": "random",
+    "distribution_type": "score"
+  }
+}

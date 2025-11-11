@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_001",
+  "chart_type": "stacked_bar",
+  "title": "Product Distribution by Department",
+  "xlabel": "Department",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "Product A",
+      "Product B",
+      "Product C"
+    ],
+    "values": [
+      [
+        120,
+        109,
+        75,
+        101,
+        113
+      ],
+      [
+        38,
+        68,
+        57,
+        88,
+        85
+      ],
+      [
+        30,
+        77,
+        56,
+        74,
+        93
+      ]
+    ]
+  },
+  "generated_at": "2025-11-11T14:59:17.366801",
+  "png_file": "chart_001.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

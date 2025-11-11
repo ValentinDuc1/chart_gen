@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+"""
+Generate a gallery of streamplot variations
+Demonstrates: density, color, linewidth, starting points, masking, unbroken streamlines
+"""
+
+from chart_generator import ChartGenerator
+from random_data_generator import RandomDataGenerator
+import numpy as np
+
+def main():
+    gen = ChartGenerator(output_dir='/mnt/user-data/outputs/streamplot_gallery')
+    data_gen = RandomDataGenerator(seed=42)
+    
+    print("🌊 Generating Streamplot Variations Gallery")
+    print("=" * 60)
+    
+    # 1. Varying Density
+    print("\n1. Varying Density...")
+    data = data_gen.generate_streamplot_variation_data(
+        variation_type='varying_density',
+        flow_type='saddle',
+        grid_size=25
+    )
+    gen.generate_chart(
+        chart_type='streamplot',
+        data=data,
+        filename_root='01_varying_density',
+        title='Varying Density',
+        xlabel='X Position',
+        ylabel='Y Position'
+    )
+    
+    # 2. Varying Color (color mapped by field)
+    print("2. Varying Color...")
+    data = data_gen.generate_streamplot_variation_data(
+        variation_type='varying_color',
+        flow_type='saddle',
+        grid_size=25
+    )
+    gen.generate_chart(
+        chart_type='streamplot',
+        data=data,
+        filename_root='02_varying_color',
+        title='Varying Color',
+        xlabel='X Position',
+        ylabel='Y Position'
+    )
+    
+    # 3. Varying Line Width
+    print("3. Varying Line Width...")
+    data = data_gen.generate_streamplot_variation_data(
+        variation_type='varying_linewidth',
+        flow_type='saddle',
+        grid_size=25
+    )
+    gen.generate_chart(
+        chart_type='streamplot',
+        data=data,
+        filename_root='03_varying_linewidth',
+        title='Varying Line Width',
+        xlabel='X Position',
+        ylabel='Y Position'
+    )
+    
+    # 4. Controlling Starting Points
+    print("4. Controlling Starting Points...")
+    data = data_gen.generate_streamplot_variation_data(
+        variation_type='starting_points',
+        flow_type='saddle',
+        grid_size=25
+    )
+    gen.generate_chart(
+        chart_type='streamplot',
+        data=data,
+        filename_root='04_starting_points',
+        title='Controlling Starting Points',
+        xlabel='X Position',
+        ylabel='Y Position'
+    )
+    
+    # 5. Streamplot with Masking
+    print("5. Streamplot with Masking...")
+    data = data_gen.generate_streamplot_variation_data(
+        variation_type='masking',
+        flow_type='saddle',
+        grid_size=25
+    )
+    gen.generate_chart(
+        chart_type='streamplot',
+        data=data,
+        filename_root='05_masking',
+        title='Streamplot with Masking',
+        xlabel='X Position',
+        ylabel='Y Position'
+    )
+    
+    # 6. Unbroken Streamlines
+    print("6. Unbroken Streamlines...")
+    data = data_gen.generate_streamplot_variation_data(
+        variation_type='unbroken',
+        flow_type='saddle',
+        grid_size=25
+    )
+    gen.generate_chart(
+        chart_type='streamplot',
+        data=data,
+        filename_root='06_unbroken',
+        title='Streamplot with Unbroken Streamlines',
+        xlabel='X Position',
+        ylabel='Y Position'
+    )
+    
+    print("\n" + "=" * 60)
+    print("✅ Gallery complete! Check /mnt/user-data/outputs/streamplot_gallery/")
+    print("\nGenerated:")
+    print("  1. 01_varying_density.png - Different streamline spacing")
+    print("  2. 02_varying_color.png - Color mapped by field")
+    print("  3. 03_varying_linewidth.png - Variable line thickness")
+    print("  4. 04_starting_points.png - Custom start positions")
+    print("  5. 05_masking.png - Masked obstacle region")
+    print("  6. 06_unbroken.png - Dense continuous streamlines")
+
+if __name__ == '__main__':
+    main()

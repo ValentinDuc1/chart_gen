@@ -1013,6 +1013,296 @@ class RandomDataGenerator:
         
         return result
     
+    def generate_heatmap_data(
+        self,
+        num_rows: int = None,
+        num_cols: int = None,
+        value_range: tuple = (0, 100),
+        row_type: str = None,
+        col_type: str = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for annotated heatmap charts.
+        
+        Args:
+            num_rows: Number of rows (auto-determined if None)
+            num_cols: Number of columns (auto-determined if None)
+            value_range: Range for values (min, max)
+            row_type: Type of row labels ('products', 'regions', 'departments', 'months', 'custom')
+            col_type: Type of column labels ('quarters', 'months', 'regions', 'products', 'years', 'custom')
+            
+        Returns:
+            Dictionary with 'values', 'row_labels', 'col_labels' keys
+        """
+        import numpy as np
+        
+        # Randomize types if not specified
+        if row_type is None:
+            row_type = random.choice(['products', 'regions', 'departments', 'months'])
+        if col_type is None:
+            col_type = random.choice(['quarters', 'months', 'regions', 'years'])
+        
+        # Determine row labels
+        if row_type == 'products':
+            row_labels = self.PRODUCTS[:num_rows] if num_rows else self.PRODUCTS[:5]
+        elif row_type == 'regions':
+            row_labels = self.REGIONS[:num_rows] if num_rows else self.REGIONS[:5]
+        elif row_type == 'departments':
+            row_labels = self.DEPARTMENTS[:num_rows] if num_rows else self.DEPARTMENTS[:5]
+        elif row_type == 'months':
+            row_labels = self.MONTHS[:num_rows] if num_rows else self.MONTHS[:6]
+        else:  # custom
+            count = num_rows or 5
+            row_labels = [f'Row {i+1}' for i in range(count)]
+        
+        # Determine column labels
+        if col_type == 'quarters':
+            col_labels = self.QUARTERS[:num_cols] if num_cols else self.QUARTERS
+        elif col_type == 'months':
+            col_labels = self.MONTHS[:num_cols] if num_cols else self.MONTHS[:6]
+        elif col_type == 'regions':
+            col_labels = self.REGIONS[:num_cols] if num_cols else self.REGIONS[:4]
+        elif col_type == 'products':
+            col_labels = self.PRODUCTS[:num_cols] if num_cols else self.PRODUCTS[:4]
+        elif col_type == 'years':
+            col_labels = self.YEARS[:num_cols] if num_cols else self.YEARS[-5:]
+        else:  # custom
+            count = num_cols or 4
+            col_labels = [f'Col {i+1}' for i in range(count)]
+        
+        # Generate values matrix
+        n_rows = len(row_labels)
+        n_cols = len(col_labels)
+        
+        values = []
+        for i in range(n_rows):
+            row = [random.randint(value_range[0], value_range[1]) for _ in range(n_cols)]
+            values.append(row)
+        
+        return {
+            'values': values,
+            'row_labels': row_labels,
+            'col_labels': col_labels
+        }
+    
+    def generate_streamplot_data(
+        self,
+        flow_type: str = None,
+        grid_size: int = 20,
+        domain: tuple = (-2, 2, -2, 2)
+    ) -> Dict[str, Any]:
+        """
+        Generate vector field data for streamplot charts.
+        
+        Args:
+            flow_type: Type of flow pattern (None for random choice):
+                - 'vortex': Circular rotation around center
+                - 'source': Outward radial flow
+                - 'sink': Inward radial flow
+                - 'saddle': Saddle point (hyperbolic)
+                - 'uniform': Parallel flow
+                - 'dipole': Source + Sink combination
+                - 'shear': Velocity gradient
+                - 'wave': Oscillating pattern
+            grid_size: Number of grid points per dimension
+            domain: (x_min, x_max, y_min, y_max) for the field
+            
+        Returns:
+            Dictionary with 'x', 'y', 'u', 'v' arrays
+        """
+        import numpy as np
+        
+        # Randomize flow type if not specified
+        if flow_type is None:
+            flow_type = random.choice(['vortex', 'source', 'sink', 'saddle', 
+                                      'uniform', 'dipole', 'shear', 'wave'])
+        
+        # Create grid
+        x_min, x_max, y_min, y_max = domain
+        x = np.linspace(x_min, x_max, grid_size)
+        y = np.linspace(y_min, y_max, grid_size)
+        X, Y = np.meshgrid(x, y)
+        
+        # Generate flow field based on type
+        if flow_type == 'vortex':
+            # Circular rotation: u = -y, v = x
+            u = -Y
+            v = X
+            
+        elif flow_type == 'source':
+            # Radial outward: u = x, v = y
+            u = X
+            v = Y
+            
+        elif flow_type == 'sink':
+            # Radial inward: u = -x, v = -y
+            u = -X
+            v = -Y
+            
+        elif flow_type == 'saddle':
+            # Hyperbolic saddle point: u = x, v = -y
+            u = X
+            v = -Y
+            
+        elif flow_type == 'uniform':
+            # Parallel flow at random angle
+            angle = random.uniform(0, 2 * np.pi)
+            speed = random.uniform(0.5, 2.0)
+            u = np.ones_like(X) * speed * np.cos(angle)
+            v = np.ones_like(Y) * speed * np.sin(angle)
+            
+        elif flow_type == 'dipole':
+            # Source at (-1, 0) and sink at (1, 0)
+            # Source contribution
+            r1_sq = (X + 1)**2 + Y**2 + 0.1  # Add small value to avoid division by zero
+            u_source = (X + 1) / r1_sq
+            v_source = Y / r1_sq
+            
+            # Sink contribution
+            r2_sq = (X - 1)**2 + Y**2 + 0.1
+            u_sink = -(X - 1) / r2_sq
+            v_sink = -Y / r2_sq
+            
+            u = u_source + u_sink
+            v = v_source + v_sink
+            
+        elif flow_type == 'shear':
+            # Velocity varies with y (like wind shear)
+            u = Y + random.uniform(0.5, 1.5)
+            v = np.zeros_like(Y) + random.uniform(-0.3, 0.3)
+            
+        elif flow_type == 'wave':
+            # Oscillating pattern
+            freq = random.uniform(1, 3)
+            u = np.sin(freq * Y) * np.cos(freq * X)
+            v = np.cos(freq * Y) * np.sin(freq * X)
+        
+        else:
+            # Default to vortex
+            u = -Y
+            v = X
+        
+        # Add small random noise for realism (5% of mean magnitude)
+        magnitude = np.sqrt(u**2 + v**2)
+        noise_level = 0.05 * np.mean(magnitude)
+        u += np.random.normal(0, noise_level, u.shape)
+        v += np.random.normal(0, noise_level, v.shape)
+        
+        return {
+            'x': x.tolist(),
+            'y': y.tolist(),
+            'u': u.tolist(),
+            'v': v.tolist(),
+            'flow_type': flow_type
+        }
+    
+    def generate_streamplot_variation_data(
+        self,
+        variation_type: str = None,
+        flow_type: str = 'vortex',
+        grid_size: int = 30
+    ) -> Dict[str, Any]:
+        """
+        Generate streamplot data with specific variations.
+        
+        Args:
+            variation_type: Type of variation:
+                - 'varying_density': Different densities
+                - 'varying_color': Different colormaps
+                - 'varying_linewidth': Different line widths
+                - 'starting_points': Custom start points
+                - 'masking': With masked region
+                - 'unbroken': Dense unbroken streamlines
+            flow_type: Base flow pattern
+            grid_size: Grid resolution
+            
+        Returns:
+            Dictionary with data and visualization parameters
+        """
+        import numpy as np
+        
+        # Generate base flow field
+        base_data = self.generate_streamplot_data(
+            flow_type=flow_type,
+            grid_size=grid_size,
+            domain=(-3, 3, -3, 3)
+        )
+        
+        x = np.array(base_data['x'])
+        y = np.array(base_data['y'])
+        u = np.array(base_data['u'])
+        v = np.array(base_data['v'])
+        
+        result = {
+            'x': x.tolist(),
+            'y': y.tolist(),
+            'u': u.tolist(),
+            'v': v.tolist(),
+            'flow_type': flow_type
+        }
+        
+        # Apply variation
+        if variation_type == 'varying_density':
+            # Sparse to dense
+            result['density'] = random.choice([0.5, 1.0, 1.5, 2.0, 2.5])
+            result['color'] = 'uniform'
+            result['linewidth'] = 1.5
+            
+        elif variation_type == 'varying_color':
+            # Color by field with different colormaps
+            result['color'] = 'velocity'
+            result['cmap'] = random.choice(['viridis', 'plasma', 'RdYlBu', 'coolwarm', 'jet'])
+            result['linewidth'] = 1.5
+            
+        elif variation_type == 'varying_linewidth':
+            # Variable line widths
+            result['linewidth'] = 'variable'
+            result['color'] = 'uniform'
+            result['density'] = 1.5
+            
+        elif variation_type == 'starting_points':
+            # Manual starting points
+            num_points = random.randint(5, 10)
+            start_x = np.random.uniform(-2, 2, num_points)
+            start_y = np.random.uniform(-2, 2, num_points)
+            result['start_points'] = [[float(sx), float(sy)] for sx, sy in zip(start_x, start_y)]
+            result['show_start_points'] = True
+            result['color'] = 'velocity'
+            result['density'] = 1.0
+            
+        elif variation_type == 'masking':
+            # Create circular or rectangular mask
+            X, Y = np.meshgrid(x, y)
+            if random.choice([True, False]):
+                # Circular mask
+                mask_x, mask_y = random.uniform(-1, 1), random.uniform(-1, 1)
+                mask_r = random.uniform(0.5, 1.2)
+                mask = (X - mask_x)**2 + (Y - mask_y)**2 < mask_r**2
+                result['mask_shape'] = 'circle'
+                result['mask_params'] = {'x': mask_x, 'y': mask_y, 'r': mask_r}
+            else:
+                # Rectangular mask
+                x_min, x_max = sorted([random.uniform(-2, 0), random.uniform(0, 2)])
+                y_min, y_max = sorted([random.uniform(-2, 0), random.uniform(0, 2)])
+                mask = (X >= x_min) & (X <= x_max) & (Y >= y_min) & (Y <= y_max)
+                result['mask_shape'] = 'rectangle'
+                result['mask_params'] = {'x_min': x_min, 'x_max': x_max, 'y_min': y_min, 'y_max': y_max}
+            
+            result['mask'] = mask.tolist()
+            result['color'] = random.choice(['#FF4444', '#44FF44', '#4444FF'])
+            result['density'] = 1.5
+            result['show_mask_region'] = True
+            result['mask_color'] = 'gray'
+            
+        elif variation_type == 'unbroken':
+            # Very dense unbroken streamlines
+            result['density'] = (3.0, 3.0)  # High density
+            result['broken_streamlines'] = False
+            result['color'] = 'uniform'
+            result['linewidth'] = 1.0
+        
+        return result
+    
     def generate_random_chart_spec(
         self,
         chart_type: Optional[str] = None,
@@ -1028,7 +1318,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -1546,6 +1836,128 @@ class RandomDataGenerator:
                     'generated': 'random',
                     'num_events': len(data['dates']),
                     'event_type': event_type
+                }
+            }
+        
+        elif chart_type == 'heatmap':
+            # Generate heatmap with random row and column types
+            data = self.generate_heatmap_data(
+                value_range=(10, 100)
+            )
+            
+            # Create descriptive title based on data types
+            row_label = data['row_labels'][0]
+            col_label = data['col_labels'][0]
+            
+            # Determine what kind of heatmap this is
+            if row_label in self.PRODUCTS:
+                row_type = 'Product'
+            elif row_label in self.REGIONS:
+                row_type = 'Regional'
+            elif row_label in self.DEPARTMENTS:
+                row_type = 'Department'
+            elif row_label in self.MONTHS:
+                row_type = 'Monthly'
+            else:
+                row_type = 'Category'
+            
+            if col_label in self.QUARTERS:
+                col_type = 'Quarterly'
+            elif col_label in self.MONTHS:
+                col_type = 'Monthly'
+            elif col_label in self.REGIONS:
+                col_type = 'Regional'
+            elif col_label in self.YEARS:
+                col_type = 'Annual'
+            else:
+                col_type = 'Period'
+            
+            return {
+                'chart_type': 'heatmap',
+                'data': data,
+                'filename_root': filename_root,
+                'title': f'{row_type} Performance by {col_type} Period',
+                'xlabel': 'Time Period',
+                'ylabel': 'Category',
+                'metadata': {
+                    'generated': 'random',
+                    'dimensions': f'{len(data["row_labels"])}x{len(data["col_labels"])}'
+                }
+            }
+        
+        elif chart_type == 'streamplot':
+            # Generate streamplot with random flow pattern
+            use_variation = random.choice([True, False, False])  # 33% chance of variation
+            
+            if use_variation:
+                variation_type = random.choice([
+                    'varying_density', 'varying_color', 'varying_linewidth',
+                    'starting_points', 'masking', 'unbroken'
+                ])
+                flow_type = random.choice(['vortex', 'source', 'saddle', 'dipole'])
+                data = self.generate_streamplot_variation_data(
+                    variation_type=variation_type,
+                    flow_type=flow_type,
+                    grid_size=random.choice([20, 25, 30])
+                )
+                
+                variation_titles = {
+                    'varying_density': f'{flow_type.title()} Flow - Varying Density',
+                    'varying_color': f'{flow_type.title()} Flow - Color Mapped',
+                    'varying_linewidth': f'{flow_type.title()} Flow - Variable Width',
+                    'starting_points': f'{flow_type.title()} Flow - Custom Start Points',
+                    'masking': f'{flow_type.title()} Flow - Masked Region',
+                    'unbroken': f'{flow_type.title()} Flow - Unbroken Streamlines'
+                }
+                
+                title = variation_titles.get(variation_type, 'Vector Field Flow')
+                
+            else:
+                # Standard streamplot
+                flow_type = random.choice(['vortex', 'source', 'sink', 'saddle', 
+                                          'uniform', 'dipole', 'shear', 'wave'])
+                data = self.generate_streamplot_data(
+                    flow_type=flow_type,
+                    grid_size=random.choice([15, 20, 25])
+                )
+                
+                title_map = {
+                    'vortex': 'Vortex Flow Pattern',
+                    'source': 'Radial Source Flow',
+                    'sink': 'Radial Sink Flow',
+                    'saddle': 'Saddle Point Flow',
+                    'uniform': 'Uniform Flow Field',
+                    'dipole': 'Dipole Flow Pattern',
+                    'shear': 'Shear Flow',
+                    'wave': 'Wave Flow Pattern'
+                }
+                title = title_map.get(flow_type, 'Vector Field Flow')
+                data['color'] = 'velocity'  # Default color by velocity
+            
+            application_map = {
+                'vortex': 'Rotational Fluid Dynamics',
+                'source': 'Expansion/Divergence Field',
+                'sink': 'Compression/Convergence Field',
+                'saddle': 'Hyperbolic Flow',
+                'uniform': 'Laminar Flow',
+                'dipole': 'Combined Source-Sink',
+                'shear': 'Velocity Gradient',
+                'wave': 'Oscillating Field'
+            }
+            
+            return {
+                'chart_type': 'streamplot',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': 'X Position',
+                'ylabel': 'Y Position',
+                'metadata': {
+                    'generated': 'random',
+                    'flow_type': flow_type,
+                    'application': application_map.get(flow_type, 'Vector field'),
+                    'grid_size': len(data['x']),
+                    'variation': use_variation
                 }
             }
         

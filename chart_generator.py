@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -917,6 +917,283 @@ class ChartGenerator:
         # Set limits
         ax.set_ylim(-0.5, max(y_positions) + 1)
         ax.grid(True, alpha=0.3, axis='x')
+
+    def _create_heatmap_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create an annotated heatmap with values displayed in each cell.
+        
+        Data format:
+        {
+            'values': [
+                [23, 45, 12, 67],  # Row 1 values
+                [89, 34, 56, 23],  # Row 2 values
+                [45, 78, 90, 12]   # Row 3 values
+            ],
+            'row_labels': ['Product A', 'Product B', 'Product C'],
+            'col_labels': ['Q1', 'Q2', 'Q3', 'Q4'],
+            'annotations': None  # Optional: custom text for cells (defaults to values)
+        }
+        """
+        import numpy as np
+        
+        values = np.array(data.get('values', []))
+        row_labels = data.get('row_labels', [f'Row {i+1}' for i in range(len(values))])
+        col_labels = data.get('col_labels', [f'Col {i+1}' for i in range(len(values[0]))])
+        annotations = data.get('annotations', None)
+        
+        # Get colormap
+        cmap = kwargs.get('cmap', 'YlOrRd')
+        
+        # Create heatmap
+        im = ax.imshow(values, cmap=cmap, aspect='auto')
+        
+        # Add colorbar
+        cbar = plt.colorbar(im, ax=ax)
+        cbar.set_label('Value', rotation=270, labelpad=20, fontsize=11)
+        
+        # Set ticks and labels
+        ax.set_xticks(np.arange(len(col_labels)))
+        ax.set_yticks(np.arange(len(row_labels)))
+        ax.set_xticklabels(col_labels)
+        ax.set_yticklabels(row_labels)
+        
+        # Rotate x labels if needed
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
+        
+        # Add annotations in each cell
+        show_annotations = kwargs.get('show_annotations', True)
+        if show_annotations:
+            # Use provided annotations or values
+            annot_data = annotations if annotations is not None else values
+            
+            # Determine text color based on value (light text on dark cells, dark on light)
+            threshold = (values.max() + values.min()) / 2
+            
+            for i in range(len(row_labels)):
+                for j in range(len(col_labels)):
+                    # Choose text color based on cell brightness
+                    text_color = 'white' if values[i, j] > threshold else 'black'
+                    
+                    # Format annotation
+                    if isinstance(annot_data[i][j], (int, np.integer)):
+                        text = f'{annot_data[i][j]}'
+                    else:
+                        text = f'{annot_data[i][j]:.1f}'
+                    
+                    ax.text(j, i, text, 
+                           ha="center", va="center", 
+                           color=text_color, fontsize=10, fontweight='bold')
+        
+        # Set labels and title
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        ax.set_xlabel(xlabel, fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        
+        # Remove grid
+        ax.grid(False)
+        
+        # Add frame
+        for spine in ax.spines.values():
+            spine.set_visible(True)
+            spine.set_linewidth(1)
+
+    def _create_streamplot_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a streamplot showing vector field flow patterns.
+        Used for: fluid dynamics, wind patterns, electromagnetic fields, gradient flows.
+        
+        Data format:
+        {
+            'x': [0, 1, 2, 3, 4],           # X-axis grid coordinates
+            'y': [0, 1, 2, 3, 4],           # Y-axis grid coordinates
+            'u': [[...], [...], ...],       # X-component of velocity (2D array)
+            'v': [[...], [...], ...],       # Y-component of velocity (2D array)
+            'magnitude': [[...], [...]]     # Optional: flow magnitude for coloring
+            'mask': [[bool, ...], ...]      # Optional: mask array (True = hide)
+            'start_points': [[x, y], ...]   # Optional: custom starting points
+        }
+        
+        kwargs options:
+            density: float or (float, float) - streamline spacing
+            linewidth: float or 'variable' - line width
+            color: 'velocity', 'uniform', or hex color
+            arrowsize: float - arrow size multiplier
+            cmap: str - colormap name
+            broken_streamlines: bool - allow broken lines (default True)
+            start_points: array - manual starting positions
+            mask: array - mask region
+        """
+        import numpy as np
+        
+        # Check if we have explicit data or need to generate
+        if 'u' in data and 'v' in data:
+            # User provided explicit flow data
+            x = np.array(data.get('x', []))
+            y = np.array(data.get('y', []))
+            u = np.array(data.get('u', []))
+            v = np.array(data.get('v', []))
+            magnitude = data.get('magnitude', None)
+            mask = data.get('mask', None)
+            
+            # If x, y are 1D arrays, create meshgrid
+            if x.ndim == 1 and y.ndim == 1:
+                X, Y = np.meshgrid(x, y)
+            else:
+                X, Y = x, y
+        else:
+            # This shouldn't happen in normal use, but provide fallback
+            grid_size = data.get('grid_size', 20)
+            x = np.linspace(-2, 2, grid_size)
+            y = np.linspace(-2, 2, grid_size)
+            X, Y = np.meshgrid(x, y)
+            u = -Y  # Simple circular flow
+            v = X
+            magnitude = None
+            mask = None
+        
+        # Calculate magnitude if not provided (for coloring)
+        if magnitude is None:
+            magnitude = np.sqrt(u**2 + v**2)
+        else:
+            magnitude = np.array(magnitude)
+        
+        # Get streamplot parameters
+        density = kwargs.get('density', 1.5)
+        linewidth = kwargs.get('linewidth', 'variable')
+        color_scheme = kwargs.get('color', 'velocity')
+        arrowsize = kwargs.get('arrowsize', 1.2)
+        cmap = kwargs.get('cmap', 'viridis')
+        broken_streamlines = kwargs.get('broken_streamlines', True)
+        start_points = kwargs.get('start_points', data.get('start_points', None))
+        
+        # Apply mask if provided
+        if mask is not None:
+            mask = np.array(mask)
+            u = np.ma.array(u, mask=mask)
+            v = np.ma.array(v, mask=mask)
+        
+        # Determine line width
+        if linewidth == 'variable':
+            # Normalize linewidth based on magnitude
+            lw = 0.5 + 2.5 * magnitude / magnitude.max()
+        elif linewidth == 'uniform':
+            lw = 1.5
+        else:
+            lw = linewidth
+        
+        # Prepare streamplot kwargs
+        stream_kwargs = {
+            'density': density,
+            'arrowsize': arrowsize,
+            'arrowstyle': '->',
+        }
+        
+        # Add broken_streamlines parameter if matplotlib supports it
+        if not broken_streamlines:
+            stream_kwargs['broken_streamlines'] = False
+        
+        # Add starting points if provided
+        if start_points is not None:
+            stream_kwargs['start_points'] = np.array(start_points)
+        
+        # Create streamplot with appropriate coloring
+        if color_scheme == 'velocity':
+            # Color by velocity magnitude
+            strm = ax.streamplot(X, Y, u, v, 
+                                color=magnitude, 
+                                linewidth=lw,
+                                cmap=cmap,
+                                norm=plt.Normalize(vmin=magnitude.min(), vmax=magnitude.max()),
+                                **stream_kwargs)
+            
+            # Add colorbar
+            cbar = plt.colorbar(strm.lines, ax=ax)
+            cbar.set_label('Flow Speed', rotation=270, labelpad=20, fontsize=11)
+            
+        elif color_scheme == 'uniform':
+            # Single color
+            strm = ax.streamplot(X, Y, u, v,
+                                color='#1f77b4',
+                                linewidth=lw if isinstance(lw, (int, float)) else 1.5,
+                                **stream_kwargs)
+        elif color_scheme == 'field':
+            # Color by a different field (use magnitude as default)
+            field = data.get('color_field', magnitude)
+            strm = ax.streamplot(X, Y, u, v,
+                                color=field,
+                                linewidth=lw,
+                                cmap=cmap,
+                                **stream_kwargs)
+            cbar = plt.colorbar(strm.lines, ax=ax)
+            cbar.set_label('Field Value', rotation=270, labelpad=20, fontsize=11)
+        else:
+            # Custom color (hex or named)
+            strm = ax.streamplot(X, Y, u, v,
+                                color=color_scheme,
+                                linewidth=lw if isinstance(lw, (int, float)) else 1.5,
+                                **stream_kwargs)
+        
+        # Plot starting points if provided and requested
+        if start_points is not None and kwargs.get('show_start_points', False):
+            start_points = np.array(start_points)
+            ax.scatter(start_points[:, 0], start_points[:, 1], 
+                      s=100, c='blue', marker='o', zorder=10,
+                      edgecolors='white', linewidths=2)
+        
+        # Draw masked region as a visual obstacle if mask is provided
+        if mask is not None and kwargs.get('show_mask_region', True):
+            from matplotlib.patches import Rectangle, Circle
+            mask_shape = data.get('mask_shape', 'rectangle')
+            mask_color = kwargs.get('mask_color', 'gray')
+            
+            if mask_shape == 'circle':
+                mask_params = data.get('mask_params', {})
+                center_x = mask_params.get('x', 0)
+                center_y = mask_params.get('y', 0)
+                radius = mask_params.get('r', 1)
+                circle = Circle((center_x, center_y), radius, 
+                               facecolor=mask_color, edgecolor='black', 
+                               linewidth=2, alpha=0.7, zorder=5)
+                ax.add_patch(circle)
+            else:  # rectangle
+                mask_params = data.get('mask_params', {})
+                x_min = mask_params.get('x_min', -1)
+                x_max = mask_params.get('x_max', 1)
+                y_min = mask_params.get('y_min', -1)
+                y_max = mask_params.get('y_max', 1)
+                width = x_max - x_min
+                height = y_max - y_min
+                rect = Rectangle((x_min, y_min), width, height,
+                                facecolor=mask_color, edgecolor='black',
+                                linewidth=2, alpha=0.7, zorder=5)
+                ax.add_patch(rect)
+        
+        # Set labels and title
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel(xlabel, fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        
+        # Set equal aspect ratio for undistorted flow
+        ax.set_aspect('equal')
+        
+        # Add grid
+        ax.grid(True, alpha=0.3, linestyle='--')
 
     
     def batch_generate(

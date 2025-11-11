@@ -794,37 +794,6 @@ class RandomDataGenerator:
             'bins': bins
         }
     
-    def _generate_series(
-        self,
-        num_points: int,
-        value_range: tuple,
-        trend: str
-    ) -> List[float]:
-        """Generate a series of values with specified trend."""
-        min_val, max_val = value_range
-        
-        if trend == 'increasing':
-            base = list(range(num_points))
-            increment = (max_val - min_val) / num_points
-            values = [min_val + (i * increment) + random.randint(-5, 5) 
-                     for i in base]
-        elif trend == 'decreasing':
-            base = list(range(num_points))
-            decrement = (max_val - min_val) / num_points
-            values = [max_val - (i * decrement) + random.randint(-5, 5) 
-                     for i in base]
-        elif trend == 'fluctuating':
-            values = []
-            current = random.randint(min_val, max_val)
-            for _ in range(num_points):
-                change = random.randint(-15, 15)
-                current = max(min_val, min(max_val, current + change))
-                values.append(current)
-        else:  # random
-            values = [random.randint(min_val, max_val) for _ in range(num_points)]
-        
-        return [max(min_val, min(max_val, int(v))) for v in values]
-    
     def generate_cohere_data(
         self,
         signal_type: str = 'mixed',
@@ -932,6 +901,37 @@ class RandomDataGenerator:
             'NFFT': NFFT
         }
     
+    def _generate_series(
+        self,
+        num_points: int,
+        value_range: tuple,
+        trend: str
+    ) -> List[float]:
+        """Generate a series of values with specified trend."""
+        min_val, max_val = value_range
+        
+        if trend == 'increasing':
+            base = list(range(num_points))
+            increment = (max_val - min_val) / num_points
+            values = [min_val + (i * increment) + random.randint(-5, 5) 
+                     for i in base]
+        elif trend == 'decreasing':
+            base = list(range(num_points))
+            decrement = (max_val - min_val) / num_points
+            values = [max_val - (i * decrement) + random.randint(-5, 5) 
+                     for i in base]
+        elif trend == 'fluctuating':
+            values = []
+            current = random.randint(min_val, max_val)
+            for _ in range(num_points):
+                change = random.randint(-15, 15)
+                current = max(min_val, min(max_val, current + change))
+                values.append(current)
+        else:  # random
+            values = [random.randint(min_val, max_val) for _ in range(num_points)]
+        
+        return [max(min_val, min(max_val, int(v))) for v in values]
+    
     def generate_random_chart_spec(
         self,
         chart_type: Optional[str] = None,
@@ -947,7 +947,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -1346,11 +1346,18 @@ class RandomDataGenerator:
             Fs = random.choice([500, 1000, 2000])
             duration = random.choice([1.0, 2.0, 3.0])
             
+            # Ensure NFFT is valid for signal length
+            signal_length = int(Fs * duration)
+            # NFFT should be at most half the signal length to allow for proper windowing
+            max_nfft = signal_length // 2
+            valid_nffts = [n for n in [64, 128, 256, 512] if n <= max_nfft]
+            NFFT = random.choice(valid_nffts) if valid_nffts else 64
+            
             data = self.generate_cohere_data(
                 signal_type=signal_type,
                 duration=duration,
                 Fs=Fs,
-                NFFT=random.choice([128, 256, 512])
+                NFFT=NFFT
             )
             
             # Create descriptive title
@@ -1378,5 +1385,6 @@ class RandomDataGenerator:
                     'duration': duration,
                     'num_samples': len(data['x'])
                 }
-    }
+            }
+        
         return {}

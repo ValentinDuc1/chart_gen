@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -626,7 +626,7 @@ class ChartGenerator:
                    transform=ax.transAxes, ha='left', va='top',
                    bbox=dict(boxstyle='round', facecolor='white', alpha=0.8, edgecolor='gray'),
                    fontsize=9, family='monospace')
-    
+
     def _create_cohere_chart(
         self,
         ax,
@@ -675,7 +675,7 @@ class ChartGenerator:
         
         # Add horizontal line at coherence = 0.5 for reference
         ax.axhline(y=0.5, color='red', linestyle='--', linewidth=1, 
-                alpha=0.5, label='Coherence = 0.5')
+                   alpha=0.5, label='Coherence = 0.5')
         
         # Add statistics if requested
         if kwargs.get('show_stats', True):
@@ -684,16 +684,17 @@ class ChartGenerator:
             max_freq = freqs[np.argmax(Cxy)]
             
             stats_text = (f'Mean: {mean_coherence:.3f}\n'
-                        f'Max: {max_coherence:.3f}\n'
-                        f'Peak: {max_freq:.1f} Hz')
+                         f'Max: {max_coherence:.3f}\n'
+                         f'Peak: {max_freq:.1f} Hz')
             
             ax.text(0.98, 0.97, stats_text,
-                transform=ax.transAxes, ha='right', va='top',
-                bbox=dict(boxstyle='round', facecolor='white', 
+                   transform=ax.transAxes, ha='right', va='top',
+                   bbox=dict(boxstyle='round', facecolor='white', 
                             alpha=0.8, edgecolor='gray'),
-                fontsize=9, family='monospace')
+                   fontsize=9, family='monospace')
         
         ax.legend(loc='lower left', fontsize=9)
+
     
     def batch_generate(
         self,

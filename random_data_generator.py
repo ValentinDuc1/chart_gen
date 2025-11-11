@@ -825,6 +825,113 @@ class RandomDataGenerator:
         
         return [max(min_val, min(max_val, int(v))) for v in values]
     
+    def generate_cohere_data(
+        self,
+        signal_type: str = 'mixed',
+        duration: float = 1.0,
+        Fs: int = 1000,
+        NFFT: int = 256
+    ) -> Dict[str, Any]:
+        """
+        Generate two signals for coherence analysis.
+        
+        Args:
+            signal_type: Type of signal relationship
+                - 'perfectly_correlated': x and y are identical (coherence ≈ 1)
+                - 'highly_correlated': x and y share most frequency components
+                - 'partially_correlated': Some frequency bands are correlated
+                - 'frequency_dependent': Correlation varies by frequency
+                - 'uncorrelated': Independent noise signals (coherence ≈ 0)
+                - 'phase_shifted': Same frequencies, different phases
+                - 'mixed': Correlated signal + independent noise
+            duration: Signal duration in seconds (default: 1.0)
+            Fs: Sampling frequency in Hz (default: 1000)
+            NFFT: FFT length for coherence calculation (default: 256)
+            
+        Returns:
+            Dictionary with 'x', 'y', 'Fs', and 'NFFT' keys
+        """
+        import numpy as np
+        
+        # Generate time array
+        t = np.linspace(0, duration, int(Fs * duration))
+        
+        if signal_type == 'perfectly_correlated':
+            # Identical signals - perfect coherence
+            freqs = [10, 25, 50, 75]  # Hz
+            x = sum(np.sin(2 * np.pi * f * t) for f in freqs)
+            y = x.copy()
+            
+        elif signal_type == 'highly_correlated':
+            # Very similar signals with small noise
+            freqs = [10, 25, 50, 75]
+            x = sum(np.sin(2 * np.pi * f * t) for f in freqs)
+            y = x + 0.1 * np.random.randn(len(t))  # Add 10% noise
+            
+        elif signal_type == 'partially_correlated':
+            # Share some frequency components
+            common_freqs = [10, 30]
+            x_freqs = [10, 30, 60]
+            y_freqs = [10, 30, 80]
+            
+            x = sum(np.sin(2 * np.pi * f * t) for f in x_freqs)
+            y = sum(np.sin(2 * np.pi * f * t) for f in y_freqs)
+            
+        elif signal_type == 'frequency_dependent':
+            # Low frequencies correlated, high frequencies not
+            # Low frequency component (correlated)
+            low_freq = 15
+            x_low = np.sin(2 * np.pi * low_freq * t)
+            y_low = x_low.copy()
+            
+            # High frequency components (uncorrelated)
+            x_high = np.sin(2 * np.pi * 100 * t) + 0.5 * np.sin(2 * np.pi * 150 * t)
+            y_high = np.sin(2 * np.pi * 110 * t) + 0.5 * np.sin(2 * np.pi * 160 * t)
+            
+            x = x_low + 0.5 * x_high
+            y = y_low + 0.5 * y_high
+            
+        elif signal_type == 'uncorrelated':
+            # Pure random noise - no correlation
+            x = np.random.randn(len(t))
+            y = np.random.randn(len(t))
+            
+        elif signal_type == 'phase_shifted':
+            # Same frequencies, different phases
+            freqs = [15, 35, 65]
+            x = sum(np.sin(2 * np.pi * f * t) for f in freqs)
+            # Phase shift by 90 degrees (π/2)
+            y = sum(np.sin(2 * np.pi * f * t + np.pi/2) for f in freqs)
+            
+        elif signal_type == 'mixed':
+            # Correlated signal + independent noise
+            freqs = [20, 40, 60]
+            signal = sum(np.sin(2 * np.pi * f * t) for f in freqs)
+            
+            noise_level_x = 0.3
+            noise_level_y = 0.3
+            
+            x = signal + noise_level_x * np.random.randn(len(t))
+            y = signal + noise_level_y * np.random.randn(len(t))
+            
+        else:
+            # Default to mixed
+            freqs = [20, 40, 60]
+            signal = sum(np.sin(2 * np.pi * f * t) for f in freqs)
+            x = signal + 0.3 * np.random.randn(len(t))
+            y = signal + 0.3 * np.random.randn(len(t))
+        
+        # Normalize signals
+        x = x / np.max(np.abs(x))
+        y = y / np.max(np.abs(y))
+        
+        return {
+            'x': x.tolist(),
+            'y': y.tolist(),
+            'Fs': Fs,
+            'NFFT': NFFT
+        }
+    
     def generate_random_chart_spec(
         self,
         chart_type: Optional[str] = None,
@@ -1229,4 +1336,47 @@ class RandomDataGenerator:
                 }
             }
         
+        elif chart_type == 'cohere':
+            # Generate coherence data
+            signal_type = random.choice([
+                'mixed', 'highly_correlated', 'partially_correlated',
+                'frequency_dependent', 'phase_shifted'
+            ])
+            
+            Fs = random.choice([500, 1000, 2000])
+            duration = random.choice([1.0, 2.0, 3.0])
+            
+            data = self.generate_cohere_data(
+                signal_type=signal_type,
+                duration=duration,
+                Fs=Fs,
+                NFFT=random.choice([128, 256, 512])
+            )
+            
+            # Create descriptive title
+            signal_names = {
+                'perfectly_correlated': 'Perfect Correlation',
+                'highly_correlated': 'High Correlation',
+                'partially_correlated': 'Partial Correlation',
+                'frequency_dependent': 'Frequency-Dependent Correlation',
+                'uncorrelated': 'No Correlation',
+                'phase_shifted': 'Phase-Shifted Signals',
+                'mixed': 'Correlated Signal with Noise'
+            }
+            
+            return {
+                'chart_type': 'cohere',
+                'data': data,
+                'filename_root': filename_root,
+                'title': f'Signal Coherence: {signal_names.get(signal_type, "Analysis")}',
+                'xlabel': 'Frequency (Hz)',
+                'ylabel': 'Coherence',
+                'metadata': {
+                    'generated': 'random',
+                    'signal_type': signal_type,
+                    'sampling_rate': Fs,
+                    'duration': duration,
+                    'num_samples': len(data['x'])
+                }
+    }
         return {}

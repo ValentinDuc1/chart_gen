@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -45,7 +45,7 @@ class ChartGenerator:
         Generate a chart and save both PNG and JSON files.
         
         Args:
-            chart_type: Type of chart ('line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d')
+            chart_type: Type of chart ('line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair')
             data: Chart data dictionary (format depends on chart_type)
             filename_root: Base filename without extension
             title: Chart title
@@ -53,9 +53,17 @@ class ChartGenerator:
             ylabel: Y-axis label
             metadata: Additional metadata to include in JSON
             **kwargs: Additional arguments passed to the chart function
+                - auto_generate_signal_pair: (bool, default=True) For 'cohere' charts, 
+                  automatically generate a companion signal_pair chart
+                - Other kwargs are chart-specific
             
         Returns:
             Tuple of (png_path, json_path)
+            
+        Note:
+            When chart_type='cohere', a companion signal_pair chart is automatically
+            generated with filename '{filename_root}_signals' unless 
+            auto_generate_signal_pair=False is specified.
         """
         if chart_type not in self.SUPPORTED_CHART_TYPES:
             raise ValueError(f"Unsupported chart type: {chart_type}. "
@@ -91,6 +99,31 @@ class ChartGenerator:
         json_path = self.output_dir / f"{filename_root}.json"
         with open(json_path, 'w') as f:
             json.dump(json_data, f, indent=2)
+        
+        # Auto-generate companion signal_pair chart for coherence
+        if chart_type == 'cohere' and kwargs.get('auto_generate_signal_pair', True):
+            # Generate companion signal pair chart
+            signal_pair_filename = f"{filename_root}_signals"
+            signal_pair_title = title.replace('Coherence', 'Signals').replace('coherence', 'signals')
+            if signal_pair_title == title:  # If no replacement happened
+                signal_pair_title = f"Time Domain: {title}"
+            
+            try:
+                companion_png, companion_json = self.generate_chart(
+                    chart_type='signal_pair',
+                    data=data,
+                    filename_root=signal_pair_filename,
+                    title=signal_pair_title,
+                    xlabel='Time (seconds)',
+                    ylabel='Amplitude',
+                    metadata=metadata,
+                    auto_generate_signal_pair=False,  # Prevent recursion
+                    **{k: v for k, v in kwargs.items() if k != 'auto_generate_signal_pair'}
+                )
+                print(f"  ✓ Auto-generated companion signal pair: {signal_pair_filename}.png")
+            except Exception as e:
+                # Don't fail the main chart if signal pair generation fails
+                print(f"  ⚠ Could not auto-generate signal pair chart: {e}")
         
         return str(png_path), str(json_path)
     
@@ -694,6 +727,90 @@ class ChartGenerator:
                    fontsize=9, family='monospace')
         
         ax.legend(loc='lower left', fontsize=9)
+
+    def _create_signal_pair_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a dual plot showing two time-domain signals (typically used with coherence data).
+        Perfect for: Visualizing signal pairs, comparing waveforms, time-series comparison
+        
+        Data format:
+        {
+            'x': [0.1, 0.2, 0.3, ...],      # First signal (time series)
+            'y': [0.15, 0.25, 0.32, ...],   # Second signal (time series)
+            'Fs': 1000,                      # Sampling frequency (optional, default: 1)
+            'labels': ['Signal X', 'Signal Y']  # Optional custom labels
+        }
+        """
+        import numpy as np
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        Fs = data.get('Fs', kwargs.get('Fs', 1))
+        labels = data.get('labels', kwargs.get('labels', ['Signal X', 'Signal Y']))
+        
+        # Create time array
+        duration = len(x) / Fs
+        t = np.linspace(0, duration, len(x))
+        
+        # Determine plot style
+        plot_style = kwargs.get('plot_style', 'stacked')  # 'stacked' or 'overlaid'
+        
+        if plot_style == 'overlaid':
+            # Plot both signals on the same axes
+            ax.plot(t, x, 'b-', linewidth=1.5, alpha=0.7, label=labels[0])
+            ax.plot(t, y, 'r-', linewidth=1.5, alpha=0.7, label=labels[1])
+            
+            ax.set_title(title, fontsize=14, fontweight='bold')
+            ax.set_xlabel(xlabel or 'Time (seconds)', fontsize=12, fontweight='bold')
+            ax.set_ylabel(ylabel or 'Amplitude', fontsize=12, fontweight='bold')
+            ax.grid(True, alpha=0.3)
+            ax.legend(loc='best', fontsize=10)
+            
+            # Add correlation coefficient
+            if len(x) > 1 and len(y) > 1:
+                corr = np.corrcoef(x, y)[0, 1]
+                ax.text(0.02, 0.98, f'Correlation: {corr:.3f}',
+                       transform=ax.transAxes, ha='left', va='top',
+                       bbox=dict(boxstyle='round', facecolor='white', alpha=0.8),
+                       fontsize=9, family='monospace')
+        else:
+            # This is a special case - we need to create subplots
+            # Since we only have one ax, we'll plot them overlaid with different y-scales
+            # But note this in the kwargs handling
+            
+            ax1 = ax
+            ax2 = ax.twinx()
+            
+            color1 = 'tab:blue'
+            color2 = 'tab:red'
+            
+            ax1.plot(t, x, color=color1, linewidth=1.5, alpha=0.8, label=labels[0])
+            ax1.set_xlabel(xlabel or 'Time (seconds)', fontsize=12, fontweight='bold')
+            ax1.set_ylabel(labels[0], fontsize=11, fontweight='bold', color=color1)
+            ax1.tick_params(axis='y', labelcolor=color1)
+            ax1.grid(True, alpha=0.3)
+            
+            ax2.plot(t, y, color=color2, linewidth=1.5, alpha=0.8, label=labels[1])
+            ax2.set_ylabel(labels[1], fontsize=11, fontweight='bold', color=color2)
+            ax2.tick_params(axis='y', labelcolor=color2)
+            
+            ax1.set_title(title, fontsize=14, fontweight='bold', pad=20)
+            
+            # Add statistics
+            stats_text = (f'{labels[0]}: μ={np.mean(x):.2f}, σ={np.std(x):.2f}\n'
+                         f'{labels[1]}: μ={np.mean(y):.2f}, σ={np.std(y):.2f}')
+            ax1.text(0.02, 0.98, stats_text,
+                    transform=ax1.transAxes, ha='left', va='top',
+                    bbox=dict(boxstyle='round', facecolor='white', alpha=0.8),
+                    fontsize=8, family='monospace')
 
     
     def batch_generate(

@@ -947,7 +947,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -1378,6 +1378,59 @@ class RandomDataGenerator:
                 'title': f'Signal Coherence: {signal_names.get(signal_type, "Analysis")}',
                 'xlabel': 'Frequency (Hz)',
                 'ylabel': 'Coherence',
+                'metadata': {
+                    'generated': 'random',
+                    'signal_type': signal_type,
+                    'sampling_rate': Fs,
+                    'duration': duration,
+                    'num_samples': len(data['x'])
+                }
+            }
+        
+        elif chart_type == 'signal_pair':
+            # Generate signal pair data (reuse cohere data generation)
+            signal_type = random.choice([
+                'mixed', 'highly_correlated', 'partially_correlated',
+                'frequency_dependent', 'phase_shifted'
+            ])
+            
+            Fs = random.choice([500, 1000, 2000])
+            duration = random.choice([0.5, 1.0, 2.0])
+            
+            # Ensure NFFT is valid for signal length
+            signal_length = int(Fs * duration)
+            max_nfft = signal_length // 2
+            valid_nffts = [n for n in [64, 128, 256, 512] if n <= max_nfft]
+            NFFT = random.choice(valid_nffts) if valid_nffts else 64
+            
+            data = self.generate_cohere_data(
+                signal_type=signal_type,
+                duration=duration,
+                Fs=Fs,
+                NFFT=NFFT
+            )
+            
+            # Add custom labels
+            data['labels'] = ['Signal X', 'Signal Y']
+            
+            # Create descriptive title
+            signal_names = {
+                'perfectly_correlated': 'Perfectly Correlated',
+                'highly_correlated': 'Highly Correlated',
+                'partially_correlated': 'Partially Correlated',
+                'frequency_dependent': 'Frequency-Dependent Correlation',
+                'uncorrelated': 'Uncorrelated',
+                'phase_shifted': 'Phase-Shifted',
+                'mixed': 'Mixed (Signal + Noise)'
+            }
+            
+            return {
+                'chart_type': 'signal_pair',
+                'data': data,
+                'filename_root': filename_root,
+                'title': f'Signal Pair: {signal_names.get(signal_type, "Comparison")}',
+                'xlabel': 'Time (seconds)',
+                'ylabel': 'Amplitude',
                 'metadata': {
                     'generated': 'random',
                     'signal_type': signal_type,

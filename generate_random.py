@@ -43,7 +43,7 @@ Examples:
     parser.add_argument(
         '-t', '--types',
         nargs='+',
-        choices=['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere'],
+        choices=['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair'],
         help='Specific chart types to generate (random if not specified)'
     )
     
@@ -84,7 +84,7 @@ Examples:
     
     # Determine which charts to generate
     if args.one_of_each:
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair']
         print(f"Generating one chart of each type...")
     elif args.types:
         chart_types = args.types * ((args.num // len(args.types)) + 1)
@@ -115,6 +115,11 @@ Examples:
         print(f"✓ Chart {i}/{len(chart_types)}: {spec['chart_type'].upper()}")
         print(f"  Title: {spec['title']}")
         print(f"  Files: {filename_root}.png / {filename_root}.json")
+        
+        # Note if signal_pair was auto-generated
+        if spec['chart_type'] == 'cohere':
+            print(f"  + Auto-generated: {filename_root}_signals.png / {filename_root}_signals.json")
+        
         print()
     
     # Summary

@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -811,6 +811,112 @@ class ChartGenerator:
                     transform=ax1.transAxes, ha='left', va='top',
                     bbox=dict(boxstyle='round', facecolor='white', alpha=0.8),
                     fontsize=8, family='monospace')
+
+    def _create_timeline_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a timeline chart with dates and event text.
+        
+        Data format:
+        {
+            'dates': ['2024-01', '2024-03', '2024-06', '2024-09'],
+            'events': ['Event 1', 'Event 2', 'Event 3', 'Event 4'],
+            'categories': ['Type A', 'Type B', 'Type A', 'Type C']  # Optional
+        }
+        """
+        import matplotlib.dates as mdates
+        from datetime import datetime
+        
+        dates = data.get('dates', [])
+        events = data.get('events', [])
+        categories = data.get('categories', None)
+        
+        # Convert dates to datetime objects
+        date_objects = []
+        for d in dates:
+            if isinstance(d, str):
+                # Try different date formats
+                for fmt in ['%Y-%m-%d', '%Y-%m', '%Y', '%m/%d/%Y', '%d/%m/%Y']:
+                    try:
+                        date_objects.append(datetime.strptime(d, fmt))
+                        break
+                    except ValueError:
+                        continue
+            else:
+                date_objects.append(d)
+        
+        # Assign y-positions based on categories or alternate
+        if categories:
+            unique_cats = list(set(categories))
+            cat_to_y = {cat: i for i, cat in enumerate(unique_cats)}
+            y_positions = [cat_to_y[cat] for cat in categories]
+            y_labels = unique_cats
+        else:
+            # Alternate positions for better readability
+            y_positions = [i % 3 for i in range(len(dates))]
+            y_labels = None
+        
+        # Get colors
+        colors = kwargs.get('colors', None)
+        if not colors:
+            default_colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8']
+            if categories:
+                unique_cats = list(set(categories))
+                cat_colors = {cat: default_colors[i % len(default_colors)] 
+                            for i, cat in enumerate(unique_cats)}
+                colors = [cat_colors[cat] for cat in categories]
+            else:
+                colors = [default_colors[i % len(default_colors)] for i in range(len(dates))]
+        
+        # Plot timeline
+        ax.scatter(date_objects, y_positions, s=200, c=colors, 
+                  alpha=0.8, edgecolors='black', linewidth=2, zorder=3)
+        
+        # Add event text
+        for i, (date, event, y_pos) in enumerate(zip(date_objects, events, y_positions)):
+            # Position text above or below point
+            text_y = y_pos + 0.3 if i % 2 == 0 else y_pos - 0.3
+            va = 'bottom' if i % 2 == 0 else 'top'
+            
+            ax.text(date, text_y, event, 
+                   ha='center', va=va, fontsize=9,
+                   bbox=dict(boxstyle='round,pad=0.5', facecolor='white', 
+                           edgecolor='gray', alpha=0.8))
+        
+        # Draw horizontal line
+        if y_labels:
+            for y in range(len(y_labels)):
+                ax.axhline(y=y, color='gray', linestyle='--', linewidth=1, alpha=0.3, zorder=1)
+        else:
+            ax.axhline(y=1, color='gray', linestyle='-', linewidth=2, alpha=0.5, zorder=1)
+        
+        # Format x-axis
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m'))
+        ax.xaxis.set_major_locator(mdates.AutoDateLocator())
+        plt.setp(ax.xaxis.get_majorticklabels(), rotation=45, ha='right')
+        
+        # Set labels
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.set_xlabel(xlabel or 'Date', fontsize=12)
+        
+        if y_labels:
+            ax.set_yticks(range(len(y_labels)))
+            ax.set_yticklabels(y_labels)
+            ax.set_ylabel(ylabel or 'Category', fontsize=12)
+        else:
+            ax.set_yticks([])
+            ax.set_ylabel('')
+        
+        # Set limits
+        ax.set_ylim(-0.5, max(y_positions) + 1)
+        ax.grid(True, alpha=0.3, axis='x')
 
     
     def batch_generate(

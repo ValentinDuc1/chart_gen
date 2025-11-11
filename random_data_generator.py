@@ -932,6 +932,87 @@ class RandomDataGenerator:
         
         return [max(min_val, min(max_val, int(v))) for v in values]
     
+    def generate_timeline_data(
+        self,
+        num_events: int = None,
+        date_range: tuple = ('2024-01', '2024-12'),
+        event_type: str = 'project',
+        use_categories: bool = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for timeline charts.
+        
+        Args:
+            num_events: Number of events (default: random 4-8)
+            date_range: Tuple of (start_date, end_date) as strings
+            event_type: Type of events ('project', 'product', 'company', 'custom')
+            use_categories: Whether to categorize events (random if None)
+            
+        Returns:
+            Dictionary with 'dates', 'events', and optionally 'categories' keys
+        """
+        from datetime import datetime, timedelta
+        
+        count = num_events if num_events else random.randint(4, 8)
+        
+        # Parse date range
+        start_str, end_str = date_range
+        start_date = datetime.strptime(start_str, '%Y-%m')
+        end_date = datetime.strptime(end_str, '%Y-%m')
+        
+        # Generate random dates
+        date_diff = (end_date - start_date).days
+        dates = []
+        for _ in range(count):
+            random_days = random.randint(0, date_diff)
+            event_date = start_date + timedelta(days=random_days)
+            dates.append(event_date.strftime('%Y-%m-%d'))
+        
+        # Sort dates
+        dates.sort()
+        
+        # Generate events based on type
+        if event_type == 'project':
+            event_templates = [
+                'Project Kickoff', 'Design Review', 'Development Phase',
+                'Testing Complete', 'Beta Release', 'Production Launch',
+                'Milestone Achieved', 'Phase Completion', 'Deadline Extended'
+            ]
+        elif event_type == 'product':
+            event_templates = [
+                'Product Launch', 'Feature Release', 'Update v2.0',
+                'Bug Fix Release', 'Major Update', 'Beta Testing',
+                'Market Expansion', 'Partnership Announced', 'Rebranding'
+            ]
+        elif event_type == 'company':
+            event_templates = [
+                'Company Founded', 'Series A Funding', 'New Office Opened',
+                'CEO Appointed', 'Acquisition Completed', 'IPO Announced',
+                'Team Expansion', 'Award Received', 'Strategic Partnership'
+            ]
+        else:  # custom
+            event_templates = [
+                'Event 1', 'Event 2', 'Event 3', 'Event 4',
+                'Milestone A', 'Milestone B', 'Milestone C', 'Milestone D'
+            ]
+        
+        events = random.sample(event_templates, min(count, len(event_templates)))
+        if len(events) < count:
+            events.extend([f'Event {i+1}' for i in range(len(events), count)])
+        
+        result = {'dates': dates, 'events': events}
+        
+        # Add categories if requested
+        if use_categories is None:
+            use_categories = random.choice([True, False])
+        
+        if use_categories:
+            category_types = ['Planning', 'Development', 'Testing', 'Release', 'Marketing']
+            categories = [random.choice(category_types) for _ in range(count)]
+            result['categories'] = categories
+        
+        return result
+    
     def generate_random_chart_spec(
         self,
         chart_type: Optional[str] = None,
@@ -947,7 +1028,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -1437,6 +1518,34 @@ class RandomDataGenerator:
                     'sampling_rate': Fs,
                     'duration': duration,
                     'num_samples': len(data['x'])
+                }
+            }
+        
+        elif chart_type == 'timeline':
+            event_type = random.choice(['project', 'product', 'company'])
+            data = self.generate_timeline_data(
+                num_events=random.randint(5, 10),
+                date_range=('2024-01', '2024-12'),
+                event_type=event_type
+            )
+            
+            title_map = {
+                'project': 'Project Timeline',
+                'product': 'Product Development Timeline',
+                'company': 'Company Milestones'
+            }
+            
+            return {
+                'chart_type': 'timeline',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(event_type, 'Event Timeline'),
+                'xlabel': 'Date',
+                'ylabel': 'Events',
+                'metadata': {
+                    'generated': 'random',
+                    'num_events': len(data['dates']),
+                    'event_type': event_type
                 }
             }
         

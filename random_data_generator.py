@@ -1328,11 +1328,11 @@ class RandomDataGenerator:
             filename_root = f"{chart_type}_chart_{random_id}"
         
         if chart_type == 'line':
-            num_series = random.choice([1, 1, 1, 2, 3])  # Bias toward single series
+            num_series = random.choice([1, 1, 2, 3, 4])  # Bias toward single series
             data = self.generate_line_data(
                 num_series=num_series,
                 x_type=random.choice(['months', 'quarters', 'numeric']),
-                trend=random.choice(['random', 'increasing', 'fluctuating'])
+                trend=random.choice(['random', 'increasing', 'fluctuating', 'decreasing'])
             )
             return {
                 'chart_type': 'line',
@@ -1814,8 +1814,8 @@ class RandomDataGenerator:
         elif chart_type == 'timeline':
             event_type = random.choice(['project', 'product', 'company'])
             data = self.generate_timeline_data(
-                num_events=random.randint(5, 10),
-                date_range=('2024-01', '2024-12'),
+                num_events=random.randint(5, 20),
+                date_range=random.randint('2000-01', '2024-12'),
                 event_type=event_type
             )
             
@@ -1858,6 +1858,8 @@ class RandomDataGenerator:
                 row_type = 'Department'
             elif row_label in self.MONTHS:
                 row_type = 'Monthly'
+            elif row_label in self.SCORE_LABELS:
+                row_type = 'Score'
             else:
                 row_type = 'Category'
             
@@ -1869,6 +1871,10 @@ class RandomDataGenerator:
                 col_type = 'Regional'
             elif col_label in self.YEARS:
                 col_type = 'Annual'
+            elif col_label in self.PRODUCTS:
+                col_type = 'Product'
+            elif col_label in self.DEPARTMENTS:
+                col_type = 'Department'
             else:
                 col_type = 'Period'
             
@@ -1877,8 +1883,8 @@ class RandomDataGenerator:
                 'data': data,
                 'filename_root': filename_root,
                 'title': f'{row_type} Performance by {col_type} Period',
-                'xlabel': 'Time Period',
-                'ylabel': 'Category',
+                'xlabel': col_type,
+                'ylabel': row_type,
                 'metadata': {
                     'generated': 'random',
                     'dimensions': f'{len(data["row_labels"])}x{len(data["col_labels"])}'
@@ -1887,7 +1893,7 @@ class RandomDataGenerator:
         
         elif chart_type == 'streamplot':
             # Generate streamplot with random flow pattern
-            use_variation = random.choice([True, False, False])  # 33% chance of variation
+            use_variation = random.choice([True, True, False])  # 66% chance of variation
             
             if use_variation:
                 variation_type = random.choice([

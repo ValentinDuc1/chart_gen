@@ -76,11 +76,12 @@ class RandomDataGenerator:
             y = self._generate_series(actual_num_points, y_range, trend)
             return {'x': x, 'y': y}
         else:
-            labels = random.sample(self.PRODUCTS, min(num_series, len(self.PRODUCTS)))
             y_series = []
+            labels = []
             for i in range(num_series):
                 series_data = self._generate_series(actual_num_points, y_range, trend)
                 y_series.append(series_data)
+                labels.append(random.choice(self.PRODUCTS))
             return {'x': x, 'y': y_series, 'labels': labels}
     
     def generate_bar_data(
@@ -449,17 +450,19 @@ class RandomDataGenerator:
         area_type: str = 'single',
         x_type: str = 'months',
         y_range: tuple = (10, 100),
-        num_series: int = 2
+        num_series: int = 2,
+        step: bool = False
     ) -> Dict[str, Any]:
         """
         Generate data for area charts (fill_between).
         
         Args:
             num_points: Number of data points (auto-determined if None)
-            area_type: 'single', 'range', or 'stacked'
+            area_type: 'single', 'range', 'stacked', 'stacked_100', 'overlapping', 'step'
             x_type: Type of x-axis ('months', 'quarters', 'numeric', 'years')
             y_range: Range for y values (min, max)
-            num_series: Number of series for stacked areas
+            num_series: Number of series for multi-series areas
+            step: Create step transitions (for step area)
             
         Returns:
             Dictionary with appropriate keys for area chart type
@@ -483,7 +486,10 @@ class RandomDataGenerator:
         if area_type == 'single':
             # Single area from 0 to y
             y = self._generate_series(actual_num_points, y_range, 'fluctuating')
-            return {'x': x, 'y': y}
+            result = {'x': x, 'y': y}
+            if step:
+                result['step'] = True
+            return result
             
         elif area_type == 'range':
             # Range/band chart with y1 and y2
@@ -499,21 +505,47 @@ class RandomDataGenerator:
             y1 = [max(y_range[0], m - random.randint(5, 15)) for m in middle]
             y2 = [min(y_range[1], m + random.randint(5, 15)) for m in middle]
             
-            return {'x': x, 'y1': y1, 'y2': y2}
+            result = {'x': x, 'y1': y1, 'y2': y2}
+            if step:
+                result['step'] = True
+            return result
             
-        else:  # stacked
-            # Multiple stacked areas
+        elif area_type in ['stacked', 'stacked_100', 'overlapping']:
+            # Multiple areas
             areas = []
+            labels = random.sample(self.PRODUCTS, min(num_series, len(self.PRODUCTS)))
+            
             for i in range(num_series):
                 # Generate smaller values for stacking
                 adjusted_range = (y_range[0] // num_series, y_range[1] // num_series)
                 y = self._generate_series(actual_num_points, adjusted_range, 'fluctuating')
                 areas.append({
                     'y': y,
-                    'label': random.choice(self.PRODUCTS) if i < len(self.PRODUCTS) else f'Series {i+1}'
+                    'label': labels[i] if i < len(labels) else f'Series {i+1}'
                 })
             
-            return {'x': x, 'areas': areas}
+            result = {'x': x, 'areas': areas, 'area_type': area_type}
+            if step:
+                result['step'] = True
+            return result
+            
+        else:  # Fallback to stacked
+            # Multiple stacked areas
+            areas = []
+            labels = random.sample(self.PRODUCTS, min(num_series, len(self.PRODUCTS)))
+            
+            for i in range(num_series):
+                adjusted_range = (y_range[0] // num_series, y_range[1] // num_series)
+                y = self._generate_series(actual_num_points, adjusted_range, 'fluctuating')
+                areas.append({
+                    'y': y,
+                    'label': labels[i] if i < len(labels) else f'Series {i+1}'
+                })
+            
+            result = {'x': x, 'areas': areas, 'area_type': 'stacked'}
+            if step:
+                result['step'] = True
+            return result
     
     def generate_discrete_distribution_data(
         self,
@@ -1582,9 +1614,10 @@ class RandomDataGenerator:
             }
         
         elif chart_type == 'area':
-            # Generate area chart data
-            area_type = random.choice(['single', 'range', 'stacked'])
+            # Generate area chart data - exclude 'single' type
+            area_type = random.choice(['range', 'stacked', 'stacked_100', 'overlapping'])
             x_type = random.choice(['months', 'quarters', 'numeric'])
+            use_step = random.choice([True, False, False])  # 33% chance of step
             
             if area_type == 'stacked':
                 num_series = random.choice([2, 3])
@@ -1592,26 +1625,45 @@ class RandomDataGenerator:
                     area_type='stacked',
                     x_type=x_type,
                     num_series=num_series,
-                    y_range=(20, 80)
+                    y_range=(20, 80),
+                    step=use_step
                 )
                 title = 'Stacked Performance Over Time'
                 ylabel = random.choice(['Total Value', 'Combined Sales ($K)', 'Cumulative Score'])
+                
+            elif area_type == 'stacked_100':
+                num_series = random.choice([2, 3, 4])
+                data = self.generate_area_data(
+                    area_type='stacked_100',
+                    x_type=x_type,
+                    num_series=num_series,
+                    y_range=(20, 80),
+                    step=use_step
+                )
+                title = 'Percentage Breakdown Over Time'
+                ylabel = 'Percentage (%)'
+                
+            elif area_type == 'overlapping':
+                num_series = random.choice([2, 3])
+                data = self.generate_area_data(
+                    area_type='overlapping',
+                    x_type=x_type,
+                    num_series=num_series,
+                    y_range=(30, 120),
+                    step=use_step
+                )
+                title = random.choice(['Performance Comparison', 'Overlapping Trends', 'Multi-Series Analysis'])
+                ylabel = random.choice(['Value', 'Sales ($K)', 'Performance Score'])
+                
             elif area_type == 'range':
                 data = self.generate_area_data(
                     area_type='range',
                     x_type=x_type,
-                    y_range=(30, 100)
+                    y_range=(30, 100),
+                    step=use_step
                 )
                 title = random.choice(['Performance Range', 'Confidence Interval', 'Value Range Over Time'])
                 ylabel = random.choice(['Value', 'Sales ($K)', 'Performance Score', 'Metric'])
-            else:  # single
-                data = self.generate_area_data(
-                    area_type='single',
-                    x_type=x_type,
-                    y_range=(30, 120)
-                )
-                title = random.choice(['Cumulative Performance', 'Growth Over Time', 'Trend Analysis'])
-                ylabel = random.choice(['Value', 'Sales ($K)', 'Revenue', 'Performance'])
             
             # Determine xlabel based on x_type
             if x_type == 'months':
@@ -1633,7 +1685,8 @@ class RandomDataGenerator:
                 'metadata': {
                     'generated': 'random',
                     'area_type': area_type,
-                    'num_points': len(data.get('x', []))
+                    'num_points': len(data.get('x', [])),
+                    'step': use_step
                 }
             }
         

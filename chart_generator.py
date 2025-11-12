@@ -551,13 +551,19 @@ class ChartGenerator:
             'y1': [10, 12, 11, 14, 16],  # Lower bound
             'y2': [15, 18, 16, 20, 22]   # Upper bound
             
-            # OR for multiple areas (stacked):
+            # OR for multiple areas (stacked, stacked_100, overlapping):
             'areas': [
                 {'y': [10, 15, 13, 17, 20], 'label': 'Series 1'},
                 {'y': [5, 8, 7, 9, 11], 'label': 'Series 2'}
-            ]
+            ],
+            'area_type': 'stacked' | 'stacked_100' | 'overlapping'
+            
+            # OR for step area:
+            'y': [10, 15, 13, 17, 20],
+            'step': True  # Creates step transitions
         }
         """
+        import numpy as np
         x = data.get('x', [])
         
         colors = kwargs.get('colors', None)
@@ -565,22 +571,71 @@ class ChartGenerator:
             colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', 
                      '#FFD93D', '#6BCB77', '#C56CF0', '#17C0EB', '#F8B739']
         
+        # Determine if step mode
+        is_step = data.get('step', False)
+        step_where = 'post' if is_step else None
+        
         # Check which type of area chart
         if 'areas' in data:
-            # Multiple stacked areas
             areas = data['areas']
-            for i, area in enumerate(areas):
-                y = area['y']
-                label = area.get('label', f'Series {i+1}')
-                ax.fill_between(x, y, alpha=0.7, color=colors[i % len(colors)], label=label)
-                ax.plot(x, y, color=colors[i % len(colors)], linewidth=2)
-            ax.legend(loc='best', fontsize=10)
+            area_type = data.get('area_type', 'stacked')  # Default to stacked
+            
+            if area_type == 'stacked':
+                # Traditional stacked areas
+                for i, area in enumerate(areas):
+                    y = area['y']
+                    label = area.get('label', f'Series {i+1}')
+                    ax.fill_between(x, y, alpha=0.7, color=colors[i % len(colors)], 
+                                   label=label, step=step_where)
+                    ax.plot(x, y, color=colors[i % len(colors)], linewidth=2)
+                ax.legend(loc='best', fontsize=10)
+                
+            elif area_type == 'stacked_100':
+                # 100% stacked - normalize to percentages
+                # Convert to numpy arrays
+                y_arrays = [np.array(area['y']) for area in areas]
+                
+                # Calculate total at each x point
+                totals = np.zeros(len(x))
+                for y_arr in y_arrays:
+                    totals += y_arr
+                
+                # Calculate percentages
+                percentages = []
+                for y_arr in y_arrays:
+                    pct = (y_arr / totals) * 100
+                    percentages.append(pct)
+                
+                # Plot stacked from bottom to top
+                bottom = np.zeros(len(x))
+                for i, (pct, area) in enumerate(zip(percentages, areas)):
+                    label = area.get('label', f'Series {i+1}')
+                    ax.fill_between(x, bottom, bottom + pct, alpha=0.7, 
+                                   color=colors[i % len(colors)], label=label,
+                                   step=step_where)
+                    ax.plot(x, bottom + pct, color=colors[i % len(colors)], linewidth=1.5)
+                    bottom += pct
+                
+                ax.set_ylim(0, 100)
+                ax.set_ylabel('Percentage (%)', fontsize=12)
+                ax.legend(loc='best', fontsize=10)
+                
+            elif area_type == 'overlapping':
+                # Overlapping areas with transparency
+                for i, area in enumerate(areas):
+                    y = area['y']
+                    label = area.get('label', f'Series {i+1}')
+                    ax.fill_between(x, 0, y, alpha=0.4, color=colors[i % len(colors)], 
+                                   label=label, step=step_where)
+                    ax.plot(x, y, color=colors[i % len(colors)], linewidth=2.5)
+                ax.legend(loc='best', fontsize=10)
             
         elif 'y1' in data and 'y2' in data:
             # Range/band chart (between y1 and y2)
             y1 = data['y1']
             y2 = data['y2']
-            ax.fill_between(x, y1, y2, alpha=0.3, color=colors[0], label='Range')
+            ax.fill_between(x, y1, y2, alpha=0.3, color=colors[0], label='Range',
+                           step=step_where)
             ax.plot(x, y1, color=colors[0], linewidth=2, linestyle='--', label='Lower Bound')
             ax.plot(x, y2, color=colors[1], linewidth=2, linestyle='--', label='Upper Bound')
             # Calculate and plot average
@@ -591,16 +646,18 @@ class ChartGenerator:
         else:
             # Single area (from 0 to y)
             y = data.get('y', [])
-            ax.fill_between(x, 0, y, alpha=0.6, color=colors[0])
+            ax.fill_between(x, 0, y, alpha=0.6, color=colors[0], step=step_where)
             ax.plot(x, y, color=colors[0], linewidth=2.5)
         
         ax.set_title(title, fontsize=14, fontweight='bold')
         ax.set_xlabel(xlabel, fontsize=12)
-        ax.set_ylabel(ylabel, fontsize=12)
+        if 'y1' not in data:  # Don't override ylabel for stacked_100
+            ax.set_ylabel(ylabel, fontsize=12)
         ax.grid(True, alpha=0.3)
         
-        # Start y-axis at 0 for better visualization
-        ax.set_ylim(bottom=0)
+        # Start y-axis at 0 for better visualization (except stacked_100)
+        if data.get('area_type') != 'stacked_100':
+            ax.set_ylim(bottom=0)
     
     def _create_hist2d_chart(
         self,

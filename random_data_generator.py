@@ -37,7 +37,7 @@ class RandomDataGenerator:
     def generate_line_data(
         self,
         num_points: int = None,
-        num_series: int = 1,
+        num_series: int = None,
         x_type: str = 'months',
         y_range: tuple = (10, 100),
         trend: str = 'random'
@@ -76,12 +76,11 @@ class RandomDataGenerator:
             y = self._generate_series(actual_num_points, y_range, trend)
             return {'x': x, 'y': y}
         else:
+            labels = random.sample(self.PRODUCTS, min(num_series, len(self.PRODUCTS)))
             y_series = []
-            labels = []
             for i in range(num_series):
                 series_data = self._generate_series(actual_num_points, y_range, trend)
                 y_series.append(series_data)
-                labels.append(random.choice(self.PRODUCTS))
             return {'x': x, 'y': y_series, 'labels': labels}
     
     def generate_bar_data(
@@ -1329,9 +1328,10 @@ class RandomDataGenerator:
         
         if chart_type == 'line':
             num_series = random.choice([1, 1, 2, 3, 4])  # Bias toward single series
+            x_type = random.choice(['months', 'quarters', 'numeric'])
             data = self.generate_line_data(
                 num_series=num_series,
-                x_type=random.choice(['months', 'quarters', 'numeric']),
+                x_type=x_type,
                 trend=random.choice(['random', 'increasing', 'fluctuating', 'decreasing'])
             )
             return {
@@ -1339,7 +1339,7 @@ class RandomDataGenerator:
                 'data': data,
                 'filename_root': filename_root,
                 'title': f'{random.choice(["Sales", "Revenue", "Performance", "Growth"])} Over Time',
-                'xlabel': random.choice(['Month', 'Quarter', 'Time Period']),
+                'xlabel': {'months': 'Month', 'quarters': 'Quarter', 'numeric': 'Time Period'}.get(x_type, 'X-Axis'),
                 'ylabel': random.choice(['Value', 'Amount ($K)', 'Units', 'Score']),
                 'metadata': {'generated': 'random', 'series_count': num_series}
             }

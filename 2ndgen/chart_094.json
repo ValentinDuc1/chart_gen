@@ -1,0 +1,43 @@
+{
+  "filename_root": "chart_094",
+  "chart_type": "grouped_bar",
+  "title": "Department Performance by Region",
+  "xlabel": "Region",
+  "ylabel": "Units",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "Sales",
+      "Marketing"
+    ],
+    "values": [
+      [
+        44,
+        68,
+        32,
+        47,
+        77
+      ],
+      [
+        50,
+        46,
+        118,
+        43,
+        60
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:47.146302",
+  "png_file": "chart_094.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 5
+  }
+}

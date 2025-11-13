@@ -1,0 +1,46 @@
+{
+  "filename_root": "chart_039",
+  "chart_type": "grouped_bar",
+  "title": "Quarterly Performance by Month",
+  "xlabel": "Month",
+  "ylabel": "Revenue",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "Q1",
+      "Q2"
+    ],
+    "values": [
+      [
+        71,
+        50,
+        39,
+        39,
+        117,
+        51
+      ],
+      [
+        110,
+        91,
+        48,
+        53,
+        55,
+        70
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:28.137450",
+  "png_file": "chart_039.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 6
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "filename_root": "chart_089",
+  "chart_type": "horizontal_bar",
+  "title": "Rating Summary",
+  "xlabel": "Value",
+  "ylabel": "Department",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance",
+      "Operations",
+      "Customer Service"
+    ],
+    "values": [
+      4,
+      2,
+      4,
+      2,
+      5,
+      1,
+      3
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:45.641221",
+  "png_file": "chart_089.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 7
+  }
+}

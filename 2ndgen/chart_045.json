@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_045",
+  "chart_type": "grouped_bar",
+  "title": "Annual Performance by Region",
+  "xlabel": "Region",
+  "ylabel": "Performance Score",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "values": [
+      [
+        110,
+        31,
+        50,
+        79,
+        63
+      ],
+      [
+        50,
+        62,
+        110,
+        70,
+        31
+      ],
+      [
+        68,
+        106,
+        108,
+        42,
+        50
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:30.510932",
+  "png_file": "chart_045.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

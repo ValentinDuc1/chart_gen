@@ -1,0 +1,36 @@
+{
+  "filename_root": "chart_070",
+  "chart_type": "timeline",
+  "title": "Product Development Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2010-09-21",
+      "2011-07-17",
+      "2017-02-15",
+      "2017-05-04",
+      "2019-09-30",
+      "2022-02-19",
+      "2022-04-29",
+      "2022-08-15"
+    ],
+    "events": [
+      "Bug Fix Release",
+      "Major Update",
+      "Partnership Announced",
+      "Beta Testing",
+      "Feature Release",
+      "Rebranding",
+      "Market Expansion",
+      "Product Launch"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:39.699461",
+  "png_file": "chart_070.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 8,
+    "event_type": "product"
+  }
+}

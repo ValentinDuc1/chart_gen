@@ -1,0 +1,38 @@
+{
+  "filename_root": "chart_013",
+  "chart_type": "bar",
+  "title": "Regional Performance",
+  "xlabel": "Region",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central",
+      "Northeast",
+      "Southeast",
+      "Northwest",
+      "Southwest"
+    ],
+    "y": [
+      11,
+      75,
+      13,
+      20,
+      49,
+      50,
+      17,
+      80,
+      48
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:18.724524",
+  "png_file": "chart_013.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 9,
+    "x_type": "regions"
+  }
+}

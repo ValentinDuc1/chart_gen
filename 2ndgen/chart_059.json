@@ -1,0 +1,30 @@
+{
+  "filename_root": "chart_059",
+  "chart_type": "bar",
+  "title": "Category Performance",
+  "xlabel": "Category",
+  "ylabel": "Units Sold",
+  "data": {
+    "x": [
+      "Category A",
+      "Category B",
+      "Category C",
+      "Category D",
+      "Category E"
+    ],
+    "y": [
+      75,
+      56,
+      51,
+      92,
+      86
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:35.640364",
+  "png_file": "chart_059.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 5,
+    "x_type": "categories"
+  }
+}

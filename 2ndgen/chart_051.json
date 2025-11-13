@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_051",
+  "chart_type": "horizontal_bar",
+  "title": "Rating Summary",
+  "xlabel": "Score",
+  "ylabel": "Category",
+  "data": {
+    "categories": [
+      "Product Quality",
+      "Customer Service",
+      "Delivery Speed",
+      "Pricing",
+      "User Experience"
+    ],
+    "values": [
+      1.0,
+      3.0,
+      3.5,
+      3.7,
+      3.3
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:33.209254",
+  "png_file": "chart_051.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 5
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "filename_root": "chart_007",
+  "chart_type": "heatmap",
+  "title": "Department Performance by Monthly Period",
+  "xlabel": "Monthly",
+  "ylabel": "Department",
+  "data": {
+    "values": [
+      [
+        23,
+        39,
+        34,
+        20,
+        35,
+        55
+      ],
+      [
+        45,
+        43,
+        50,
+        15,
+        76,
+        53
+      ],
+      [
+        14,
+        11,
+        18,
+        29,
+        23,
+        17
+      ],
+      [
+        65,
+        11,
+        71,
+        79,
+        29,
+        48
+      ],
+      [
+        78,
+        80,
+        39,
+        71,
+        70,
+        15
+      ]
+    ],
+    "row_labels": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "col_labels": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:16.967852",
+  "png_file": "chart_007.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "5x6"
+  }
+}

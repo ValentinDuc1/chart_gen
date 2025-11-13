@@ -1,0 +1,43 @@
+{
+  "filename_root": "chart_066",
+  "chart_type": "line",
+  "title": "Growth Over Time",
+  "xlabel": "Month",
+  "ylabel": "Units",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "y": [
+      98,
+      92,
+      89,
+      78,
+      67,
+      67,
+      58,
+      42,
+      37,
+      33,
+      29,
+      21
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:38.143108",
+  "png_file": "chart_066.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

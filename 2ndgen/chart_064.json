@@ -1,0 +1,47 @@
+{
+  "filename_root": "chart_064",
+  "chart_type": "grouped_bar",
+  "title": "Regional Performance by Quarter",
+  "xlabel": "Quarter",
+  "ylabel": "Revenue",
+  "data": {
+    "categories": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "groups": [
+      "North",
+      "South",
+      "East"
+    ],
+    "values": [
+      [
+        69,
+        101,
+        85,
+        57
+      ],
+      [
+        98,
+        98,
+        107,
+        75
+      ],
+      [
+        43,
+        114,
+        68,
+        93
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:37.598061",
+  "png_file": "chart_064.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 4
+  }
+}

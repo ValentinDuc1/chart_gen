@@ -1,0 +1,72 @@
+{
+  "filename_root": "chart_020",
+  "chart_type": "heatmap",
+  "title": "Product Performance by Monthly Period",
+  "xlabel": "Monthly",
+  "ylabel": "Product",
+  "data": {
+    "values": [
+      [
+        48,
+        66,
+        61,
+        39,
+        36,
+        48
+      ],
+      [
+        25,
+        12,
+        97,
+        34,
+        22,
+        76
+      ],
+      [
+        75,
+        27,
+        97,
+        100,
+        44,
+        37
+      ],
+      [
+        28,
+        49,
+        61,
+        30,
+        16,
+        39
+      ],
+      [
+        43,
+        24,
+        15,
+        79,
+        35,
+        17
+      ]
+    ],
+    "row_labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "col_labels": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:21.269643",
+  "png_file": "chart_020.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "5x6"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "filename_root": "chart_021",
+  "chart_type": "line",
+  "title": "Revenue Over Time",
+  "xlabel": "Month",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "y": [
+      100,
+      87,
+      86,
+      78,
+      75,
+      65,
+      56,
+      48,
+      45,
+      29,
+      21,
+      21
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:21.535569",
+  "png_file": "chart_021.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

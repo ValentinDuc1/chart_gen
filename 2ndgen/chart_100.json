@@ -1,0 +1,55 @@
+{
+  "filename_root": "chart_100",
+  "chart_type": "stacked_bar",
+  "title": "Quarterly Distribution by Month",
+  "xlabel": "Month",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "Q1",
+      "Q2",
+      "Q3"
+    ],
+    "values": [
+      [
+        60,
+        59,
+        70,
+        74,
+        98,
+        68
+      ],
+      [
+        64,
+        104,
+        74,
+        62,
+        62,
+        98
+      ],
+      [
+        113,
+        69,
+        55,
+        110,
+        74,
+        102
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:49.566835",
+  "png_file": "chart_100.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 6
+  }
+}

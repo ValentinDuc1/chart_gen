@@ -1,0 +1,59 @@
+{
+  "filename_root": "chart_038",
+  "chart_type": "grouped_bar",
+  "title": "Product Performance by Department",
+  "xlabel": "Department",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "values": [
+      [
+        52,
+        76,
+        65,
+        68,
+        76
+      ],
+      [
+        78,
+        80,
+        77,
+        69,
+        92
+      ],
+      [
+        112,
+        75,
+        32,
+        96,
+        90
+      ],
+      [
+        39,
+        112,
+        71,
+        75,
+        49
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:27.881263",
+  "png_file": "chart_038.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 5
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "filename_root": "chart_048",
+  "chart_type": "stacked_bar",
+  "title": "Department Distribution by Quarter",
+  "xlabel": "Quarter",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "groups": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR"
+    ],
+    "values": [
+      [
+        86,
+        119,
+        97,
+        67
+      ],
+      [
+        36,
+        41,
+        56,
+        51
+      ],
+      [
+        66,
+        95,
+        42,
+        109
+      ],
+      [
+        69,
+        88,
+        32,
+        91
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:31.912942",
+  "png_file": "chart_048.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 4
+  }
+}

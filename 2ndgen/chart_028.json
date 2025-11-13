@@ -1,0 +1,60 @@
+{
+  "filename_root": "chart_028",
+  "chart_type": "heatmap",
+  "title": "Product Performance by Regional Period",
+  "xlabel": "Regional",
+  "ylabel": "Product",
+  "data": {
+    "values": [
+      [
+        23,
+        18,
+        49,
+        96
+      ],
+      [
+        58,
+        65,
+        23,
+        60
+      ],
+      [
+        25,
+        92,
+        63,
+        64
+      ],
+      [
+        50,
+        50,
+        36,
+        38
+      ],
+      [
+        87,
+        99,
+        82,
+        91
+      ]
+    ],
+    "row_labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "col_labels": [
+      "North",
+      "South",
+      "East",
+      "West"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:24.146372",
+  "png_file": "chart_028.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "5x4"
+  }
+}

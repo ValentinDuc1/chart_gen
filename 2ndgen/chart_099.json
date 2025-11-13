@@ -1,0 +1,61 @@
+{
+  "filename_root": "chart_099",
+  "chart_type": "area",
+  "title": "Performance Comparison",
+  "xlabel": "Month",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "areas": [
+      {
+        "y": [
+          24,
+          10,
+          15,
+          10,
+          25,
+          16
+        ],
+        "label": "Product E"
+      },
+      {
+        "y": [
+          23,
+          30,
+          15,
+          22,
+          15,
+          10
+        ],
+        "label": "Product C"
+      },
+      {
+        "y": [
+          30,
+          24,
+          30,
+          20,
+          28,
+          32
+        ],
+        "label": "Product A"
+      }
+    ],
+    "area_type": "overlapping"
+  },
+  "generated_at": "2025-11-13T13:10:49.299970",
+  "png_file": "chart_099.png",
+  "metadata": {
+    "generated": "random",
+    "area_type": "overlapping",
+    "num_points": 6,
+    "step": false
+  }
+}

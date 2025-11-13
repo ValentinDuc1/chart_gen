@@ -1,0 +1,47 @@
+{
+  "filename_root": "chart_073",
+  "chart_type": "stacked_bar",
+  "title": "Department Distribution by Quarter",
+  "xlabel": "Quarter",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "groups": [
+      "Sales",
+      "Marketing",
+      "Engineering"
+    ],
+    "values": [
+      [
+        120,
+        110,
+        101,
+        98
+      ],
+      [
+        75,
+        76,
+        54,
+        55
+      ],
+      [
+        78,
+        114,
+        40,
+        92
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:40.469581",
+  "png_file": "chart_073.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 4
+  }
+}

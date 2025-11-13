@@ -1,0 +1,53 @@
+{
+  "filename_root": "chart_084",
+  "chart_type": "area",
+  "title": "Stacked Performance Over Time",
+  "xlabel": "Quarter",
+  "ylabel": "Total Value",
+  "data": {
+    "x": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "areas": [
+      {
+        "y": [
+          6,
+          6,
+          16,
+          15
+        ],
+        "label": "Product B"
+      },
+      {
+        "y": [
+          6,
+          15,
+          14,
+          24
+        ],
+        "label": "Product D"
+      },
+      {
+        "y": [
+          26,
+          15,
+          6,
+          9
+        ],
+        "label": "Product E"
+      }
+    ],
+    "area_type": "stacked"
+  },
+  "generated_at": "2025-11-13T13:10:43.894133",
+  "png_file": "chart_084.png",
+  "metadata": {
+    "generated": "random",
+    "area_type": "stacked",
+    "num_points": 4,
+    "step": false
+  }
+}

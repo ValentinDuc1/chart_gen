@@ -1,0 +1,47 @@
+{
+  "filename_root": "chart_069",
+  "chart_type": "stacked_bar",
+  "title": "Department Distribution by Year",
+  "xlabel": "Year",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "groups": [
+      "Sales",
+      "Marketing",
+      "Engineering"
+    ],
+    "values": [
+      [
+        63,
+        108,
+        34,
+        36
+      ],
+      [
+        51,
+        96,
+        90,
+        56
+      ],
+      [
+        57,
+        34,
+        105,
+        60
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:39.427758",
+  "png_file": "chart_069.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 4
+  }
+}

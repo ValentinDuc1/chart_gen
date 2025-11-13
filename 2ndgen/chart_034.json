@@ -1,0 +1,60 @@
+{
+  "filename_root": "chart_034",
+  "chart_type": "heatmap",
+  "title": "Product Performance by Quarterly Period",
+  "xlabel": "Quarterly",
+  "ylabel": "Product",
+  "data": {
+    "values": [
+      [
+        79,
+        51,
+        95,
+        72
+      ],
+      [
+        19,
+        71,
+        54,
+        10
+      ],
+      [
+        52,
+        44,
+        52,
+        47
+      ],
+      [
+        58,
+        47,
+        72,
+        86
+      ],
+      [
+        62,
+        67,
+        90,
+        23
+      ]
+    ],
+    "row_labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "col_labels": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:26.726181",
+  "png_file": "chart_034.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "5x4"
+  }
+}

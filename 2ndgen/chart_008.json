@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_008",
+  "chart_type": "horizontal_bar",
+  "title": "Rating Summary",
+  "xlabel": "Rating",
+  "ylabel": "Department",
+  "data": {
+    "categories": [
+      "Product Quality",
+      "Customer Service",
+      "Delivery Speed",
+      "Pricing",
+      "User Experience"
+    ],
+    "values": [
+      2.6,
+      1.9,
+      2.4,
+      4.4,
+      4.4
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:17.197859",
+  "png_file": "chart_008.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 5
+  }
+}

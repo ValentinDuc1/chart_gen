@@ -1,0 +1,27 @@
+{
+  "filename_root": "chart_040",
+  "chart_type": "line",
+  "title": "Revenue Over Time",
+  "xlabel": "Quarter",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "y": [
+      100,
+      81,
+      50,
+      32
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:28.397373",
+  "png_file": "chart_040.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

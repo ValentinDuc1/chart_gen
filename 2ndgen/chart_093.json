@@ -1,0 +1,67 @@
+{
+  "filename_root": "chart_093",
+  "chart_type": "heatmap",
+  "title": "Monthly Performance by Quarterly Period",
+  "xlabel": "Quarterly",
+  "ylabel": "Monthly",
+  "data": {
+    "values": [
+      [
+        29,
+        74,
+        51,
+        23
+      ],
+      [
+        60,
+        84,
+        14,
+        78
+      ],
+      [
+        21,
+        32,
+        97,
+        58
+      ],
+      [
+        64,
+        55,
+        42,
+        21
+      ],
+      [
+        35,
+        86,
+        96,
+        85
+      ],
+      [
+        23,
+        57,
+        86,
+        51
+      ]
+    ],
+    "row_labels": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "col_labels": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:46.905430",
+  "png_file": "chart_093.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "6x4"
+  }
+}

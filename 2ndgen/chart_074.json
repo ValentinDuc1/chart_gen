@@ -1,0 +1,38 @@
+{
+  "filename_root": "chart_074",
+  "chart_type": "bar",
+  "title": "Regional Performance",
+  "xlabel": "Region",
+  "ylabel": "Units Sold",
+  "data": {
+    "x": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central",
+      "Northeast",
+      "Southeast",
+      "Northwest",
+      "Southwest"
+    ],
+    "y": [
+      68,
+      27,
+      48,
+      94,
+      77,
+      88,
+      80,
+      36,
+      11
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:40.751161",
+  "png_file": "chart_074.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 9,
+    "x_type": "regions"
+  }
+}

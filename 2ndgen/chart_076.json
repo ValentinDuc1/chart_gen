@@ -1,0 +1,73 @@
+{
+  "filename_root": "chart_076",
+  "chart_type": "timeline",
+  "title": "Product Development Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2016-10-06",
+      "2017-09-05",
+      "2018-06-29",
+      "2018-08-26",
+      "2018-10-24",
+      "2019-02-01",
+      "2019-05-13",
+      "2019-10-11",
+      "2020-01-20",
+      "2020-07-10",
+      "2021-11-26",
+      "2022-02-09",
+      "2022-04-18",
+      "2022-05-14",
+      "2022-08-19",
+      "2023-11-21",
+      "2024-02-13"
+    ],
+    "events": [
+      "Feature Release",
+      "Market Expansion",
+      "Beta Testing",
+      "Major Update",
+      "Update v2.0",
+      "Partnership Announced",
+      "Rebranding",
+      "Bug Fix Release",
+      "Product Launch",
+      "Event 10",
+      "Event 11",
+      "Event 12",
+      "Event 13",
+      "Event 14",
+      "Event 15",
+      "Event 16",
+      "Event 17"
+    ],
+    "categories": [
+      "Planning",
+      "Testing",
+      "Marketing",
+      "Testing",
+      "Testing",
+      "Testing",
+      "Planning",
+      "Release",
+      "Planning",
+      "Planning",
+      "Testing",
+      "Development",
+      "Development",
+      "Release",
+      "Testing",
+      "Testing",
+      "Development"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:41.320329",
+  "png_file": "chart_076.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 17,
+    "event_type": "product"
+  }
+}

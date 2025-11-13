@@ -1,0 +1,53 @@
+{
+  "filename_root": "chart_083",
+  "chart_type": "area",
+  "title": "Percentage Breakdown Over Time",
+  "xlabel": "Quarter",
+  "ylabel": "Percentage (%)",
+  "data": {
+    "x": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "areas": [
+      {
+        "y": [
+          9,
+          6,
+          14,
+          6
+        ],
+        "label": "Product B"
+      },
+      {
+        "y": [
+          6,
+          14,
+          23,
+          26
+        ],
+        "label": "Product D"
+      },
+      {
+        "y": [
+          8,
+          6,
+          19,
+          22
+        ],
+        "label": "Product A"
+      }
+    ],
+    "area_type": "stacked_100"
+  },
+  "generated_at": "2025-11-13T13:10:43.606551",
+  "png_file": "chart_083.png",
+  "metadata": {
+    "generated": "random",
+    "area_type": "stacked_100",
+    "num_points": 4,
+    "step": false
+  }
+}

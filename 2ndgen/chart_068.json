@@ -1,0 +1,83 @@
+{
+  "filename_root": "chart_068",
+  "chart_type": "line",
+  "title": "Performance Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "y": [
+      [
+        11,
+        23,
+        25,
+        33,
+        46,
+        53,
+        62,
+        74,
+        87,
+        90
+      ],
+      [
+        10,
+        18,
+        33,
+        32,
+        44,
+        57,
+        67,
+        69,
+        78,
+        96
+      ],
+      [
+        10,
+        23,
+        33,
+        34,
+        46,
+        55,
+        61,
+        72,
+        77,
+        86
+      ],
+      [
+        12,
+        14,
+        24,
+        41,
+        43,
+        54,
+        60,
+        68,
+        86,
+        92
+      ]
+    ],
+    "labels": [
+      "Product E",
+      "Product E",
+      "Product B",
+      "Product A"
+    ]
+  },
+  "generated_at": "2025-11-13T13:10:39.176168",
+  "png_file": "chart_068.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 4
+  }
+}

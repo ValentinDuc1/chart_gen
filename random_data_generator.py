@@ -1145,7 +1145,7 @@ class RandomDataGenerator:
         # Randomize flow type if not specified
         if flow_type is None:
             flow_type = random.choice(['vortex', 'source', 'sink', 'saddle', 
-                                      'uniform', 'dipole', 'shear', 'wave'])
+                                      'uniform', 'dipole', 'shear', 'wave', 'turbulent'])
         
         # Create grid
         x_min, x_max, y_min, y_max = domain
@@ -1180,6 +1180,24 @@ class RandomDataGenerator:
             speed = random.uniform(0.5, 2.0)
             u = np.ones_like(X) * speed * np.cos(angle)
             v = np.ones_like(Y) * speed * np.sin(angle)
+            
+        elif flow_type == 'turbulent':
+            # Create turbulent flow using summed sine waves
+            base_speed = 1.0
+            u = np.ones_like(X) * base_speed
+            v = np.zeros_like(Y)
+            
+            # Add multiple frequency components (turbulent cascade)
+            for scale in [1, 2, 4, 8]:
+                amplitude = 0.5 / scale
+                u += amplitude * np.sin(X * scale + np.random.uniform(0, 2*np.pi))
+                u += amplitude * np.cos(Y * scale + np.random.uniform(0, 2*np.pi))
+                v += amplitude * np.sin(Y * scale + np.random.uniform(0, 2*np.pi))
+                v += amplitude * np.cos(X * scale + np.random.uniform(0, 2*np.pi))
+            
+            # Add some rotation/vorticity
+            u += -0.3 * Y * np.exp(-(X**2 + Y**2)/10)
+            v += 0.3 * X * np.exp(-(X**2 + Y**2)/10)
             
         elif flow_type == 'dipole':
             # Source at (-1, 0) and sink at (1, 0)
@@ -1229,7 +1247,7 @@ class RandomDataGenerator:
     def generate_streamplot_variation_data(
         self,
         variation_type: str = None,
-        flow_type: str = 'vortex',
+        flow_type: str = None,
         grid_size: int = 30
     ) -> Dict[str, Any]:
         """
@@ -1958,7 +1976,7 @@ class RandomDataGenerator:
                     'varying_density', 'varying_color', 'varying_linewidth',
                     'starting_points', 'masking', 'unbroken'
                 ])
-                flow_type = random.choice(['vortex', 'source', 'saddle', 'dipole'])
+                flow_type = random.choice(['vortex', 'source', 'saddle', 'dipole','shear', 'wave', 'turbulent'])
                 data = self.generate_streamplot_variation_data(
                     variation_type=variation_type,
                     flow_type=flow_type,
@@ -1979,7 +1997,7 @@ class RandomDataGenerator:
             else:
                 # Standard streamplot
                 flow_type = random.choice(['vortex', 'source', 'sink', 'saddle', 
-                                          'uniform', 'dipole', 'shear', 'wave'])
+                                          'uniform', 'dipole', 'shear', 'wave', 'turbulent'])
                 data = self.generate_streamplot_data(
                     flow_type=flow_type,
                     grid_size=random.choice([15, 20, 25])
@@ -1993,7 +2011,8 @@ class RandomDataGenerator:
                     'uniform': 'Uniform Flow Field',
                     'dipole': 'Dipole Flow Pattern',
                     'shear': 'Shear Flow',
-                    'wave': 'Wave Flow Pattern'
+                    'wave': 'Wave Flow Pattern',
+                    'turbulent': 'Turbulent Flow Field'
                 }
                 title = title_map.get(flow_type, 'Vector Field Flow')
                 data['color'] = 'velocity'  # Default color by velocity
@@ -2006,7 +2025,8 @@ class RandomDataGenerator:
                 'uniform': 'Laminar Flow',
                 'dipole': 'Combined Source-Sink',
                 'shear': 'Velocity Gradient',
-                'wave': 'Oscillating Field'
+                'wave': 'Oscillating Field',
+                'turbulent': 'Turbulent Flow Simulation'
             }
             
             return {

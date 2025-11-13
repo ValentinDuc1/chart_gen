@@ -7,7 +7,6 @@ import random
 import string
 from typing import Dict, Any, List, Optional
 
-
 class RandomDataGenerator:
     """Generate random data suitable for different chart types."""
     
@@ -447,7 +446,7 @@ class RandomDataGenerator:
     def generate_area_data(
         self,
         num_points: int = None,
-        area_type: str = 'single',
+        area_type: str = 'range',
         x_type: str = 'months',
         y_range: tuple = (10, 100),
         num_series: int = 2,
@@ -549,7 +548,7 @@ class RandomDataGenerator:
     
     def generate_discrete_distribution_data(
         self,
-        distribution_type: str = 'binomial',
+        distribution_type: str = 'range',
         num_values: int = None,
         **kwargs
     ) -> Dict[str, Any]:
@@ -695,7 +694,7 @@ class RandomDataGenerator:
         num_points: int = None,
         x_range: tuple = (0, 100),
         y_range: tuple = (0, 100),
-        distribution: str = 'random',
+        distribution: str = None,
         bins: list = None
     ) -> Dict[str, Any]:
         """
@@ -827,7 +826,7 @@ class RandomDataGenerator:
     
     def generate_cohere_data(
         self,
-        signal_type: str = 'mixed',
+        signal_type: str = None,
         duration: float = 1.0,
         Fs: int = 1000,
         NFFT: int = 256
@@ -1691,7 +1690,7 @@ class RandomDataGenerator:
             }
         
         elif chart_type == 'discrete_distribution':
-            dist_type = random.choice(['binomial', 'poisson', 'uniform', 'rating', 'score'])
+            dist_type = random.choice(['binomial', 'poisson', 'uniform', 'rating', 'score', 'dice'])
             
             if dist_type == 'binomial':
                 data = self.generate_discrete_distribution_data('binomial', n=random.choice([8, 10, 12, 15]), p=round(random.uniform(0.3, 0.7), 1))
@@ -1705,6 +1704,9 @@ class RandomDataGenerator:
             elif dist_type == 'rating':
                 data = self.generate_discrete_distribution_data('rating', skew=random.choice(['positive', 'neutral']))
                 title = 'Customer Rating Distribution'
+            elif dist_type == 'dice':
+                data = self.generate_discrete_distribution_data('dice', num_dice=random.choice([1, 2, 3]), sides=random.choice([6, 8, 10]))
+                title = 'Dice Roll Distribution'
             else:  # score
                 data = self.generate_discrete_distribution_data('score', grade_type=random.choice(['normal', 'easy', 'hard']))
                 title = 'Grade Distribution'
@@ -1750,8 +1752,8 @@ class RandomDataGenerator:
                 'data': data,
                 'filename_root': filename_root,
                 'title': title,
-                'xlabel': random.choice(['Variable X', 'Feature 1', 'Measurement A', 'X-Axis']),
-                'ylabel': random.choice(['Variable Y', 'Feature 2', 'Measurement B', 'Y-Axis']),
+                'xlabel': random.choice(['Variable X', 'Feature 1', 'Measurement A']),
+                'ylabel': random.choice(['Variable Y', 'Feature 2', 'Measurement B']),
                 'metadata': {
                     'generated': 'random',
                     'distribution': dist_type,
@@ -1866,9 +1868,12 @@ class RandomDataGenerator:
         
         elif chart_type == 'timeline':
             event_type = random.choice(['project', 'product', 'company'])
+            start = f'{random.randint(2000, 2023)}-{random.randint(1, 12):02d}'
+            end = f'{random.randint(2023, 2024)}-{random.randint(1, 12):02d}'
+            date_range = (start, end)
             data = self.generate_timeline_data(
                 num_events=random.randint(5, 20),
-                date_range=random.randint('2000-01', '2024-12'),
+                date_range=date_range,
                 event_type=event_type
             )
             

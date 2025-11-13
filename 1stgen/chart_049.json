@@ -1,0 +1,48 @@
+{
+  "filename_root": "chart_049",
+  "chart_type": "pie",
+  "title": "Distribution Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central",
+      "Northeast",
+      "Southeast",
+      "Northwest",
+      "Southwest"
+    ],
+    "values": [
+      5.9,
+      4.6,
+      8.5,
+      19.0,
+      10.5,
+      3.3,
+      25.5,
+      17.6,
+      5.2
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0.1,
+      0,
+      0
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:01.941843",
+  "png_file": "chart_049.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 9
+  }
+}

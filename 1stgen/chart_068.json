@@ -1,0 +1,43 @@
+{
+  "filename_root": "chart_068",
+  "chart_type": "line",
+  "title": "Sales Over Time",
+  "xlabel": "Month",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "y": [
+      26,
+      26,
+      19,
+      27,
+      17,
+      10,
+      15,
+      10,
+      10,
+      10,
+      10,
+      10
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:07.401235",
+  "png_file": "chart_068.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

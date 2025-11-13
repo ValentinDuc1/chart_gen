@@ -1,0 +1,50 @@
+{
+  "filename_root": "chart_047",
+  "chart_type": "timeline",
+  "title": "Company Milestones",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2004-07-31",
+      "2004-12-03",
+      "2006-03-09",
+      "2010-11-05",
+      "2010-12-27",
+      "2010-12-31",
+      "2012-01-19",
+      "2015-05-10",
+      "2015-06-09",
+      "2019-08-29",
+      "2021-01-09",
+      "2021-06-30",
+      "2022-09-10",
+      "2022-10-24",
+      "2024-01-28"
+    ],
+    "events": [
+      "Acquisition Completed",
+      "Team Expansion",
+      "New Office Opened",
+      "Strategic Partnership",
+      "Company Founded",
+      "IPO Announced",
+      "Award Received",
+      "CEO Appointed",
+      "Series A Funding",
+      "Event 10",
+      "Event 11",
+      "Event 12",
+      "Event 13",
+      "Event 14",
+      "Event 15"
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:01.448923",
+  "png_file": "chart_047.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 15,
+    "event_type": "company"
+  }
+}

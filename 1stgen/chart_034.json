@@ -1,0 +1,77 @@
+{
+  "filename_root": "chart_034",
+  "chart_type": "area",
+  "title": "Percentage Breakdown Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Percentage (%)",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "areas": [
+      {
+        "y": [
+          6,
+          6,
+          12,
+          10,
+          6,
+          6,
+          6,
+          6,
+          19,
+          13
+        ],
+        "label": "Product E"
+      },
+      {
+        "y": [
+          20,
+          7,
+          6,
+          6,
+          15,
+          21,
+          8,
+          21,
+          26,
+          26
+        ],
+        "label": "Product B"
+      },
+      {
+        "y": [
+          26,
+          20,
+          15,
+          17,
+          8,
+          9,
+          16,
+          26,
+          26,
+          18
+        ],
+        "label": "Product C"
+      }
+    ],
+    "area_type": "stacked_100"
+  },
+  "generated_at": "2025-11-13T13:08:57.761760",
+  "png_file": "chart_034.png",
+  "metadata": {
+    "generated": "random",
+    "area_type": "stacked_100",
+    "num_points": 10,
+    "step": false
+  }
+}

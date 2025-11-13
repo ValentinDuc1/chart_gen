@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_088",
+  "chart_type": "stacked_bar",
+  "title": "Annual Distribution by Product",
+  "xlabel": "Product",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "2020",
+      "2021"
+    ],
+    "values": [
+      [
+        83,
+        108,
+        37,
+        49
+      ],
+      [
+        42,
+        85,
+        99,
+        98
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:13.190585",
+  "png_file": "chart_088.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

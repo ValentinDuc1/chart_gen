@@ -1,0 +1,37 @@
+{
+  "filename_root": "chart_081",
+  "chart_type": "timeline",
+  "title": "Product Development Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2008-07-03",
+      "2008-10-22",
+      "2011-02-24",
+      "2013-04-03",
+      "2014-07-18"
+    ],
+    "events": [
+      "Product Launch",
+      "Beta Testing",
+      "Partnership Announced",
+      "Update v2.0",
+      "Major Update"
+    ],
+    "categories": [
+      "Development",
+      "Testing",
+      "Planning",
+      "Release",
+      "Development"
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:11.119170",
+  "png_file": "chart_081.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 5,
+    "event_type": "product"
+  }
+}

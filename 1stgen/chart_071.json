@@ -1,0 +1,27 @@
+{
+  "filename_root": "chart_071",
+  "chart_type": "line",
+  "title": "Performance Over Time",
+  "xlabel": "Quarter",
+  "ylabel": "Score",
+  "data": {
+    "x": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "y": [
+      60,
+      66,
+      58,
+      55
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:08.290070",
+  "png_file": "chart_071.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 1
+  }
+}

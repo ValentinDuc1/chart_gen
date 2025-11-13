@@ -1,0 +1,54 @@
+{
+  "filename_root": "chart_045",
+  "chart_type": "stacked_bar",
+  "title": "Quarterly Distribution by Product",
+  "xlabel": "Product",
+  "ylabel": "Total Units",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "values": [
+      [
+        116,
+        88,
+        94,
+        99
+      ],
+      [
+        107,
+        110,
+        88,
+        104
+      ],
+      [
+        113,
+        81,
+        36,
+        87
+      ],
+      [
+        94,
+        53,
+        72,
+        112
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:00.775917",
+  "png_file": "chart_045.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 4
+  }
+}

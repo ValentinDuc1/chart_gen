@@ -1,0 +1,54 @@
+{
+  "filename_root": "chart_013",
+  "chart_type": "stacked_bar",
+  "title": "Annual Distribution by Quarter",
+  "xlabel": "Quarter",
+  "ylabel": "Combined Performance",
+  "data": {
+    "categories": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022",
+      "2023"
+    ],
+    "values": [
+      [
+        72,
+        62,
+        73,
+        94
+      ],
+      [
+        119,
+        119,
+        113,
+        63
+      ],
+      [
+        87,
+        104,
+        57,
+        115
+      ],
+      [
+        89,
+        76,
+        95,
+        45
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:51.264549",
+  "png_file": "chart_013.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 4
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "filename_root": "chart_090",
+  "chart_type": "pie",
+  "title": "Distribution Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Desktop",
+      "Mobile",
+      "Tablet",
+      "Smart TV",
+      "Gaming Console",
+      "Wearable"
+    ],
+    "values": [
+      13.9,
+      16.4,
+      8.5,
+      9.1,
+      30.3,
+      21.8
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0,
+      0.1,
+      0
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:13.779206",
+  "png_file": "chart_090.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 6
+  }
+}

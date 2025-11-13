@@ -1,0 +1,60 @@
+{
+  "filename_root": "chart_030",
+  "chart_type": "heatmap",
+  "title": "Regional Performance by Regional Period",
+  "xlabel": "Regional",
+  "ylabel": "Regional",
+  "data": {
+    "values": [
+      [
+        72,
+        37,
+        78,
+        69
+      ],
+      [
+        28,
+        36,
+        44,
+        32
+      ],
+      [
+        72,
+        39,
+        32,
+        27
+      ],
+      [
+        50,
+        30,
+        27,
+        92
+      ],
+      [
+        14,
+        55,
+        83,
+        10
+      ]
+    ],
+    "row_labels": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "col_labels": [
+      "North",
+      "South",
+      "East",
+      "West"
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:56.752869",
+  "png_file": "chart_030.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "5x4"
+  }
+}

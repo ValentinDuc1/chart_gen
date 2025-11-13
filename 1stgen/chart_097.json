@@ -1,0 +1,43 @@
+{
+  "filename_root": "chart_097",
+  "chart_type": "stacked_bar",
+  "title": "Monthly Distribution by Department",
+  "xlabel": "Department",
+  "ylabel": "Total Revenue",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "Jan",
+      "Feb"
+    ],
+    "values": [
+      [
+        115,
+        62,
+        109,
+        39,
+        71
+      ],
+      [
+        51,
+        56,
+        37,
+        110,
+        31
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:15.948550",
+  "png_file": "chart_097.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 5
+  }
+}

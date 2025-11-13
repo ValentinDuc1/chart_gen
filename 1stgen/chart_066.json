@@ -1,0 +1,32 @@
+{
+  "filename_root": "chart_066",
+  "chart_type": "timeline",
+  "title": "Product Development Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2016-01-02",
+      "2016-03-22",
+      "2016-10-01",
+      "2016-10-07",
+      "2017-04-15",
+      "2021-02-17"
+    ],
+    "events": [
+      "Product Launch",
+      "Update v2.0",
+      "Beta Testing",
+      "Partnership Announced",
+      "Feature Release",
+      "Market Expansion"
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:06.767251",
+  "png_file": "chart_066.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 6,
+    "event_type": "product"
+  }
+}

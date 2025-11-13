@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_008",
+  "chart_type": "horizontal_bar",
+  "title": "Customer Satisfaction Ratings",
+  "xlabel": "Score",
+  "ylabel": "Metric",
+  "data": {
+    "categories": [
+      "Product Quality",
+      "Customer Service",
+      "Delivery Speed",
+      "Pricing",
+      "User Experience"
+    ],
+    "values": [
+      1.7,
+      2.4,
+      1.6,
+      4.3,
+      1.6
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:49.524500",
+  "png_file": "chart_008.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 5
+  }
+}

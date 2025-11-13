@@ -1,0 +1,47 @@
+{
+  "filename_root": "chart_017",
+  "chart_type": "grouped_bar",
+  "title": "Monthly Performance by Quarter",
+  "xlabel": "Quarter",
+  "ylabel": "Performance Score",
+  "data": {
+    "categories": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "groups": [
+      "Jan",
+      "Feb",
+      "Mar"
+    ],
+    "values": [
+      [
+        93,
+        117,
+        47,
+        88
+      ],
+      [
+        82,
+        69,
+        53,
+        63
+      ],
+      [
+        93,
+        38,
+        88,
+        83
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:52.294862",
+  "png_file": "chart_017.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 4
+  }
+}

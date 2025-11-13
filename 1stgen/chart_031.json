@@ -1,0 +1,47 @@
+{
+  "filename_root": "chart_031",
+  "chart_type": "stacked_bar",
+  "title": "Quarterly Distribution by Year",
+  "xlabel": "Year",
+  "ylabel": "Total Revenue",
+  "data": {
+    "categories": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "groups": [
+      "Q1",
+      "Q2",
+      "Q3"
+    ],
+    "values": [
+      [
+        77,
+        43,
+        30,
+        54
+      ],
+      [
+        91,
+        113,
+        92,
+        32
+      ],
+      [
+        32,
+        96,
+        37,
+        48
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:56.999841",
+  "png_file": "chart_031.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 4
+  }
+}

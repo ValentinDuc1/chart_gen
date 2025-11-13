@@ -1,0 +1,50 @@
+{
+  "filename_root": "chart_096",
+  "chart_type": "timeline",
+  "title": "Product Development Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2022-04-30",
+      "2022-05-29",
+      "2022-06-25",
+      "2022-07-06",
+      "2022-11-10",
+      "2023-01-07",
+      "2023-02-08",
+      "2023-02-10",
+      "2023-03-02",
+      "2023-05-25",
+      "2023-06-21",
+      "2023-09-13",
+      "2023-12-01",
+      "2023-12-16",
+      "2024-02-12"
+    ],
+    "events": [
+      "Rebranding",
+      "Partnership Announced",
+      "Market Expansion",
+      "Beta Testing",
+      "Product Launch",
+      "Bug Fix Release",
+      "Update v2.0",
+      "Feature Release",
+      "Major Update",
+      "Event 10",
+      "Event 11",
+      "Event 12",
+      "Event 13",
+      "Event 14",
+      "Event 15"
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:15.671019",
+  "png_file": "chart_096.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 15,
+    "event_type": "product"
+  }
+}

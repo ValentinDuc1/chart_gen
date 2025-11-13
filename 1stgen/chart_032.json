@@ -1,0 +1,29 @@
+{
+  "filename_root": "chart_032",
+  "chart_type": "horizontal_bar",
+  "title": "Rating Summary",
+  "xlabel": "Rating",
+  "ylabel": "Category",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "values": [
+      5,
+      1,
+      1,
+      2,
+      3
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:57.229295",
+  "png_file": "chart_032.png",
+  "metadata": {
+    "generated": "random",
+    "category_count": 5
+  }
+}

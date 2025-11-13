@@ -1,0 +1,73 @@
+{
+  "filename_root": "chart_012",
+  "chart_type": "timeline",
+  "title": "Project Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2016-06-29",
+      "2017-08-01",
+      "2018-03-20",
+      "2018-09-19",
+      "2019-02-18",
+      "2019-03-04",
+      "2019-05-14",
+      "2019-08-03",
+      "2019-10-21",
+      "2020-05-03",
+      "2020-06-29",
+      "2020-10-20",
+      "2021-05-12",
+      "2023-01-14",
+      "2023-03-18",
+      "2023-06-11",
+      "2024-04-22"
+    ],
+    "events": [
+      "Testing Complete",
+      "Project Kickoff",
+      "Phase Completion",
+      "Development Phase",
+      "Deadline Extended",
+      "Beta Release",
+      "Milestone Achieved",
+      "Design Review",
+      "Production Launch",
+      "Event 10",
+      "Event 11",
+      "Event 12",
+      "Event 13",
+      "Event 14",
+      "Event 15",
+      "Event 16",
+      "Event 17"
+    ],
+    "categories": [
+      "Planning",
+      "Testing",
+      "Marketing",
+      "Release",
+      "Testing",
+      "Marketing",
+      "Planning",
+      "Planning",
+      "Marketing",
+      "Testing",
+      "Release",
+      "Planning",
+      "Testing",
+      "Development",
+      "Development",
+      "Testing",
+      "Release"
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:51.000331",
+  "png_file": "chart_012.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 17,
+    "event_type": "project"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "filename_root": "chart_093",
+  "chart_type": "stacked_bar",
+  "title": "Regional Distribution by Department",
+  "xlabel": "Department",
+  "ylabel": "Total Revenue",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "North",
+      "South",
+      "East",
+      "West"
+    ],
+    "values": [
+      [
+        61,
+        85,
+        87,
+        44,
+        44
+      ],
+      [
+        48,
+        81,
+        110,
+        82,
+        59
+      ],
+      [
+        102,
+        56,
+        60,
+        93,
+        74
+      ],
+      [
+        71,
+        86,
+        59,
+        42,
+        112
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:14.620841",
+  "png_file": "chart_093.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 4,
+    "num_categories": 5
+  }
+}

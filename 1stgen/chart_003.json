@@ -1,0 +1,43 @@
+{
+  "filename_root": "chart_003",
+  "chart_type": "stacked_bar",
+  "title": "Monthly Distribution by Region",
+  "xlabel": "Region",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central"
+    ],
+    "groups": [
+      "Jan",
+      "Feb"
+    ],
+    "values": [
+      [
+        42,
+        102,
+        106,
+        118,
+        94
+      ],
+      [
+        97,
+        67,
+        117,
+        57,
+        92
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:47.878299",
+  "png_file": "chart_003.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 5
+  }
+}

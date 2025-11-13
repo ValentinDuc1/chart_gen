@@ -1,0 +1,81 @@
+{
+  "filename_root": "chart_076",
+  "chart_type": "heatmap",
+  "title": "Monthly Performance by Monthly Period",
+  "xlabel": "Monthly",
+  "ylabel": "Monthly",
+  "data": {
+    "values": [
+      [
+        34,
+        93,
+        74,
+        13,
+        24,
+        67
+      ],
+      [
+        17,
+        84,
+        83,
+        11,
+        78,
+        39
+      ],
+      [
+        51,
+        75,
+        32,
+        53,
+        85,
+        45
+      ],
+      [
+        85,
+        93,
+        80,
+        62,
+        20,
+        56
+      ],
+      [
+        94,
+        26,
+        49,
+        35,
+        32,
+        32
+      ],
+      [
+        75,
+        42,
+        24,
+        44,
+        75,
+        43
+      ]
+    ],
+    "row_labels": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "col_labels": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:09.808081",
+  "png_file": "chart_076.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "6x6"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "filename_root": "chart_035",
+  "chart_type": "area",
+  "title": "Stacked Performance Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Combined Sales ($K)",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "areas": [
+      {
+        "y": [
+          40,
+          26,
+          30,
+          33,
+          37,
+          40,
+          25,
+          34,
+          40,
+          40
+        ],
+        "label": "Product B"
+      },
+      {
+        "y": [
+          10,
+          16,
+          17,
+          13,
+          10,
+          10,
+          10,
+          10,
+          10,
+          10
+        ],
+        "label": "Product D"
+      }
+    ],
+    "area_type": "stacked",
+    "step": true
+  },
+  "generated_at": "2025-11-13T13:08:58.042857",
+  "png_file": "chart_035.png",
+  "metadata": {
+    "generated": "random",
+    "area_type": "stacked",
+    "num_points": 10,
+    "step": true
+  }
+}

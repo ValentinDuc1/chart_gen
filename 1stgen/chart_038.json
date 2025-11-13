@@ -1,0 +1,36 @@
+{
+  "filename_root": "chart_038",
+  "chart_type": "pie",
+  "title": "Share Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "values": [
+      21.9,
+      13.5,
+      26.0,
+      23.4,
+      15.1
+    ],
+    "explode": [
+      0,
+      0,
+      0.1,
+      0,
+      0
+    ]
+  },
+  "generated_at": "2025-11-13T13:08:58.825484",
+  "png_file": "chart_038.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 5
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "filename_root": "chart_060",
+  "chart_type": "grouped_bar",
+  "title": "Quarterly Performance by Department",
+  "xlabel": "Department",
+  "ylabel": "Performance Score",
+  "data": {
+    "categories": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "groups": [
+      "Q1",
+      "Q2",
+      "Q3"
+    ],
+    "values": [
+      [
+        47,
+        77,
+        88,
+        34,
+        84
+      ],
+      [
+        63,
+        83,
+        31,
+        46,
+        48
+      ],
+      [
+        40,
+        63,
+        67,
+        64,
+        42
+      ]
+    ]
+  },
+  "generated_at": "2025-11-13T13:09:05.092142",
+  "png_file": "chart_060.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 5
+  }
+}

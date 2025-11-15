@@ -5,6 +5,7 @@ Generates realistic random data for each chart type
 
 import random
 import string
+import math
 from typing import Dict, Any, List, Optional
 
 
@@ -894,6 +895,138 @@ class RandomDataGenerator:
             'trend': trend,
             'volatility': volatility
         }
+    
+    def generate_treemap_data(
+        self,
+        num_categories: int = None,
+        category_type: str = None,
+        value_range: tuple = (10, 1000),
+        distribution: str = 'power_law',
+        hierarchical: bool = True
+    ) -> Dict[str, Any]:
+        """
+        Generate data for treemap charts (hierarchical rectangles).
+        
+        Args:
+            num_categories: Number of categories (default: random 8-15)
+            category_type: Type of categories ('products', 'regions', 'departments', 'technologies', 'custom')
+            value_range: Range for values (min, max)
+            distribution: Size distribution ('uniform', 'power_law', 'exponential')
+            hierarchical: Whether to create hierarchical groups (default: True)
+            
+        Returns:
+            Dictionary with 'labels', 'sizes', and optionally 'groups' keys
+        """
+        # Determine number of categories
+        num_categories = num_categories or random.randint(8, 15)
+        
+        # Create hierarchical structure if requested
+        if hierarchical:
+            # Create 3-5 main groups
+            num_groups = random.randint(3, 5)
+            group_labels = [chr(65 + i) for i in range(num_groups)]  # A, B, C, D, E
+            
+            # Distribute categories among groups
+            labels = []
+            sizes = []
+            groups = []
+            
+            items_per_group = [num_categories // num_groups] * num_groups
+            # Distribute remainder
+            for i in range(num_categories % num_groups):
+                items_per_group[i] += 1
+            
+            for group_idx, (group_label, group_size) in enumerate(zip(group_labels, items_per_group)):
+                # Generate sizes for this group
+                if distribution == 'power_law':
+                    # Power law within group
+                    group_values = []
+                    for i in range(group_size):
+                        u = random.random()
+                        x_min = value_range[0]
+                        x_max = value_range[1]
+                        x = x_min * ((x_max / x_min) ** u)
+                        group_values.append(int(x))
+                    group_values.sort(reverse=True)
+                
+                elif distribution == 'exponential':
+                    group_values = []
+                    for i in range(group_size):
+                        decay_rate = 0.3
+                        value = value_range[1] * math.exp(-decay_rate * i) + value_range[0]
+                        group_values.append(int(value))
+                    random.shuffle(group_values)
+                
+                else:  # uniform
+                    group_values = [random.randint(value_range[0], value_range[1]) 
+                                  for _ in range(group_size)]
+                
+                # Create labels for items in this group
+                for i, val in enumerate(group_values):
+                    labels.append(f'{group_label}-{i+1}')
+                    sizes.append(val)
+                    groups.append(group_label)
+            
+            return {
+                'labels': labels,
+                'sizes': sizes,
+                'groups': groups
+            }
+        
+        else:
+            # Non-hierarchical (flat) structure
+            # Determine category labels
+            if category_type == 'products':
+                base_labels = self.PRODUCTS + [f'Product {chr(65+i)}' for i in range(10)]
+            elif category_type == 'regions':
+                base_labels = self.REGIONS + ['Europe', 'Asia', 'Africa', 'Oceania', 'South America', 'North America']
+            elif category_type == 'departments':
+                base_labels = self.DEPARTMENTS
+            elif category_type == 'technologies':
+                base_labels = ['Python', 'JavaScript', 'Java', 'C++', 'Go', 'Rust', 'TypeScript', 
+                              'Ruby', 'PHP', 'Swift', 'Kotlin', 'C#', 'R', 'MATLAB']
+            elif category_type == 'market_segments':
+                base_labels = ['Enterprise', 'SMB', 'Consumer', 'Education', 'Government', 
+                              'Healthcare', 'Retail', 'Finance', 'Manufacturing', 'Technology']
+            else:  # custom
+                base_labels = [f'Category {chr(65+i)}' for i in range(26)]
+            
+            # Ensure unique labels
+            if len(base_labels) < num_categories:
+                base_labels.extend([f'Item {i}' for i in range(num_categories - len(base_labels))])
+            
+            labels = random.sample(base_labels, num_categories)
+            
+            # Generate sizes based on distribution
+            if distribution == 'uniform':
+                sizes = [random.randint(value_range[0], value_range[1]) for _ in range(num_categories)]
+            
+            elif distribution == 'power_law':
+                sizes = []
+                for i in range(num_categories):
+                    u = random.random()
+                    x_min = value_range[0]
+                    x_max = value_range[1]
+                    x = x_min * ((x_max / x_min) ** u)
+                    sizes.append(int(x))
+                sizes.sort(reverse=True)
+            
+            elif distribution == 'exponential':
+                sizes = []
+                for i in range(num_categories):
+                    decay_rate = 0.3
+                    value = value_range[1] * math.exp(-decay_rate * i) + value_range[0]
+                    sizes.append(int(value))
+                random.shuffle(sizes)
+            
+            else:
+                sizes = [random.randint(value_range[0], value_range[1]) for _ in range(num_categories)]
+                sizes.sort(reverse=True)
+            
+            return {
+                'labels': labels,
+                'sizes': sizes
+            }
     
     def generate_hist2d_data(
         self,
@@ -1981,9 +2114,10 @@ class RandomDataGenerator:
             }
         
         elif chart_type == 'time_series_histogram':
-            # Generate timeline series histogram data
-            trend_type = random.choice(['increasing', 'decreasing', 'fluctuating', 'random'])
-            volatility_type = random.choice(['low', 'medium', 'high'])
+            # Generate time series histogram data
+            trend_type = random.choice(['random', 'increasing', 'decreasing', 'cyclical', 
+                                       'volatility_increase', 'volatility_decrease'])
+            volatility = random.choice(['low', 'medium', 'high'])
             num_times = random.choice([8, 10, 12, 15])
             
             data = self.generate_time_series_histogram_data(
@@ -1991,13 +2125,13 @@ class RandomDataGenerator:
                 samples_per_time=random.randint(150, 300),
                 value_range=(0, 100),
                 trend=trend_type,
-                volatility=volatility_type,
+                volatility=volatility,
                 bins=random.choice([15, 20, 25])
             )
-                
-                
+            
+            # Create descriptive title based on trend
             trend_titles = {
-                'random': 'Randoom Walk Distribution',
+                'random': 'Random Walk Distribution',
                 'increasing': 'Upward Trend Distribution',
                 'decreasing': 'Downward Trend Distribution',
                 'cyclical': 'Cyclical Distribution Pattern',
@@ -2005,8 +2139,8 @@ class RandomDataGenerator:
                 'volatility_decrease': 'Decreasing Volatility Over Time'
             }
             
-            title = trend_titles.get(trend_type, 'Distribution Evolution')
-                
+            title = trend_titles.get(trend_type, 'Distribution Evolution Over Time')
+            
             return {
                 'chart_type': 'time_series_histogram',
                 'data': data,
@@ -2016,9 +2150,46 @@ class RandomDataGenerator:
                 'ylabel': random.choice(['Value', 'Measurement', 'Score', 'Performance']),
                 'metadata': {
                     'generated': 'random',
-                    'trend_type': trend_type,
-                    'volatility_type': volatility_type,
-                    'num_time_points': num_times,
+                    'trend': trend_type,
+                    'volatility': volatility,
+                    'num_time_points': num_times
+                }
+            }
+        
+        elif chart_type == 'treemap':
+            # Generate treemap data (hierarchical by default for better appearance)
+            distribution = random.choice(['power_law', 'power_law', 'exponential', 'uniform'])  # Bias toward power_law
+            num_categories = random.choice([10, 12, 14, 16])
+            
+            data = self.generate_treemap_data(
+                num_categories=num_categories,
+                category_type=None,  # Use hierarchical labels (A-1, A-2, B-1, etc.)
+                value_range=(50, 1000),
+                distribution=distribution,
+                hierarchical=True  # Enable hierarchical grouping
+            )
+            
+            # Use generic title for hierarchical treemaps
+            title = random.choice([
+                'Hierarchical Data Distribution',
+                'Category Breakdown',
+                'Market Share Analysis',
+                'Resource Allocation',
+                'Portfolio Distribution'
+            ])
+            
+            return {
+                'chart_type': 'treemap',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': '',
+                'ylabel': '',
+                'metadata': {
+                    'generated': 'random',
+                    'hierarchical': True,
+                    'distribution': distribution,
+                    'num_categories': num_categories
                 }
             }
                 
@@ -2166,11 +2337,12 @@ class RandomDataGenerator:
         
         elif chart_type == 'timeline':
             event_type = random.choice(['project', 'product', 'company'])
-            start = f'{random.randint(2000, 2023)}-{random.randint(1, 12):02d}'
-            end = f'{random.randint(2023, 2024)}-{random.randint(1, 12):02d}'
-            date_range = (start, end)
+            
+            # Generate random date range between 2000-01 and 2024-12
+            date_range = self._random_date_range('2000-01', '2024-12')
+            
             data = self.generate_timeline_data(
-                num_events=random.randint(5, 20),
+                num_events=random.randint(5, 15),
                 date_range=date_range,
                 event_type=event_type
             )
@@ -2191,7 +2363,8 @@ class RandomDataGenerator:
                 'metadata': {
                     'generated': 'random',
                     'num_events': len(data['dates']),
-                    'event_type': event_type
+                    'event_type': event_type,
+                    'date_range': date_range
                 }
             }
         

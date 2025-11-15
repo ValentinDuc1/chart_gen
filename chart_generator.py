@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram','hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -560,6 +560,260 @@ class ChartGenerator:
             ax.plot(time_points, medians, 'y--', linewidth=2.5, 
                    label='Median', alpha=0.8)
             ax.legend(loc='upper right', fontsize=10)
+    
+    def _create_treemap_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a treemap visualization showing hierarchical data as nested rectangles.
+        Uses squarified treemap algorithm for better aspect ratios.
+        
+        Data format:
+        {
+            'labels': ['A-1', 'A-2', 'B-1', ...],  # Category names
+            'sizes': [100, 50, 30, ...],            # Relative sizes
+            'colors': ['#FF0000', ...],             # Optional custom colors
+            'groups': ['A', 'A', 'B', ...],        # Optional: group categories
+        }
+        """
+        import matplotlib.patches as mpatches
+        import numpy as np
+        
+        labels = data.get('labels', [])
+        sizes = np.array(data.get('sizes', []))
+        groups = data.get('groups', None)
+        colors = data.get('colors', None)
+        
+        # Normalize sizes
+        sizes = sizes / sizes.sum()
+        
+        # If groups are provided, organize by groups with color schemes
+        if groups:
+            unique_groups = []
+            seen = set()
+            for g in groups:
+                if g not in seen:
+                    unique_groups.append(g)
+                    seen.add(g)
+            
+            # Assign base colors to groups
+            group_colors = {}
+            cmap_name = kwargs.get('cmap', 'tab10')
+            cmap = plt.cm.get_cmap(cmap_name)
+            
+            for i, group in enumerate(unique_groups):
+                group_colors[group] = cmap(i / len(unique_groups))
+            
+            # Generate colors based on groups (with variations)
+            if colors is None:
+                colors = []
+                group_counts = {}
+                for i, group in enumerate(groups):
+                    if group not in group_counts:
+                        group_counts[group] = 0
+                    
+                    base_color = np.array(group_colors[group])
+                    # Add variation within group
+                    variation = group_counts[group] * 0.1
+                    varied_color = base_color * (0.7 + variation)
+                    varied_color = np.clip(varied_color, 0, 1)
+                    colors.append(varied_color)
+                    group_counts[group] += 1
+        else:
+            # No groups - use colorful palette
+            if colors is None:
+                cmap = plt.cm.get_cmap(kwargs.get('cmap', 'Set3'))
+                colors = [cmap(i / len(labels)) for i in range(len(labels))]
+        
+        # Squarified treemap algorithm
+        def normalize_sizes(sizes, dx, dy):
+            """Normalize sizes to total area."""
+            total_size = sum(sizes)
+            total_area = dx * dy
+            factor = total_area / total_size if total_size > 0 else 0
+            return [s * factor for s in sizes]
+        
+        def worst_ratio(sizes, width):
+            """Calculate worst aspect ratio for a row."""
+            if not sizes or width == 0:
+                return float('inf')
+            
+            total = sum(sizes)
+            min_size = min(sizes)
+            max_size = max(sizes)
+            
+            w_sq = width ** 2
+            t_sq = total ** 2
+            
+            return max(w_sq * max_size / t_sq, t_sq / (w_sq * min_size))
+        
+        def layout_row(sizes, x, y, width, height):
+            """Layout a single row of rectangles."""
+            rects = []
+            total = sum(sizes)
+            
+            if total == 0:
+                return rects
+            
+            # Horizontal or vertical layout
+            if width >= height:
+                # Horizontal layout
+                current_x = x
+                for size in sizes:
+                    rect_width = (size / total) * width if total > 0 else 0
+                    rects.append((current_x, y, rect_width, height))
+                    current_x += rect_width
+            else:
+                # Vertical layout
+                current_y = y
+                for size in sizes:
+                    rect_height = (size / total) * height if total > 0 else 0
+                    rects.append((x, current_y, width, rect_height))
+                    current_y += rect_height
+            
+            return rects
+        
+        def squarify(sizes, x, y, width, height):
+            """Squarified treemap algorithm."""
+            if not sizes:
+                return []
+            
+            if len(sizes) == 1:
+                return [(x, y, width, height)]
+            
+            # Normalize sizes to area
+            sizes = normalize_sizes(sizes, width, height)
+            
+            rectangles = []
+            
+            while sizes:
+                # Decide split direction
+                if width >= height:
+                    # Split horizontally
+                    # Find optimal split point
+                    best_split = 1
+                    best_ratio = float('inf')
+                    
+                    for i in range(1, len(sizes) + 1):
+                        row = sizes[:i]
+                        ratio = worst_ratio(row, height)
+                        
+                        if ratio < best_ratio:
+                            best_ratio = ratio
+                            best_split = i
+                        else:
+                            break
+                    
+                    # Layout this row
+                    row = sizes[:best_split]
+                    row_width = sum(row) / height if height > 0 else 0
+                    row_rects = layout_row(row, x, y, row_width, height)
+                    rectangles.extend(row_rects)
+                    
+                    # Continue with remaining
+                    sizes = sizes[best_split:]
+                    x += row_width
+                    width -= row_width
+                else:
+                    # Split vertically
+                    best_split = 1
+                    best_ratio = float('inf')
+                    
+                    for i in range(1, len(sizes) + 1):
+                        row = sizes[:i]
+                        ratio = worst_ratio(row, width)
+                        
+                        if ratio < best_ratio:
+                            best_ratio = ratio
+                            best_split = i
+                        else:
+                            break
+                    
+                    # Layout this row
+                    row = sizes[:best_split]
+                    row_height = sum(row) / width if width > 0 else 0
+                    row_rects = layout_row(row, x, y, width, row_height)
+                    rectangles.extend(row_rects)
+                    
+                    # Continue with remaining
+                    sizes = sizes[best_split:]
+                    y += row_height
+                    height -= row_height
+            
+            return rectangles
+        
+        # Create rectangles using squarified algorithm
+        rectangles = squarify(list(sizes), 0, 0, 1, 1)
+        
+        # Draw rectangles
+        for i, (x, y, w, h) in enumerate(rectangles):
+            if w < 0.001 or h < 0.001:  # Skip tiny rectangles
+                continue
+            
+            # Draw rectangle with border
+            rect = mpatches.Rectangle((x, y), w, h,
+                                     facecolor=colors[i],
+                                     edgecolor='white',
+                                     linewidth=2.5,
+                                     alpha=0.9)
+            ax.add_patch(rect)
+            
+            # Add labels
+            min_size_for_label = kwargs.get('min_label_size', 0.02)
+            if w * h > min_size_for_label:
+                # Calculate font size based on rectangle size
+                area = w * h
+                font_size = np.clip(8 + area * 30, 7, 14)
+                
+                # Percentage
+                percentage = sizes[i] * 100
+                
+                # Format label
+                label_text = labels[i]
+                
+                # Determine text color (black or white based on background)
+                color_rgb = colors[i]
+                if isinstance(color_rgb, (list, tuple, np.ndarray)) and len(color_rgb) >= 3:
+                    brightness = 0.299 * color_rgb[0] + 0.587 * color_rgb[1] + 0.114 * color_rgb[2]
+                else:
+                    brightness = 0.5
+                
+                text_color = 'white' if brightness < 0.5 else 'black'
+                
+                # Add text (two lines: label and percentage)
+                if w > 0.08 and h > 0.08:
+                    # Large enough for two lines
+                    ax.text(x + w/2, y + h/2 + 0.015, label_text,
+                           ha='center', va='center',
+                           fontsize=font_size,
+                           fontweight='bold',
+                           color=text_color)
+                    ax.text(x + w/2, y + h/2 - 0.015, f'{percentage:.1f}%',
+                           ha='center', va='center',
+                           fontsize=font_size * 0.85,
+                           color=text_color)
+                elif w * h > 0.015:
+                    # Medium size - single line
+                    ax.text(x + w/2, y + h/2, f'{label_text}\n{percentage:.1f}%',
+                           ha='center', va='center',
+                           fontsize=max(6, font_size * 0.8),
+                           fontweight='bold',
+                           color=text_color)
+        
+        # Set limits and appearance
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.set_aspect('equal')
+        ax.axis('off')
+        
+        # Add title
+        ax.set_title(title, fontsize=16, fontweight='bold', pad=15)
     
     def _create_pie_chart(
         self,

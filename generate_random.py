@@ -43,7 +43,7 @@ Examples:
     parser.add_argument(
         '-t', '--types',
         nargs='+',
-        choices=['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot'],
+        choices=['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot'],
         help='Specific chart types to generate (random if not specified)'
     )
     
@@ -84,7 +84,7 @@ Examples:
     
     # Determine which charts to generate
     if args.one_of_each:
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
         print(f"Generating one chart of each type...")
     elif args.types:
         chart_types = args.types * ((args.num // len(args.types)) + 1)

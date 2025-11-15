@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram','hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -311,6 +311,255 @@ class ChartGenerator:
                    transform=ax.transAxes, ha='right', va='bottom',
                    bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.5),
                    fontsize=10)
+    
+    def _create_cumulative_distribution_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a cumulative distribution function (CDF) chart.
+        Shows cumulative probability: P(X ≤ x)
+        
+        Data format:
+        {
+            'values': [0, 1, 2, 3, 4, 5],  # Discrete values (x-axis)
+            'probabilities': [0.05, 0.15, 0.25, 0.30, 0.20, 0.05],  # P(X=x)
+            'labels': ['X=0', 'X=1', ...],  # Optional custom labels
+        }
+        
+        OR for continuous approximation:
+        {
+            'x': [0, 1, 2, 3, ...],  # Values
+            'cdf': [0.05, 0.20, 0.45, 0.75, ...]  # Pre-calculated CDF values
+        }
+        """
+        import numpy as np
+        
+        # Check if CDF is pre-calculated or needs to be computed
+        if 'cdf' in data and 'x' in data:
+            # Pre-calculated CDF with x values
+            x_values = np.array(data.get('x', []))
+            cdf_values = np.array(data.get('cdf', []))
+        elif 'cdf' in data and 'values' in data:
+            # CDF calculated from discrete distribution with numeric values
+            x_values = np.array(data.get('values', []))
+            cdf_values = np.array(data.get('cdf', []))
+        elif 'cdf' in data and 'categories' in data:
+            # CDF calculated from categorical distribution (e.g., ratings, scores)
+            # Use index positions for categories
+            categories = data.get('categories', [])
+            x_values = np.arange(len(categories))
+            cdf_values = np.array(data.get('cdf', []))
+            # Store categories for later use in labels
+            category_labels = categories
+        else:
+            # Calculate CDF from probabilities
+            values = np.array(data.get('values', []))
+            probabilities = np.array(data.get('probabilities', []))
+            
+            # Normalize probabilities if needed
+            prob_sum = sum(probabilities)
+            if not (0.99 <= prob_sum <= 1.01):
+                probabilities = probabilities / prob_sum
+            
+            # Calculate cumulative distribution
+            cdf_values = np.cumsum(probabilities)
+            x_values = values
+        
+        # Plot style
+        plot_style = kwargs.get('plot_style', 'step')  # 'step', 'line', or 'both'
+        
+        if plot_style == 'step' or plot_style == 'both':
+            # Step plot (typical for discrete distributions)
+            ax.step(x_values, cdf_values, where='post', linewidth=2.5, 
+                   color='#2E86AB', label='CDF', alpha=0.9)
+            
+            # Add markers at data points
+            ax.plot(x_values, cdf_values, 'o', color='#2E86AB', 
+                   markersize=8, markeredgecolor='white', markeredgewidth=1.5)
+        
+        if plot_style == 'line' or plot_style == 'both':
+            # Smooth line (for continuous approximation)
+            ax.plot(x_values, cdf_values, linewidth=2.5, 
+                   color='#A23B72', linestyle='--', alpha=0.7, label='Smooth CDF')
+        
+        # Add horizontal line at y=1.0
+        ax.axhline(y=1.0, color='red', linestyle='--', linewidth=1, 
+                  alpha=0.5, label='Total = 1.0')
+        
+        # Add horizontal line at y=0.5 (median)
+        ax.axhline(y=0.5, color='green', linestyle=':', linewidth=1, 
+                  alpha=0.5, label='Median (50%)')
+        
+        # Shade area under curve
+        if kwargs.get('shade_area', True):
+            ax.fill_between(x_values, 0, cdf_values, alpha=0.2, color='#2E86AB', 
+                           step='post' if plot_style == 'step' else None)
+        
+        # Add value labels at key points
+        if kwargs.get('show_values', True):
+            # Show values at quartiles
+            quartile_indices = [int(len(cdf_values) * q) for q in [0.25, 0.5, 0.75]]
+            for idx in quartile_indices:
+                if 0 <= idx < len(x_values):
+                    ax.annotate(f'{cdf_values[idx]:.2f}',
+                              xy=(x_values[idx], cdf_values[idx]),
+                              xytext=(5, 5), textcoords='offset points',
+                              fontsize=9, bbox=dict(boxstyle='round,pad=0.3',
+                              facecolor='yellow', alpha=0.5))
+        
+        # Set labels and title
+        ax.set_xlabel(xlabel or 'Value', fontsize=12, fontweight='bold')
+        ax.set_ylabel(ylabel or 'Cumulative Probability', fontsize=12, fontweight='bold')
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        
+        # Set axis limits
+        ax.set_xlim(min(x_values) - 0.5, max(x_values) + 0.5)
+        ax.set_ylim(-0.05, 1.1)
+        
+        # Set x-tick labels for categorical data
+        if 'categories' in data and 'category_labels' in locals():
+            ax.set_xticks(x_values)
+            ax.set_xticklabels(category_labels)
+        
+        # Add grid
+        ax.grid(True, alpha=0.3, linestyle='--')
+        
+        # Add legend
+        if plot_style == 'both' or kwargs.get('show_legend', True):
+            ax.legend(loc='lower right', fontsize=10)
+        
+        # Add statistics text box
+        if kwargs.get('show_stats', True):
+            # Check if we have numeric values for statistics
+            if 'values' in data and 'probabilities' in data:
+                values = np.array(data['values'])
+                probs = np.array(data['probabilities'])
+                
+                mean = np.sum(values * probs)
+                variance = np.sum((values - mean)**2 * probs)
+                std_dev = np.sqrt(variance)
+                
+                # Find median (where CDF ≈ 0.5)
+                median_idx = np.argmin(np.abs(cdf_values - 0.5))
+                median = x_values[median_idx]
+                
+                stats_text = f'Mean: {mean:.2f}\nMedian: {median:.2f}\nStd Dev: {std_dev:.2f}'
+                ax.text(0.02, 0.98, stats_text,
+                       transform=ax.transAxes, ha='left', va='top',
+                       bbox=dict(boxstyle='round', facecolor='white', alpha=0.8),
+                       fontsize=9, family='monospace')
+            elif 'categories' in data:
+                # For categorical data, just show median category
+                median_idx = np.argmin(np.abs(cdf_values - 0.5))
+                if 'category_labels' in locals():
+                    median_cat = category_labels[median_idx]
+                    stats_text = f'Median: {median_cat}'
+                    ax.text(0.02, 0.98, stats_text,
+                           transform=ax.transAxes, ha='left', va='top',
+                           bbox=dict(boxstyle='round', facecolor='white', alpha=0.8),
+                           fontsize=9, family='monospace')
+    
+    def _create_time_series_histogram_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a time series histogram showing distribution evolution over time.
+        
+        Data format:
+        {
+            'time_points': [0, 1, 2, 3, ...],  # Time steps or dates
+            'data_series': [                    # Data at each time point
+                [10, 15, 12, 18, ...],         # Data at time 0
+                [12, 16, 14, 20, ...],         # Data at time 1
+                ...
+            ],
+            'bins': 20,  # Optional: number of bins (default: auto)
+            'labels': ['Jan', 'Feb', ...]  # Optional: time labels
+        }
+        """
+        import numpy as np
+        
+        time_points = data.get('time_points', [])
+        data_series = data.get('data_series', [])
+        num_bins = data.get('bins', kwargs.get('bins', 20))
+        time_labels = data.get('labels', None)
+        
+        # Determine global min/max for consistent binning
+        all_data = np.concatenate(data_series)
+        data_min, data_max = all_data.min(), all_data.max()
+        
+        # Create bin edges
+        bin_edges = np.linspace(data_min, data_max, num_bins + 1)
+        bin_centers = (bin_edges[:-1] + bin_edges[1:]) / 2
+        
+        # Calculate histogram for each time point
+        histogram_matrix = np.zeros((num_bins, len(time_points)))
+        
+        for i, time_data in enumerate(data_series):
+            counts, _ = np.histogram(time_data, bins=bin_edges)
+            histogram_matrix[:, i] = counts
+        
+        # Create meshgrid for pcolormesh
+        T, Y = np.meshgrid(time_points, bin_centers)
+        
+        # Plot using pcolormesh
+        cmap = kwargs.get('cmap', 'viridis')
+        pcm = ax.pcolormesh(T, Y, histogram_matrix, 
+                           cmap=cmap, 
+                           shading='auto',
+                           alpha=0.9)
+        
+        # Add colorbar
+        cbar = ax.figure.colorbar(pcm, ax=ax, label='Frequency')
+        cbar.ax.tick_params(labelsize=10)
+        
+        # Set labels and title
+        ax.set_xlabel(xlabel or 'Time', fontsize=12, fontweight='bold')
+        ax.set_ylabel(ylabel or 'Value', fontsize=12, fontweight='bold')
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        
+        # Set custom time labels if provided
+        if time_labels and len(time_labels) == len(time_points):
+            ax.set_xticks(time_points)
+            ax.set_xticklabels(time_labels, rotation=45, ha='right')
+        
+        # Add grid for readability
+        ax.grid(True, alpha=0.3, linestyle='--', color='white', linewidth=0.5)
+        
+        # Optional: Add contour lines to show density
+        if kwargs.get('show_contours', True):
+            contour_levels = kwargs.get('contour_levels', 5)
+            contours = ax.contour(T, Y, histogram_matrix, 
+                                 levels=contour_levels,
+                                 colors='white', 
+                                 alpha=0.4, 
+                                 linewidths=1)
+        
+        # Optional: Overlay mean line
+        if kwargs.get('show_mean', True):
+            means = [np.mean(time_data) for time_data in data_series]
+            ax.plot(time_points, means, 'r-', linewidth=2.5, 
+                   label='Mean', alpha=0.8)
+            ax.legend(loc='upper right', fontsize=10)
+        
+        # Optional: Overlay median line
+        if kwargs.get('show_median', False):
+            medians = [np.median(time_data) for time_data in data_series]
+            ax.plot(time_points, medians, 'y--', linewidth=2.5, 
+                   label='Median', alpha=0.8)
+            ax.legend(loc='upper right', fontsize=10)
     
     def _create_pie_chart(
         self,

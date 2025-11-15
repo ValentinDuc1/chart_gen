@@ -7,6 +7,7 @@ import random
 import string
 from typing import Dict, Any, List, Optional
 
+
 class RandomDataGenerator:
     """Generate random data suitable for different chart types."""
     
@@ -32,6 +33,35 @@ class RandomDataGenerator:
         """
         if seed is not None:
             random.seed(seed)
+    
+    def _random_date_range(self, start='2000-01', end='2024-12'):
+        """
+        Generate a random date range within bounds.
+        
+        Args:
+            start: Start bound as 'YYYY-MM'
+            end: End bound as 'YYYY-MM'
+            
+        Returns:
+            Tuple of (start_date, end_date) as 'YYYY-MM' strings
+        """
+        # Parse bounds
+        sy, sm = map(int, start.split('-'))
+        ey, em = map(int, end.split('-'))
+        
+        # Random start
+        y1 = random.randint(sy, ey)
+        m1 = random.randint(1, 12)
+        
+        # Random end after start
+        y2 = random.randint(y1, ey)
+        m2 = random.randint(1, 12)
+        
+        # Ensure end is after start
+        if y2 == y1 and m2 < m1:
+            m2 = m1
+        
+        return (f'{y1}-{m1:02d}', f'{y2}-{m2:02d}')
     
     def generate_line_data(
         self,
@@ -688,6 +718,65 @@ class RandomDataGenerator:
         
         else:
             return self.generate_discrete_distribution_data('binomial', **kwargs)
+    
+    def generate_cumulative_distribution_data(
+        self,
+        distribution_type: str = 'range',
+        num_values: int = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """
+        Generate data for cumulative distribution function (CDF) charts.
+        
+        Args:
+            distribution_type: Type of distribution (same as discrete_distribution_data)
+                - 'binomial', 'poisson', 'uniform', 'dice', 'rating', 'score', 'custom'
+                - 'normal_approx': Continuous normal approximation
+            num_values: Number of discrete values (auto-determined for most types)
+            **kwargs: Distribution-specific parameters
+            
+        Returns:
+            Dictionary with 'values', 'probabilities', 'cdf', and 'labels' keys
+        """
+        import numpy as np
+        
+        # Special case: continuous normal approximation
+        if distribution_type == 'normal_approx':
+            mean = kwargs.get('mean', 50)
+            std = kwargs.get('std', 15)
+            num_points = kwargs.get('num_points', 100)
+            
+            # Generate x values
+            x_min = mean - 3 * std
+            x_max = mean + 3 * std
+            x_values = np.linspace(x_min, x_max, num_points)
+            
+            # Calculate CDF using error function
+            from scipy import special
+            cdf_values = 0.5 * (1 + special.erf((x_values - mean) / (std * np.sqrt(2))))
+            
+            return {
+                'x': x_values.tolist(),
+                'cdf': cdf_values.tolist(),
+                'distribution_params': {'type': 'normal', 'mean': mean, 'std': std}
+            }
+        
+        # For discrete distributions, get PMF first
+        pmf_data = self.generate_discrete_distribution_data(
+            distribution_type=distribution_type,
+            num_values=num_values,
+            **kwargs
+        )
+        
+        # Calculate cumulative distribution
+        probabilities = pmf_data['probabilities']
+        cdf = np.cumsum(probabilities).tolist()
+        
+        # Build result with both PMF and CDF
+        result = pmf_data.copy()
+        result['cdf'] = cdf
+        
+        return result
     
     def generate_hist2d_data(
         self,
@@ -1366,7 +1455,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'timeline_series_histogram', 'cumulative_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -1742,9 +1831,83 @@ class RandomDataGenerator:
                 }
             }
         
+        elif chart_type == 'cumulative_distribution':
+            dist_type = random.choice(['binomial', 'poisson', 'uniform', 'rating', 'score'])
+            
+            if dist_type == 'binomial':
+                data = self.generate_cumulative_distribution_data('binomial', n=random.choice([8, 10, 12, 15]), p=round(random.uniform(0.3, 0.7), 1))
+                title = 'Binomial CDF'
+            elif dist_type == 'poisson':
+                data = self.generate_cumulative_distribution_data('poisson', lambda_rate=round(random.uniform(2.0, 6.0), 1))
+                title = 'Poisson CDF'
+            elif dist_type == 'uniform':
+                data = self.generate_cumulative_distribution_data('uniform', min_val=1, max_val=random.choice([6, 8, 10]))
+                title = 'Discrete Uniform CDF'
+            elif dist_type == 'rating':
+                data = self.generate_cumulative_distribution_data('rating', skew=random.choice(['positive', 'neutral']))
+                title = 'Customer Rating CDF'
+            else:  # score
+                data = self.generate_cumulative_distribution_data('score', grade_type=random.choice(['normal', 'easy', 'hard']))
+                title = 'Grade CDF'
+            
+            return {
+                'chart_type': 'cumulative_distribution',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': random.choice(['Value', 'Outcome', 'Score']),
+                'ylabel': 'Cumulative Probability',
+                'metadata': {
+                    'generated': 'random',
+                    'distribution_type': dist_type
+                }
+            }
+        
+        elif chart_type == 'timeline_series_histogram':
+            # Generate timeline series histogram data
+            trend_type = random.choice(['increasing', 'decreasing', 'fluctuating', 'random'])
+            volatility_type = random.choice(['low', 'medium', 'high'])
+            num_times = random.choice([8, 10, 12, 15])
+            
+            data = self.generate_timeline_series_histogram_data(
+                num_time_point=num_times,
+                samples_per_time=random.randint([150, 300]),
+                value_range=(0, 100),
+                trend=trend_type,
+                volatility=volatility_type,
+                bins=random.choice([15, 20, 25])
+            )
+                
+                
+            trend_titles = {
+                'random': 'Randoom Walk Distribution',
+                'increasing': 'Upward Trend Distribution',
+                'decreasing': 'Downward Trend Distribution',
+                'cyclical': 'Cyclical Distribution Pattern',
+                'volatility_increase': 'Increasing Volatility Over Time',
+                'volatility_decrease': 'Decreasing Volatility Over Time'
+            }
+            
+            title = trend_titles.get(trend_type, 'Distribution Evolution')
+                
+            return {
+                'chart_type': 'timeline_series_histogram',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': 'Time Period',
+                'ylabel': random.choice(['Value', 'Measurement', 'Score', 'Performance']),
+                'metadata': {
+                    'generated': 'random',
+                    'trend_type': trend_type,
+                    'volatility_type': volatility_type,
+                    'num_time_points': num_times,
+                }
+            }
+                
         elif chart_type == 'hist2d':
             # Generate 2D histogram data
-            dist_type = random.choice(['random', 'clustered', 'diagonal', 'circular', 'normal'])
+            dist_type = random.choice(['random', 'increasing', 'decreasing', 'cyclical', 'volatility_increase', 'volatility_decrease'])
             num_points = random.choice([150, 200, 250, 300])
             
             data = self.generate_hist2d_data(

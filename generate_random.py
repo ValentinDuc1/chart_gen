@@ -84,7 +84,7 @@ Examples:
     
     # Determine which charts to generate
     if args.one_of_each:
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'timeline_series_histogram', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
         print(f"Generating one chart of each type...")
     elif args.types:
         chart_types = args.types * ((args.num // len(args.types)) + 1)

@@ -778,6 +778,123 @@ class RandomDataGenerator:
         
         return result
     
+    def generate_time_series_histogram_data(
+        self,
+        num_time_points: int = None,
+        samples_per_time: int = None,
+        value_range: tuple = (0, 100),
+        trend: str = None,
+        volatility: str = 'medium',
+        bins: int = 20
+    ) -> Dict[str, Any]:
+        """
+        Generate data for time series histogram charts.
+        Shows how a distribution evolves over time.
+        
+        Args:
+            num_time_points: Number of time steps (default: 12)
+            samples_per_time: Samples at each time point (default: 200)
+            value_range: Range of values (min, max)
+            trend: Distribution trend over time
+                - 'random': Random walk
+                - 'increasing': Mean increases over time
+                - 'decreasing': Mean decreases over time
+                - 'cyclical': Oscillating pattern
+                - 'volatility_increase': Spread increases over time
+                - 'volatility_decrease': Spread decreases over time
+            volatility: Amount of randomness ('low', 'medium', 'high')
+            bins: Number of histogram bins
+            
+        Returns:
+            Dictionary with 'time_points', 'data_series', 'bins', 'labels'
+        """
+        import numpy as np
+        
+        n_times = num_time_points or 12
+        n_samples = samples_per_time or 200
+        
+        time_points = list(range(n_times))
+        data_series = []
+        
+        # Set volatility level
+        vol_levels = {'low': 0.5, 'medium': 1.0, 'high': 2.0}
+        vol_factor = vol_levels.get(volatility, 1.0)
+        
+        # Initial distribution parameters
+        initial_mean = (value_range[0] + value_range[1]) / 2
+        initial_std = (value_range[1] - value_range[0]) / 6
+        
+        # Generate data for each time point
+        for t in range(n_times):
+            t_normalized = t / max(1, n_times - 1)  # 0 to 1
+            
+            if trend == 'increasing':
+                # Mean increases linearly
+                mean = initial_mean + (value_range[1] - initial_mean) * t_normalized * 0.8
+                std = initial_std * vol_factor
+                
+            elif trend == 'decreasing':
+                # Mean decreases linearly
+                mean = initial_mean - (initial_mean - value_range[0]) * t_normalized * 0.8
+                std = initial_std * vol_factor
+                
+            elif trend == 'cyclical':
+                # Oscillating mean
+                mean = initial_mean + np.sin(2 * np.pi * t_normalized * 2) * (value_range[1] - value_range[0]) * 0.25
+                std = initial_std * vol_factor
+                
+            elif trend == 'volatility_increase':
+                # Variance increases over time
+                mean = initial_mean
+                std = initial_std * (0.5 + 1.5 * t_normalized) * vol_factor
+                
+            elif trend == 'volatility_decrease':
+                # Variance decreases over time
+                mean = initial_mean
+                std = initial_std * (1.5 - 1.0 * t_normalized) * vol_factor
+                
+            else:  # random walk
+                # Mean does random walk
+                if t == 0:
+                    mean = initial_mean
+                else:
+                    mean = means[-1] + np.random.normal(0, 5)
+                    mean = np.clip(mean, value_range[0], value_range[1])
+                std = initial_std * vol_factor
+            
+            # Generate samples
+            samples = np.random.normal(mean, std, n_samples)
+            
+            # Clip to value range
+            samples = np.clip(samples, value_range[0], value_range[1])
+            
+            data_series.append(samples.tolist())
+            
+            # Store means for random walk
+            if trend == 'random':
+                if t == 0:
+                    means = [mean]
+                else:
+                    means.append(mean)
+        
+        # Generate time labels (could be months, quarters, etc.)
+        label_options = [
+            self.MONTHS,
+            self.QUARTERS * 3,  # Repeat quarters
+            [f'T{i+1}' for i in range(n_times)],
+            [f'Week {i+1}' for i in range(n_times)]
+        ]
+        labels = random.choice(label_options)[:n_times]
+        
+        return {
+            'time_points': time_points,
+            'data_series': data_series,
+            'bins': bins,
+            'labels': labels,
+            'trend': trend,
+            'volatility': volatility
+        }
+    
     def generate_hist2d_data(
         self,
         num_points: int = None,
@@ -1455,7 +1572,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'timeline_series_histogram', 'cumulative_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'time_series_histogram', 'cumulative_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -1863,15 +1980,15 @@ class RandomDataGenerator:
                 }
             }
         
-        elif chart_type == 'timeline_series_histogram':
+        elif chart_type == 'time_series_histogram':
             # Generate timeline series histogram data
             trend_type = random.choice(['increasing', 'decreasing', 'fluctuating', 'random'])
             volatility_type = random.choice(['low', 'medium', 'high'])
             num_times = random.choice([8, 10, 12, 15])
             
-            data = self.generate_timeline_series_histogram_data(
-                num_time_point=num_times,
-                samples_per_time=random.randint([150, 300]),
+            data = self.generate_time_series_histogram_data(
+                num_time_points=num_times,
+                samples_per_time=random.randint(150, 300),
                 value_range=(0, 100),
                 trend=trend_type,
                 volatility=volatility_type,
@@ -1891,7 +2008,7 @@ class RandomDataGenerator:
             title = trend_titles.get(trend_type, 'Distribution Evolution')
                 
             return {
-                'chart_type': 'timeline_series_histogram',
+                'chart_type': 'time_series_histogram',
                 'data': data,
                 'filename_root': filename_root,
                 'title': title,

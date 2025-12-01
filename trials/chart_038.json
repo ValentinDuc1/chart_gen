@@ -1,0 +1,36 @@
+{
+  "filename_root": "chart_038",
+  "chart_type": "pie",
+  "title": "Market Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "values": [
+      19.1,
+      29.8,
+      5.3,
+      38.3,
+      7.4
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0.1,
+      0
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:07.782579",
+  "png_file": "chart_038.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 5
+  }
+}

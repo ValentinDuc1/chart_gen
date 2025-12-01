@@ -1,0 +1,46 @@
+{
+  "filename_root": "chart_015",
+  "chart_type": "timeline",
+  "title": "Product Development Timeline",
+  "xlabel": "Date",
+  "ylabel": "Events",
+  "data": {
+    "dates": [
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01",
+      "2024-03-01"
+    ],
+    "events": [
+      "Product Launch",
+      "Partnership Announced",
+      "Beta Testing",
+      "Feature Release",
+      "Major Update",
+      "Market Expansion",
+      "Bug Fix Release",
+      "Update v2.0",
+      "Rebranding",
+      "Event 10",
+      "Event 11"
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:02.291617",
+  "png_file": "chart_015.png",
+  "metadata": {
+    "generated": "random",
+    "num_events": 11,
+    "event_type": "product",
+    "date_range": [
+      "2024-03",
+      "2024-03"
+    ]
+  }
+}

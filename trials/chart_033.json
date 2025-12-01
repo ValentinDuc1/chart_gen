@@ -1,0 +1,41 @@
+{
+  "filename_root": "chart_033",
+  "chart_type": "area",
+  "title": "Confidence Interval",
+  "xlabel": "Month",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "y1": [
+      56,
+      63,
+      55,
+      44,
+      45,
+      38
+    ],
+    "y2": [
+      73,
+      90,
+      75,
+      65,
+      62,
+      60
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:06.553134",
+  "png_file": "chart_033.png",
+  "metadata": {
+    "generated": "random",
+    "area_type": "range",
+    "num_points": 6,
+    "step": false
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "filename_root": "chart_057",
+  "chart_type": "discrete_distribution",
+  "title": "Discrete Uniform Distribution",
+  "xlabel": "Probability",
+  "ylabel": "Outcome",
+  "data": {
+    "values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "probabilities": [
+      0.125,
+      0.125,
+      0.125,
+      0.125,
+      0.125,
+      0.125,
+      0.125,
+      0.125
+    ],
+    "labels": [
+      "X=1",
+      "X=2",
+      "X=3",
+      "X=4",
+      "X=5",
+      "X=6",
+      "X=7",
+      "X=8"
+    ],
+    "distribution_params": {
+      "type": "uniform",
+      "min": 1,
+      "max": 8
+    }
+  },
+  "generated_at": "2025-12-01T15:33:12.656062",
+  "png_file": "chart_057.png",
+  "metadata": {
+    "generated": "random",
+    "distribution_type": "uniform"
+  }
+}

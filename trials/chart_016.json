@@ -1,0 +1,48 @@
+{
+  "filename_root": "chart_016",
+  "chart_type": "pie",
+  "title": "Share Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "North",
+      "South",
+      "East",
+      "West",
+      "Central",
+      "Northeast",
+      "Southeast",
+      "Northwest",
+      "Southwest"
+    ],
+    "values": [
+      8.4,
+      4.0,
+      9.9,
+      16.8,
+      8.8,
+      13.1,
+      12.4,
+      10.9,
+      15.7
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0.1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:02.542768",
+  "png_file": "chart_016.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 9
+  }
+}

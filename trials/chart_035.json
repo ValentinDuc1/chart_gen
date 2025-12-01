@@ -1,0 +1,47 @@
+{
+  "filename_root": "chart_035",
+  "chart_type": "stacked_bar",
+  "title": "Annual Distribution by Quarter",
+  "xlabel": "Quarter",
+  "ylabel": "Total Sales ($K)",
+  "data": {
+    "categories": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "groups": [
+      "2020",
+      "2021",
+      "2022"
+    ],
+    "values": [
+      [
+        86,
+        112,
+        46,
+        110
+      ],
+      [
+        100,
+        60,
+        35,
+        118
+      ],
+      [
+        117,
+        53,
+        107,
+        110
+      ]
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:07.039127",
+  "png_file": "chart_035.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 3,
+    "num_categories": 4
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "filename_root": "chart_092",
+  "chart_type": "line",
+  "title": "Revenue Over Time",
+  "xlabel": "Time Period",
+  "ylabel": "Amount ($K)",
+  "data": {
+    "x": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "y": [
+      [
+        95,
+        88,
+        77,
+        68,
+        61,
+        55,
+        48,
+        39,
+        24,
+        24
+      ],
+      [
+        95,
+        92,
+        85,
+        73,
+        63,
+        54,
+        44,
+        35,
+        33,
+        14
+      ],
+      [
+        95,
+        91,
+        78,
+        73,
+        66,
+        56,
+        50,
+        42,
+        29,
+        14
+      ],
+      [
+        100,
+        90,
+        83,
+        68,
+        69,
+        59,
+        51,
+        37,
+        26,
+        21
+      ]
+    ],
+    "labels": [
+      "Product A",
+      "Product A",
+      "Product C",
+      "Product B"
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:22.232300",
+  "png_file": "chart_092.png",
+  "metadata": {
+    "generated": "random",
+    "series_count": 4
+  }
+}

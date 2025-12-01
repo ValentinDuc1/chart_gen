@@ -1,0 +1,71 @@
+{
+  "filename_root": "chart_047",
+  "chart_type": "bar3d",
+  "title": "Sales by Product and Region",
+  "xlabel": "Category 1",
+  "ylabel": "Category 2",
+  "data": {
+    "x": [
+      0,
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      2
+    ],
+    "y": [
+      0,
+      1,
+      2,
+      3,
+      0,
+      1,
+      2,
+      3,
+      0,
+      1,
+      2,
+      3
+    ],
+    "z": [
+      77,
+      44,
+      47,
+      95,
+      41,
+      94,
+      89,
+      70,
+      76,
+      80,
+      75,
+      79
+    ],
+    "dx": 0.8,
+    "dy": 0.8,
+    "x_labels": [
+      "North",
+      "South",
+      "East"
+    ],
+    "y_labels": [
+      "Y1",
+      "Y2",
+      "Y3",
+      "Y4"
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:09.937280",
+  "png_file": "chart_047.png",
+  "metadata": {
+    "generated": "random",
+    "num_x": 3,
+    "num_y": 4
+  }
+}

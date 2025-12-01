@@ -1,0 +1,46 @@
+{
+  "filename_root": "chart_082",
+  "chart_type": "grouped_bar",
+  "title": "Regional Performance by Month",
+  "xlabel": "Month",
+  "ylabel": "Sales ($K)",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "North",
+      "South"
+    ],
+    "values": [
+      [
+        77,
+        88,
+        33,
+        32,
+        37,
+        101
+      ],
+      [
+        59,
+        41,
+        104,
+        102,
+        117,
+        31
+      ]
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:19.633039",
+  "png_file": "chart_082.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 6
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "filename_root": "chart_050",
+  "chart_type": "grouped_bar",
+  "title": "Product Performance by Month",
+  "xlabel": "Month",
+  "ylabel": "Revenue",
+  "data": {
+    "categories": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun"
+    ],
+    "groups": [
+      "Product A",
+      "Product B"
+    ],
+    "values": [
+      [
+        50,
+        47,
+        50,
+        35,
+        112,
+        98
+      ],
+      [
+        37,
+        75,
+        88,
+        102,
+        62,
+        64
+      ]
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:10.655034",
+  "png_file": "chart_050.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 6
+  }
+}

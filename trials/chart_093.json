@@ -1,0 +1,40 @@
+{
+  "filename_root": "chart_093",
+  "chart_type": "stacked_bar",
+  "title": "Quarterly Distribution by Product",
+  "xlabel": "Product",
+  "ylabel": "Total Revenue",
+  "data": {
+    "categories": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D"
+    ],
+    "groups": [
+      "Q1",
+      "Q2"
+    ],
+    "values": [
+      [
+        60,
+        115,
+        98,
+        51
+      ],
+      [
+        32,
+        90,
+        77,
+        94
+      ]
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:22.491948",
+  "png_file": "chart_093.png",
+  "metadata": {
+    "generated": "random",
+    "num_groups": 2,
+    "num_categories": 4
+  }
+}

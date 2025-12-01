@@ -1,0 +1,30 @@
+{
+  "filename_root": "chart_096",
+  "chart_type": "bar",
+  "title": "Category Performance",
+  "xlabel": "Category",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Category A",
+      "Category B",
+      "Category C",
+      "Category D",
+      "Category E"
+    ],
+    "y": [
+      16,
+      38,
+      73,
+      78,
+      42
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:23.146648",
+  "png_file": "chart_096.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 5,
+    "x_type": "categories"
+  }
+}

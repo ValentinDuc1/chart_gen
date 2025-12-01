@@ -1,0 +1,30 @@
+{
+  "filename_root": "chart_069",
+  "chart_type": "bar",
+  "title": "Product Performance",
+  "xlabel": "Product",
+  "ylabel": "Value",
+  "data": {
+    "x": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "y": [
+      39,
+      11,
+      16,
+      75,
+      94
+    ]
+  },
+  "generated_at": "2025-12-01T15:33:15.807652",
+  "png_file": "chart_069.png",
+  "metadata": {
+    "generated": "random",
+    "bar_count": 5,
+    "x_type": "products"
+  }
+}

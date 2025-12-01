@@ -1279,7 +1279,405 @@ class RandomDataGenerator:
             'x_labels': x_labels,
             'y_labels': y_labels
         }
+    def generate_line3d_data(
+        self,
+        num_points: int = None,
+        num_lines: int = 1,
+        trajectory_type: str = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for 3D line plots (trajectories).
+        
+        Args:
+            num_points: Number of points per line (default: random 50-200)
+            num_lines: Number of lines
+            trajectory_type: 'spiral', 'helix', 'random_walk', 'lissajous', 'parametric'
+            
+        Returns:
+            Dictionary with 'x', 'y', 'z' or 'lines' keys
+        """
+        import numpy as np
+        
+        num_points = num_points or random.randint(50, 200)
+        
+        if trajectory_type is None:
+            trajectory_type = random.choice(['spiral', 'helix', 'random_walk', 'lissajous'])
+        
+        if num_lines == 1:
+            t = np.linspace(0, 4*np.pi, num_points)
+            
+            if trajectory_type == 'helix':
+                x = np.cos(t)
+                y = np.sin(t)
+                z = t / (2*np.pi)
+            
+            elif trajectory_type == 'spiral':
+                r = t / (4*np.pi)
+                x = r * np.cos(t * 2)
+                y = r * np.sin(t * 2)
+                z = t / (4*np.pi)
+            
+            elif trajectory_type == 'lissajous':
+                a, b = random.randint(1, 4), random.randint(1, 4)
+                x = np.sin(a * t)
+                y = np.cos(b * t)
+                z = np.sin((a + b) * t / 2)
+            
+            else:  # random_walk
+                x = np.cumsum(np.random.randn(num_points)) * 0.1
+                y = np.cumsum(np.random.randn(num_points)) * 0.1
+                z = np.cumsum(np.random.randn(num_points)) * 0.1
+            
+            return {
+                'x': x.tolist(),
+                'y': y.tolist(),
+                'z': z.tolist()
+            }
+        else:
+            # Multiple lines
+            lines = []
+            for _ in range(num_lines):
+                t = np.linspace(0, 4*np.pi, num_points)
+                offset = random.uniform(-2, 2)
+                
+                x = np.cos(t) + offset
+                y = np.sin(t) + offset
+                z = t / (2*np.pi) + offset
+                
+                lines.append([x.tolist(), y.tolist(), z.tolist()])
+            
+            return {'lines': lines}
     
+    def generate_wireframe3d_data(
+        self,
+        x_range: tuple = (-5, 5),
+        y_range: tuple = (-5, 5),
+        resolution: int = 30,
+        function_type: str = None
+    ) -> Dict[str, Any]:
+        """Generate data for wireframe (same as surface but rendered differently)."""
+        return self.generate_surface3d_data(x_range, y_range, resolution, function_type)
+    
+    def generate_quiver3d_data(
+        self,
+        grid_size: tuple = None,
+        field_type: str = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for 3D vector field (quiver) plots.
+        
+        Args:
+            grid_size: (nx, ny, nz) grid dimensions
+            field_type: 'radial', 'circular', 'vortex', 'uniform', 'random'
+            
+        Returns:
+            Dictionary with 'x', 'y', 'z', 'u', 'v', 'w' keys
+        """
+        import numpy as np
+        
+        grid_size = grid_size or (5, 5, 5)
+        nx, ny, nz = grid_size
+        
+        if field_type is None:
+            field_type = random.choice(['radial', 'circular', 'vortex', 'uniform'])
+        
+        # Create grid
+        x = np.linspace(-2, 2, nx)
+        y = np.linspace(-2, 2, ny)
+        z = np.linspace(-2, 2, nz)
+        X, Y, Z = np.meshgrid(x, y, z)
+        
+        # Flatten for quiver
+        x_flat = X.flatten()
+        y_flat = Y.flatten()
+        z_flat = Z.flatten()
+        
+        if field_type == 'radial':
+            # Pointing outward from center
+            u = x_flat
+            v = y_flat
+            w = z_flat
+        
+        elif field_type == 'circular':
+            # Circular around z-axis
+            u = -y_flat
+            v = x_flat
+            w = np.zeros_like(z_flat)
+        
+        elif field_type == 'vortex':
+            # Vortex field
+            r = np.sqrt(x_flat**2 + y_flat**2)
+            u = -y_flat / (r + 0.1)
+            v = x_flat / (r + 0.1)
+            w = z_flat * 0.5
+        
+        elif field_type == 'uniform':
+            # Uniform field in one direction
+            direction = random.choice(['x', 'y', 'z'])
+            if direction == 'x':
+                u = np.ones_like(x_flat)
+                v = np.zeros_like(y_flat)
+                w = np.zeros_like(z_flat)
+            elif direction == 'y':
+                u = np.zeros_like(x_flat)
+                v = np.ones_like(y_flat)
+                w = np.zeros_like(z_flat)
+            else:
+                u = np.zeros_like(x_flat)
+                v = np.zeros_like(y_flat)
+                w = np.ones_like(z_flat)
+        
+        else:  # random
+            u = np.random.randn(len(x_flat))
+            v = np.random.randn(len(y_flat))
+            w = np.random.randn(len(z_flat))
+        
+        return {
+            'x': x_flat.tolist(),
+            'y': y_flat.tolist(),
+            'z': z_flat.tolist(),
+            'u': u.tolist(),
+            'v': v.tolist(),
+            'w': w.tolist()
+        }
+    
+    def generate_stem3d_data(
+        self,
+        num_points: int = None,
+        x_range: tuple = (0, 10),
+        y_range: tuple = (0, 10),
+        z_range: tuple = (0, 100),
+        pattern: str = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for 3D stem plots.
+        
+        Args:
+            num_points: Number of stems (default: random 15-30)
+            x_range, y_range, z_range: Ranges for coordinates
+            pattern: 'random', 'grid', 'decreasing'
+            
+        Returns:
+            Dictionary with 'x', 'y', 'z' keys
+        """
+        import numpy as np
+        
+        num_points = num_points or random.randint(15, 30)
+        
+        if pattern is None:
+            pattern = random.choice(['random', 'grid', 'decreasing'])
+        
+        if pattern == 'grid':
+            # Regular grid
+            n_side = int(np.sqrt(num_points))
+            x = np.repeat(np.linspace(x_range[0], x_range[1], n_side), n_side)
+            y = np.tile(np.linspace(y_range[0], y_range[1], n_side), n_side)
+            z = np.random.uniform(z_range[0], z_range[1], n_side * n_side)
+        
+        elif pattern == 'decreasing':
+            # Heights decrease with distance from center
+            x = np.random.uniform(x_range[0], x_range[1], num_points)
+            y = np.random.uniform(y_range[0], y_range[1], num_points)
+            
+            cx = (x_range[0] + x_range[1]) / 2
+            cy = (y_range[0] + y_range[1]) / 2
+            
+            dist = np.sqrt((x - cx)**2 + (y - cy)**2)
+            max_dist = np.max(dist)
+            z = z_range[1] * (1 - dist / max_dist)
+        
+        else:  # random
+            x = np.random.uniform(x_range[0], x_range[1], num_points)
+            y = np.random.uniform(y_range[0], y_range[1], num_points)
+            z = np.random.uniform(z_range[0], z_range[1], num_points)
+        
+        return {
+            'x': x.tolist(),
+            'y': y.tolist(),
+            'z': z.tolist()
+        }
+    
+    def generate_parametric3d_data(
+        self,
+        surface_type: str = None,
+        resolution: int = 50
+    ) -> Dict[str, Any]:
+        """
+        Generate parametric surface data (torus, sphere, etc.).
+        
+        Args:
+            surface_type: 'torus', 'sphere', 'mobius', 'klein_bottle', 'figure8'
+            resolution: Grid resolution
+            
+        Returns:
+            Dictionary with 'x', 'y', 'z', 'surface_type' keys
+        """
+        import numpy as np
+        
+        if surface_type is None:
+            surface_type = random.choice(['torus', 'sphere', 'figure8', 'mobius'])
+        
+        if surface_type == 'torus':
+            # Torus parameters
+            R = 3  # Major radius
+            r = 1  # Minor radius
+            
+            u = np.linspace(0, 2*np.pi, resolution)
+            v = np.linspace(0, 2*np.pi, resolution)
+            U, V = np.meshgrid(u, v)
+            
+            X = (R + r * np.cos(V)) * np.cos(U)
+            Y = (R + r * np.cos(V)) * np.sin(U)
+            Z = r * np.sin(V)
+        
+        elif surface_type == 'sphere':
+            u = np.linspace(0, 2*np.pi, resolution)
+            v = np.linspace(0, np.pi, resolution)
+            U, V = np.meshgrid(u, v)
+            
+            radius = 3
+            X = radius * np.sin(V) * np.cos(U)
+            Y = radius * np.sin(V) * np.sin(U)
+            Z = radius * np.cos(V)
+        
+        elif surface_type == 'mobius':
+            u = np.linspace(0, 2*np.pi, resolution)
+            v = np.linspace(-1, 1, resolution//2)
+            U, V = np.meshgrid(u, v)
+            
+            X = (2 + V * np.cos(U/2)) * np.cos(U)
+            Y = (2 + V * np.cos(U/2)) * np.sin(U)
+            Z = V * np.sin(U/2)
+        
+        elif surface_type == 'figure8':
+            u = np.linspace(0, 2*np.pi, resolution)
+            v = np.linspace(0, 2*np.pi, resolution)
+            U, V = np.meshgrid(u, v)
+            
+            X = (2 + np.cos(V)) * np.cos(U)
+            Y = (2 + np.cos(V)) * np.sin(U)
+            Z = np.sin(V) * np.sin(U)
+        
+        else:  # default to torus
+            R, r = 3, 1
+            u = np.linspace(0, 2*np.pi, resolution)
+            v = np.linspace(0, 2*np.pi, resolution)
+            U, V = np.meshgrid(u, v)
+            
+            X = (R + r * np.cos(V)) * np.cos(U)
+            Y = (R + r * np.cos(V)) * np.sin(U)
+            Z = r * np.sin(V)
+        
+        return {
+            'x': X.tolist(),
+            'y': Y.tolist(),
+            'z': Z.tolist(),
+            'surface_type': surface_type
+        }
+    
+    def generate_contour3d_data(
+        self,
+        x_range: tuple = (-5, 5),
+        y_range: tuple = (-5, 5),
+        resolution: int = 50,
+        function_type: str = None
+    ) -> Dict[str, Any]:
+        """Generate data for 3D contour (same as surface)."""
+        return self.generate_surface3d_data(x_range, y_range, resolution, function_type)
+    
+    def generate_volume3d_data(
+        self,
+        grid_size: tuple = None,
+        volume_type: str = None
+    ) -> Dict[str, Any]:
+        """
+        Generate volumetric data (3D voxel data).
+        
+        Args:
+            grid_size: (nx, ny, nz) voxel grid dimensions
+            volume_type: 'sphere', 'gaussian', 'random', 'gradient'
+            
+        Returns:
+            Dictionary with 'volume', 'threshold' keys
+        """
+        import numpy as np
+        
+        grid_size = grid_size or (10, 10, 10)
+        nx, ny, nz = grid_size
+        
+        if volume_type is None:
+            volume_type = random.choice(['sphere', 'gaussian', 'gradient'])
+        
+        # Create coordinate grids
+        x = np.linspace(-1, 1, nx)
+        y = np.linspace(-1, 1, ny)
+        z = np.linspace(-1, 1, nz)
+        X, Y, Z = np.meshgrid(x, y, z, indexing='ij')
+        
+        if volume_type == 'sphere':
+            # Solid sphere
+            R = np.sqrt(X**2 + Y**2 + Z**2)
+            volume = (R < 0.8).astype(float)
+        
+        elif volume_type == 'gaussian':
+            # Gaussian blob
+            volume = np.exp(-(X**2 + Y**2 + Z**2) / 0.5)
+        
+        elif volume_type == 'gradient':
+            # Linear gradient
+            volume = (X + Y + Z + 3) / 6
+        
+        else:  # random
+            volume = np.random.rand(nx, ny, nz)
+        
+        return {
+            'volume': volume.tolist(),
+            'threshold': 0.5
+        }
+    
+    def generate_network3d_data(
+        self,
+        num_nodes: int = None,
+        connection_probability: float = 0.15
+    ) -> Dict[str, Any]:
+        """
+        Generate 3D network graph data.
+        
+        Args:
+            num_nodes: Number of nodes (default: random 10-25)
+            connection_probability: Probability of edge between nodes
+            
+        Returns:
+            Dictionary with 'nodes', 'edges' keys
+        """
+        import numpy as np
+        
+        num_nodes = num_nodes or random.randint(10, 25)
+        
+        # Generate random node positions in 3D
+        nodes = np.random.uniform(-5, 5, (num_nodes, 3))
+        
+        # Generate edges based on distance or random probability
+        edges = []
+        for i in range(num_nodes):
+            for j in range(i + 1, num_nodes):
+                if random.random() < connection_probability:
+                    edges.append([i, j])
+        
+        # Generate node sizes (could be degree-based)
+        node_degrees = [0] * num_nodes
+        for edge in edges:
+            node_degrees[edge[0]] += 1
+            node_degrees[edge[1]] += 1
+        
+        node_sizes = [50 + deg * 20 for deg in node_degrees]
+        
+        return {
+            'nodes': nodes.tolist(),
+            'edges': edges,
+            'node_sizes': node_sizes
+        }
+        
     def generate_hist2d_data(
         self,
         num_points: int = None,
@@ -1957,7 +2355,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'surface3d', 'scatter3d', 'bar3d', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'surface3d', 'scatter3d', 'bar3d', 'line3d', 'wireframe3d', 'quiver3d', 'stem3d', 'parametric3d', 'contour3d', 'volume3d', 'network3d', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -2553,7 +2951,254 @@ class RandomDataGenerator:
                     'num_y': num_y
                 }
             }
-               
+        
+        elif chart_type == 'line3d':
+            # Generate 3D line/trajectory data
+            trajectory_type = random.choice(['spiral', 'helix', 'random_walk', 'lissajous'])
+            num_points = random.choice([80, 120, 150])
+            
+            data = self.generate_line3d_data(
+                num_points=num_points,
+                num_lines=1,
+                trajectory_type=trajectory_type
+            )
+            
+            title_map = {
+                'spiral': '3D Spiral Trajectory',
+                'helix': '3D Helix Path',
+                'random_walk': '3D Random Walk',
+                'lissajous': 'Lissajous Curve in 3D'
+            }
+            
+            return {
+                'chart_type': 'line3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(trajectory_type, '3D Line Plot'),
+                'xlabel': 'X',
+                'ylabel': 'Y',
+                'zlabel': 'Z',
+                'metadata': {
+                    'generated': 'random',
+                    'trajectory_type': trajectory_type,
+                    'num_points': num_points
+                }
+            }
+        
+        elif chart_type == 'wireframe3d':
+            # Generate wireframe data
+            function_type = random.choice(['gaussian', 'saddle', 'wave', 'peaks'])
+            
+            data = self.generate_wireframe3d_data(
+                x_range=(-5, 5),
+                y_range=(-5, 5),
+                resolution=30,
+                function_type=function_type
+            )
+            
+            title_map = {
+                'gaussian': 'Gaussian Wireframe',
+                'saddle': 'Saddle Point Wireframe',
+                'wave': 'Wave Wireframe',
+                'peaks': 'Peaks Wireframe'
+            }
+            
+            return {
+                'chart_type': 'wireframe3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(function_type, '3D Wireframe'),
+                'xlabel': 'X Axis',
+                'ylabel': 'Y Axis',
+                'zlabel': 'Z Value',
+                'metadata': {
+                    'generated': 'random',
+                    'function_type': function_type
+                }
+            }
+        
+        elif chart_type == 'quiver3d':
+            # Generate vector field data
+            field_type = random.choice(['radial', 'circular', 'vortex', 'uniform'])
+            grid_size = (4, 4, 4)
+            
+            data = self.generate_quiver3d_data(
+                grid_size=grid_size,
+                field_type=field_type
+            )
+            
+            title_map = {
+                'radial': '3D Radial Vector Field',
+                'circular': '3D Circular Flow Field',
+                'vortex': '3D Vortex Field',
+                'uniform': '3D Uniform Field'
+            }
+            
+            return {
+                'chart_type': 'quiver3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(field_type, '3D Vector Field'),
+                'xlabel': 'X',
+                'ylabel': 'Y',
+                'zlabel': 'Z',
+                'metadata': {
+                    'generated': 'random',
+                    'field_type': field_type
+                }
+            }
+        
+        elif chart_type == 'stem3d':
+            # Generate stem plot data
+            pattern = random.choice(['random', 'grid', 'decreasing'])
+            num_points = random.choice([20, 25, 30])
+            
+            data = self.generate_stem3d_data(
+                num_points=num_points,
+                pattern=pattern
+            )
+            
+            title_map = {
+                'random': '3D Stem Plot - Random Distribution',
+                'grid': '3D Stem Plot - Grid Pattern',
+                'decreasing': '3D Stem Plot - Radial Decay'
+            }
+            
+            return {
+                'chart_type': 'stem3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(pattern, '3D Stem Plot'),
+                'xlabel': 'X',
+                'ylabel': 'Y',
+                'zlabel': 'Value',
+                'metadata': {
+                    'generated': 'random',
+                    'pattern': pattern,
+                    'num_points': num_points
+                }
+            }
+        
+        elif chart_type == 'parametric3d':
+            # Generate parametric surface
+            surface_type = random.choice(['torus', 'sphere', 'mobius', 'figure8'])
+            
+            data = self.generate_parametric3d_data(
+                surface_type=surface_type,
+                resolution=50
+            )
+            
+            title_map = {
+                'torus': 'Parametric Torus',
+                'sphere': 'Parametric Sphere',
+                'mobius': 'Möbius Strip',
+                'figure8': 'Figure-8 Surface'
+            }
+            
+            return {
+                'chart_type': 'parametric3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(surface_type, 'Parametric Surface'),
+                'xlabel': 'X',
+                'ylabel': 'Y',
+                'zlabel': 'Z',
+                'metadata': {
+                    'generated': 'random',
+                    'surface_type': surface_type
+                }
+            }
+        
+        elif chart_type == 'contour3d':
+            # Generate 3D contour data
+            function_type = random.choice(['gaussian', 'peaks', 'wave'])
+            
+            data = self.generate_contour3d_data(
+                x_range=(-5, 5),
+                y_range=(-5, 5),
+                resolution=40,
+                function_type=function_type
+            )
+            
+            title_map = {
+                'gaussian': '3D Contour - Gaussian',
+                'peaks': '3D Contour - Peaks Function',
+                'wave': '3D Contour - Wave Pattern'
+            }
+            
+            return {
+                'chart_type': 'contour3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(function_type, '3D Contour Plot'),
+                'xlabel': 'X Axis',
+                'ylabel': 'Y Axis',
+                'zlabel': 'Z Value',
+                'metadata': {
+                    'generated': 'random',
+                    'function_type': function_type
+                }
+            }
+        
+        elif chart_type == 'volume3d':
+            # Generate volume data
+            volume_type = random.choice(['sphere', 'gaussian', 'gradient'])
+            grid_size = (8, 8, 8)
+            
+            data = self.generate_volume3d_data(
+                grid_size=grid_size,
+                volume_type=volume_type
+            )
+            
+            title_map = {
+                'sphere': '3D Volume - Sphere',
+                'gaussian': '3D Volume - Gaussian Blob',
+                'gradient': '3D Volume - Linear Gradient'
+            }
+            
+            return {
+                'chart_type': 'volume3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title_map.get(volume_type, '3D Volume Visualization'),
+                'xlabel': 'X',
+                'ylabel': 'Y',
+                'zlabel': 'Z',
+                'metadata': {
+                    'generated': 'random',
+                    'volume_type': volume_type
+                }
+            }
+        
+        elif chart_type == 'network3d':
+            # Generate network graph data
+            num_nodes = random.randint(12, 20)
+            
+            data = self.generate_network3d_data(
+                num_nodes=num_nodes,
+                connection_probability=0.15
+            )
+            
+            return {
+                'chart_type': 'network3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': random.choice([
+                    '3D Network Graph',
+                    'Network Topology',
+                    '3D Node-Edge Diagram',
+                    'Spatial Network Structure'
+                ]),
+                'xlabel': 'X',
+                'ylabel': 'Y',
+                'zlabel': 'Z',
+                'metadata': {
+                    'generated': 'random',
+                    'num_nodes': num_nodes,
+                    'num_edges': len(data['edges'])
+                }
+            }
+          
         elif chart_type == 'hist2d':
             # Generate 2D histogram data
             dist_type = random.choice(['random', 'increasing', 'decreasing', 'cyclical', 'volatility_increase', 'volatility_decrease'])

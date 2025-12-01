@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'surface3d', 'scatter3d', 'bar3d', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'surface3d', 'scatter3d', 'bar3d', 'line3d', 'wireframe3d', 'quiver3d', 'stem3d', 'parametric3d', 'contour3d', 'volume3d', 'network3d', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -1029,6 +1029,498 @@ class ChartGenerator:
         # Add grid
         ax.grid(True, alpha=0.3)
         
+    def _create_line3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D line plot (trajectory).
+        
+        Data format:
+        {
+            'x': [x coordinates],
+            'y': [y coordinates],
+            'z': [z coordinates],
+            'lines': [[x1, y1, z1], [x2, y2, z2], ...]  # For multiple lines
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        if 'lines' in data:
+            # Multiple lines
+            lines = data['lines']
+            labels = data.get('labels', [f'Line {i+1}' for i in range(len(lines))])
+            colors = data.get('colors', None)
+            
+            for i, line_data in enumerate(lines):
+                x, y, z = line_data
+                color = colors[i] if colors else None
+                ax.plot(x, y, z, label=labels[i], linewidth=2, alpha=0.8, color=color)
+            
+            if len(lines) > 1:
+                ax.legend()
+        else:
+            # Single line
+            x = np.array(data.get('x', []))
+            y = np.array(data.get('y', []))
+            z = np.array(data.get('z', []))
+            
+            ax.plot(x, y, z, linewidth=2.5, alpha=0.8, color=data.get('color', 'blue'))
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 20), azim=kwargs.get('azim', -45))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_wireframe3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D wireframe plot.
+        
+        Data format: Same as surface3d
+        {
+            'x': [array of x values],
+            'y': [array of y values],
+            'z': [[2D array of z values]]
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        
+        # Create meshgrid if not already
+        if len(x.shape) == 1 and len(y.shape) == 1:
+            X, Y = np.meshgrid(x, y)
+        else:
+            X, Y = x, y
+        
+        # Plot wireframe
+        ax.plot_wireframe(X, Y, z, 
+                         color=kwargs.get('color', 'blue'),
+                         linewidth=kwargs.get('linewidth', 0.8),
+                         alpha=0.7,
+                         rstride=kwargs.get('rstride', 2),
+                         cstride=kwargs.get('cstride', 2))
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 30), azim=kwargs.get('azim', -60))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_quiver3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D quiver plot (vector field).
+        
+        Data format:
+        {
+            'x': [x positions],
+            'y': [y positions],
+            'z': [z positions],
+            'u': [x components of vectors],
+            'v': [y components of vectors],
+            'w': [z components of vectors]
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        u = np.array(data.get('u', []))
+        v = np.array(data.get('v', []))
+        w = np.array(data.get('w', []))
+        
+        # Calculate magnitudes for coloring
+        magnitudes = np.sqrt(u**2 + v**2 + w**2)
+        
+        # Normalize vectors if requested
+        if kwargs.get('normalize', False):
+            u = u / (magnitudes + 1e-10)
+            v = v / (magnitudes + 1e-10)
+            w = w / (magnitudes + 1e-10)
+        
+        # Plot quiver
+        quiv = ax.quiver(x, y, z, u, v, w, 
+                        length=kwargs.get('arrow_length', 0.5),
+                        normalize=False,
+                        arrow_length_ratio=0.3,
+                        cmap=kwargs.get('cmap', 'viridis'),
+                        alpha=0.8)
+        
+        # Color by magnitude if enabled
+        if kwargs.get('color_by_magnitude', True):
+            quiv.set_array(magnitudes)
+            fig.colorbar(quiv, ax=ax, shrink=0.5, aspect=5)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 20), azim=kwargs.get('azim', -45))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_stem3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D stem plot (lollipop chart).
+        
+        Data format:
+        {
+            'x': [x positions],
+            'y': [y positions],
+            'z': [heights]
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        
+        # Plot stems (vertical lines)
+        for xi, yi, zi in zip(x, y, z):
+            ax.plot([xi, xi], [yi, yi], [0, zi], 
+                   color=kwargs.get('stem_color', 'gray'),
+                   linewidth=1.5, alpha=0.6)
+        
+        # Plot markers at tops
+        colors = data.get('colors', None)
+        if colors is None:
+            cmap = plt.cm.get_cmap(kwargs.get('cmap', 'viridis'))
+            norm = plt.Normalize(vmin=z.min(), vmax=z.max())
+            colors = [cmap(norm(val)) for val in z]
+        
+        ax.scatter(x, y, z, c=colors, s=100, alpha=0.8, 
+                  edgecolors='black', linewidth=1)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Value'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 20), azim=kwargs.get('azim', -45))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_parametric3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a parametric surface (e.g., torus, sphere).
+        
+        Data format:
+        {
+            'x': [[2D array]],
+            'y': [[2D array]],
+            'z': [[2D array]],
+            'surface_type': 'torus' | 'sphere' | 'mobius' | 'klein'
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        
+        # Plot surface
+        surf = ax.plot_surface(x, y, z, 
+                              cmap=kwargs.get('cmap', 'viridis'),
+                              alpha=0.9,
+                              edgecolor='none',
+                              antialiased=True)
+        
+        # Add colorbar
+        fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 20), azim=kwargs.get('azim', -60))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_contour3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D contour plot.
+        
+        Data format: Same as surface3d
+        {
+            'x': [array of x values],
+            'y': [array of y values],
+            'z': [[2D array of z values]]
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        
+        # Create meshgrid if not already
+        if len(x.shape) == 1 and len(y.shape) == 1:
+            X, Y = np.meshgrid(x, y)
+        else:
+            X, Y = x, y
+        
+        # Plot contours at different Z levels
+        num_levels = kwargs.get('num_levels', 15)
+        
+        # Filled contours
+        contours = ax.contourf(X, Y, z, 
+                               levels=num_levels,
+                               cmap=kwargs.get('cmap', 'viridis'),
+                               alpha=0.8)
+        
+        # Add contour lines
+        ax.contour(X, Y, z, 
+                  levels=num_levels,
+                  colors='black',
+                  linewidths=0.5,
+                  alpha=0.4)
+        
+        # Add colorbar
+        fig.colorbar(contours, ax=ax, shrink=0.5, aspect=5)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 30), azim=kwargs.get('azim', -60))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_volume3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D volume visualization (voxel/isosurface).
+        
+        Data format:
+        {
+            'volume': [3D array],  # Shape: (nx, ny, nz)
+            'threshold': float,     # Isosurface threshold
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        volume = np.array(data.get('volume', []))
+        threshold = data.get('threshold', 0.5)
+        
+        # Create voxel representation
+        # Find voxels above threshold
+        filled = volume > threshold
+        
+        # Create color array
+        colors = np.empty(filled.shape, dtype=object)
+        alpha_values = np.zeros(filled.shape)
+        
+        # Color based on intensity
+        cmap = plt.cm.get_cmap(kwargs.get('cmap', 'viridis'))
+        for i in range(filled.shape[0]):
+            for j in range(filled.shape[1]):
+                for k in range(filled.shape[2]):
+                    if filled[i, j, k]:
+                        intensity = (volume[i, j, k] - volume.min()) / (volume.max() - volume.min() + 1e-10)
+                        colors[i, j, k] = cmap(intensity)
+                        alpha_values[i, j, k] = 0.6
+        
+        # Plot voxels
+        ax.voxels(filled, facecolors=colors, alpha=0.5, edgecolor='k', linewidth=0.1)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 20), azim=kwargs.get('azim', -45))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_network3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D network graph.
+        
+        Data format:
+        {
+            'nodes': [[x, y, z], ...],  # Node positions
+            'edges': [[i, j], ...],     # Edge connections (node indices)
+            'node_sizes': [sizes],      # Optional
+            'node_colors': [colors]     # Optional
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        nodes = np.array(data.get('nodes', []))
+        edges = data.get('edges', [])
+        
+        # Plot edges
+        for edge in edges:
+            i, j = edge
+            x_vals = [nodes[i][0], nodes[j][0]]
+            y_vals = [nodes[i][1], nodes[j][1]]
+            z_vals = [nodes[i][2], nodes[j][2]]
+            ax.plot(x_vals, y_vals, z_vals, 
+                   color=kwargs.get('edge_color', 'gray'),
+                   linewidth=1, alpha=0.5)
+        
+        # Plot nodes
+        node_sizes = data.get('node_sizes', 100)
+        node_colors = data.get('node_colors', 'blue')
+        
+        ax.scatter(nodes[:, 0], nodes[:, 1], nodes[:, 2],
+                  s=node_sizes, c=node_colors,
+                  alpha=0.8, edgecolors='black', linewidth=1)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 20), azim=kwargs.get('azim', -45))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
     
     def _create_pie_chart(
         self,

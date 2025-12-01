@@ -901,8 +901,8 @@ class RandomDataGenerator:
         num_categories: int = None,
         category_type: str = None,
         value_range: tuple = (10, 1000),
-        distribution: str = 'power_law',
-        hierarchical: bool = True
+        distribution: str = None,
+        hierarchical: bool = False
     ) -> Dict[str, Any]:
         """
         Generate data for treemap charts (hierarchical rectangles).
@@ -1024,9 +1024,261 @@ class RandomDataGenerator:
                 sizes.sort(reverse=True)
             
             return {
-                'labels': labels,
+                'labels': base_labels,
                 'sizes': sizes
             }
+    
+    def generate_surface3d_data(
+        self,
+        x_range: tuple = (-5, 5),
+        y_range: tuple = (-5, 5),
+        resolution: int = 50,
+        function_type: str = None
+    ) -> Dict[str, Any]:
+        """
+        Generate data for 3D surface plots.
+        
+        Args:
+            x_range: Range for x values (min, max)
+            y_range: Range for y values (min, max)
+            resolution: Number of points in each dimension
+            function_type: Type of function ('gaussian', 'saddle', 'wave', 'peaks', 'random')
+            
+        Returns:
+            Dictionary with 'x', 'y', 'z' keys
+        """
+        import numpy as np
+        
+        # Determine function type
+        if function_type is None:
+            function_type = random.choice(['gaussian', 'saddle', 'wave', 'peaks', 'ripple'])
+        
+        # Create mesh
+        x = np.linspace(x_range[0], x_range[1], resolution)
+        y = np.linspace(y_range[0], y_range[1], resolution)
+        X, Y = np.meshgrid(x, y)
+        
+        # Generate Z based on function type
+        if function_type == 'gaussian':
+            # Gaussian peak
+            Z = np.exp(-(X**2 + Y**2) / 10)
+        
+        elif function_type == 'saddle':
+            # Saddle point (hyperbolic paraboloid)
+            Z = X**2 - Y**2
+        
+        elif function_type == 'wave':
+            # Wave pattern
+            Z = np.sin(np.sqrt(X**2 + Y**2))
+        
+        elif function_type == 'peaks':
+            # MATLAB peaks function
+            Z = 3 * (1 - X)**2 * np.exp(-(X**2) - (Y + 1)**2) \
+                - 10 * (X/5 - X**3 - Y**5) * np.exp(-X**2 - Y**2) \
+                - 1/3 * np.exp(-(X + 1)**2 - Y**2)
+        
+        elif function_type == 'ripple':
+            # Ripple effect
+            R = np.sqrt(X**2 + Y**2) + 0.01
+            Z = np.sin(R) / R
+        
+        else:  # random
+            # Random surface with smoothing
+            Z = np.random.randn(resolution, resolution)
+            try:
+                from scipy.ndimage import gaussian_filter
+                Z = gaussian_filter(Z, sigma=3)
+            except ImportError:
+                # Fallback: simple averaging smoothing
+                kernel_size = 5
+                from numpy import convolve
+                for _ in range(2):
+                    for i in range(resolution):
+                        Z[i, :] = np.convolve(Z[i, :], np.ones(kernel_size)/kernel_size, mode='same')
+                    for j in range(resolution):
+                        Z[:, j] = np.convolve(Z[:, j], np.ones(kernel_size)/kernel_size, mode='same')
+        
+        return {
+            'x': x.tolist(),
+            'y': y.tolist(),
+            'z': Z.tolist(),
+            'function': function_type
+        }
+    
+    def generate_scatter3d_data(
+        self,
+        num_points: int = None,
+        x_range: tuple = (0, 100),
+        y_range: tuple = (0, 100),
+        z_range: tuple = (0, 100),
+        distribution: str = None,
+        num_clusters: int = 3
+    ) -> Dict[str, Any]:
+        """
+        Generate data for 3D scatter plots.
+        
+        Args:
+            num_points: Number of points (default: random 50-200)
+            x_range: Range for x values (min, max)
+            y_range: Range for y values (min, max)
+            z_range: Range for z values (min, max)
+            distribution: Type ('uniform', 'clustered', 'spherical', 'spiral')
+            num_clusters: Number of clusters for 'clustered' type
+            
+        Returns:
+            Dictionary with 'x', 'y', 'z', 'colors', 'sizes' keys
+        """
+        import numpy as np
+        
+        num_points = num_points or random.randint(50, 200)
+        
+        if distribution is None:
+            distribution = random.choice(['uniform', 'clustered', 'spherical', 'spiral'])
+        
+        if distribution == 'uniform':
+            # Uniform random distribution
+            x = np.random.uniform(x_range[0], x_range[1], num_points)
+            y = np.random.uniform(y_range[0], y_range[1], num_points)
+            z = np.random.uniform(z_range[0], z_range[1], num_points)
+            colors = z  # Color by z value
+        
+        elif distribution == 'clustered':
+            # Multiple clusters
+            x, y, z = [], [], []
+            colors = []
+            
+            points_per_cluster = num_points // num_clusters
+            
+            for i in range(num_clusters):
+                # Random cluster center
+                cx = random.uniform(x_range[0], x_range[1])
+                cy = random.uniform(y_range[0], y_range[1])
+                cz = random.uniform(z_range[0], z_range[1])
+                
+                # Generate points around center
+                cluster_x = np.random.normal(cx, (x_range[1] - x_range[0]) / 10, points_per_cluster)
+                cluster_y = np.random.normal(cy, (y_range[1] - y_range[0]) / 10, points_per_cluster)
+                cluster_z = np.random.normal(cz, (z_range[1] - z_range[0]) / 10, points_per_cluster)
+                
+                x.extend(cluster_x)
+                y.extend(cluster_y)
+                z.extend(cluster_z)
+                colors.extend([i] * points_per_cluster)
+            
+            x = np.array(x)
+            y = np.array(y)
+            z = np.array(z)
+            colors = np.array(colors)
+        
+        elif distribution == 'spherical':
+            # Points on or near a sphere
+            phi = np.random.uniform(0, 2*np.pi, num_points)
+            theta = np.random.uniform(0, np.pi, num_points)
+            
+            radius = (x_range[1] - x_range[0]) / 3
+            center_x = (x_range[0] + x_range[1]) / 2
+            center_y = (y_range[0] + y_range[1]) / 2
+            center_z = (z_range[0] + z_range[1]) / 2
+            
+            x = center_x + radius * np.sin(theta) * np.cos(phi)
+            y = center_y + radius * np.sin(theta) * np.sin(phi)
+            z = center_z + radius * np.cos(theta)
+            
+            # Add some noise
+            x += np.random.normal(0, radius/10, num_points)
+            y += np.random.normal(0, radius/10, num_points)
+            z += np.random.normal(0, radius/10, num_points)
+            
+            colors = z  # Color by height
+        
+        else:  # spiral
+            # Spiral pattern
+            t = np.linspace(0, 4*np.pi, num_points)
+            
+            scale_x = (x_range[1] - x_range[0]) / 2
+            scale_y = (y_range[1] - y_range[0]) / 2
+            scale_z = (z_range[1] - z_range[0]) / (4*np.pi)
+            
+            x = x_range[0] + scale_x + scale_x * t/(4*np.pi) * np.cos(t)
+            y = y_range[0] + scale_y + scale_y * t/(4*np.pi) * np.sin(t)
+            z = z_range[0] + scale_z * t
+            
+            colors = t  # Color by position along spiral
+        
+        # Generate sizes with variation
+        sizes = np.random.uniform(30, 100, num_points)
+        
+        return {
+            'x': x.tolist(),
+            'y': y.tolist(),
+            'z': z.tolist(),
+            'colors': colors.tolist() if isinstance(colors, np.ndarray) else colors,
+            'sizes': sizes.tolist()
+        }
+    
+    def generate_bar3d_data(
+        self,
+        num_x: int = None,
+        num_y: int = None,
+        x_labels: list = None,
+        y_labels: list = None,
+        value_range: tuple = (10, 100)
+    ) -> Dict[str, Any]:
+        """
+        Generate data for 3D bar charts.
+        
+        Args:
+            num_x: Number of bars in x direction (default: random 3-6)
+            num_y: Number of bars in y direction (default: random 3-6)
+            x_labels: Labels for x axis (auto-generated if None)
+            y_labels: Labels for y axis (auto-generated if None)
+            value_range: Range for bar heights (min, max)
+            
+        Returns:
+            Dictionary with 'x', 'y', 'z', 'x_labels', 'y_labels' keys
+        """
+        import numpy as np
+        
+        num_x = num_x or random.randint(3, 6)
+        num_y = num_y or random.randint(3, 6)
+        
+        # Generate labels if not provided
+        if x_labels is None:
+            x_labels = random.choice([
+                self.QUARTERS[:num_x],
+                self.PRODUCTS[:num_x],
+                self.REGIONS[:num_x],
+                [f'X{i+1}' for i in range(num_x)]
+            ])
+        
+        if y_labels is None:
+            y_labels = random.choice([
+                self.PRODUCTS[:num_y],
+                self.REGIONS[:num_y],
+                ['2021', '2022', '2023', '2024', '2025'][:num_y],
+                [f'Y{i+1}' for i in range(num_y)]
+            ])
+        
+        # Create grid of bar positions
+        x_pos = []
+        y_pos = []
+        z_heights = []
+        
+        for i in range(num_x):
+            for j in range(num_y):
+                x_pos.append(i)
+                y_pos.append(j)
+                z_heights.append(random.randint(value_range[0], value_range[1]))
+        
+        return {
+            'x': x_pos,
+            'y': y_pos,
+            'z': z_heights,
+            'dx': 0.8,
+            'dy': 0.8,
+            'x_labels': x_labels,
+            'y_labels': y_labels
+        }
     
     def generate_hist2d_data(
         self,
@@ -1705,7 +1957,7 @@ class RandomDataGenerator:
         Returns:
             Complete chart specification dictionary ready for ChartGenerator
         """
-        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'time_series_histogram', 'cumulative_distribution', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+        chart_types = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'surface3d', 'scatter3d', 'bar3d', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
         
         if chart_type is None:
             chart_type = random.choice(chart_types)
@@ -2158,7 +2410,7 @@ class RandomDataGenerator:
         
         elif chart_type == 'treemap':
             # Generate treemap data (hierarchical by default for better appearance)
-            distribution = random.choice(['power_law', 'power_law', 'exponential', 'uniform'])  # Bias toward power_law
+            distribution = random.choice(['power_law', 'exponential', 'uniform'])  # Bias toward power_law
             num_categories = random.choice([10, 12, 14, 16])
             
             data = self.generate_treemap_data(
@@ -2193,6 +2445,115 @@ class RandomDataGenerator:
                 }
             }
                 
+        elif chart_type == 'surface3d':
+            # Generate 3D surface data
+            function_type = random.choice(['gaussian', 'saddle', 'wave', 'peaks', 'ripple'])
+            
+            data = self.generate_surface3d_data(
+                x_range=(-5, 5),
+                y_range=(-5, 5),
+                resolution=random.choice([40, 50, 60]),
+                function_type=function_type
+            )
+            
+            # Create descriptive title
+            title_map = {
+                'gaussian': 'Gaussian Peak Surface',
+                'saddle': 'Hyperbolic Paraboloid (Saddle)',
+                'wave': 'Wave Pattern Surface',
+                'peaks': 'Complex Peaks Function',
+                'ripple': 'Ripple Effect Surface'
+            }
+            
+            title = title_map.get(function_type, '3D Surface Plot')
+            
+            return {
+                'chart_type': 'surface3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': 'X Axis',
+                'ylabel': 'Y Axis',
+                'zlabel': 'Z Value',
+                'metadata': {
+                    'generated': 'random',
+                    'function_type': function_type
+                }
+            }
+        
+        elif chart_type == 'scatter3d':
+            # Generate 3D scatter data
+            distribution = random.choice(['uniform', 'clustered', 'spherical', 'spiral'])
+            num_points = random.choice([80, 120, 150, 200])
+            
+            data = self.generate_scatter3d_data(
+                num_points=num_points,
+                x_range=(0, 100),
+                y_range=(0, 100),
+                z_range=(0, 100),
+                distribution=distribution,
+                num_clusters=random.randint(2, 4)
+            )
+            
+            # Create descriptive title
+            title_map = {
+                'uniform': '3D Scatter Plot - Uniform Distribution',
+                'clustered': '3D Scatter Plot - Clustered Data',
+                'spherical': '3D Scatter Plot - Spherical Pattern',
+                'spiral': '3D Scatter Plot - Spiral Pattern'
+            }
+            
+            title = title_map.get(distribution, '3D Scatter Plot')
+            
+            return {
+                'chart_type': 'scatter3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': random.choice(['Variable X', 'Feature 1', 'Dimension 1']),
+                'ylabel': random.choice(['Variable Y', 'Feature 2', 'Dimension 2']),
+                'zlabel': random.choice(['Variable Z', 'Feature 3', 'Dimension 3']),
+                'metadata': {
+                    'generated': 'random',
+                    'distribution': distribution,
+                    'num_points': num_points
+                }
+            }
+        
+        elif chart_type == 'bar3d':
+            # Generate 3D bar data
+            num_x = random.randint(3, 5)
+            num_y = random.randint(3, 5)
+            
+            data = self.generate_bar3d_data(
+                num_x=num_x,
+                num_y=num_y,
+                value_range=(20, 100)
+            )
+            
+            title = random.choice([
+                'Sales by Product and Region',
+                'Performance Matrix',
+                'Multi-Dimensional Comparison',
+                '3D Bar Chart Analysis',
+                'Category Distribution Grid'
+            ])
+            
+            return {
+                'chart_type': 'bar3d',
+                'data': data,
+                'filename_root': filename_root,
+                'title': title,
+                'xlabel': 'Category 1',
+                'ylabel': 'Category 2',
+                'zlabel': 'Value',
+                'metadata': {
+                    'generated': 'random',
+                    'num_x': num_x,
+                    'num_y': num_y
+                }
+            }
+               
         elif chart_type == 'hist2d':
             # Generate 2D histogram data
             dist_type = random.choice(['random', 'increasing', 'decreasing', 'cyclical', 'volatility_increase', 'volatility_decrease'])

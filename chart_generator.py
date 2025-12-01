@@ -18,7 +18,7 @@ class ChartGenerator:
     Each chart is saved as a PNG with a matching JSON file.
     """
     
-    SUPPORTED_CHART_TYPES = ['line', 'bar', 'pie', 'scatter', 'horizontal_bar', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
+    SUPPORTED_CHART_TYPES = ['line', 'bar', 'horizontal_bar', 'pie', 'scatter', 'grouped_bar', 'stacked_bar', 'box', 'area', 'discrete_distribution', 'cumulative_distribution', 'time_series_histogram', 'treemap', 'surface3d', 'scatter3d', 'bar3d', 'hist2d', 'cohere', 'signal_pair', 'timeline', 'heatmap', 'streamplot']
     
     def __init__(self, output_dir: str = "./charts"):
         """
@@ -814,6 +814,221 @@ class ChartGenerator:
         
         # Add title
         ax.set_title(title, fontsize=16, fontweight='bold', pad=15)
+    
+    def _create_surface3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D surface plot.
+        
+        Data format:
+        {
+            'x': [array of x values],
+            'y': [array of y values],
+            'z': [[2D array of z values]],  # Shape: (len(y), len(x))
+            'function': 'optional function name'
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        
+        # Create meshgrid if not already
+        if len(x.shape) == 1 and len(y.shape) == 1:
+            X, Y = np.meshgrid(x, y)
+        else:
+            X, Y = x, y
+        
+        # Plot surface
+        cmap = kwargs.get('cmap', 'viridis')
+        surf = ax.plot_surface(X, Y, z, cmap=cmap, alpha=0.9, 
+                              edgecolor='none', antialiased=True)
+        
+        # Add colorbar
+        fig.colorbar(surf, ax=ax, shrink=0.5, aspect=5)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 30), azim=kwargs.get('azim', -60))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+    
+    def _create_scatter3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D scatter plot.
+        
+        Data format:
+        {
+            'x': [x coordinates],
+            'y': [y coordinates],
+            'z': [z coordinates],
+            'colors': [optional color values],
+            'sizes': [optional size values],
+            'labels': [optional category labels]
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        
+        # Get colors and sizes
+        colors = data.get('colors', None)
+        sizes = data.get('sizes', 50)
+        
+        # If colors is numeric array, use colormap
+        if colors is not None and isinstance(colors, (list, np.ndarray)):
+            if isinstance(colors[0], (int, float)):
+                # Numeric colors - use colormap
+                scatter = ax.scatter(x, y, z, c=colors, s=sizes, 
+                                    cmap=kwargs.get('cmap', 'viridis'),
+                                    alpha=0.8, edgecolors='black', linewidth=0.5)
+                fig.colorbar(scatter, ax=ax, shrink=0.5, aspect=5)
+            else:
+                # Categorical colors
+                scatter = ax.scatter(x, y, z, c=colors, s=sizes,
+                                    alpha=0.8, edgecolors='black', linewidth=0.5)
+        else:
+            # Single color
+            scatter = ax.scatter(x, y, z, s=sizes, c=colors or 'blue',
+                                alpha=0.8, edgecolors='black', linewidth=0.5)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Z'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 20), azim=kwargs.get('azim', -45))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+        
+        # Add legend if labels provided
+        if 'labels' in data and data['labels']:
+            labels = data['labels']
+            unique_labels = list(set(labels))
+            if len(unique_labels) <= 10:  # Only if reasonable number
+                from matplotlib.patches import Patch
+                legend_elements = [Patch(facecolor=colors[labels.index(label)], 
+                                        label=label) 
+                                  for label in unique_labels if label in labels]
+                ax.legend(handles=legend_elements, loc='upper left')
+    
+    def _create_bar3d_chart(
+        self,
+        ax,
+        data: Dict[str, Any],
+        title: str,
+        xlabel: str,
+        ylabel: str,
+        **kwargs
+    ):
+        """
+        Create a 3D bar chart.
+        
+        Data format:
+        {
+            'x': [x positions],
+            'y': [y positions],
+            'z': [bar heights],
+            'dx': [bar width in x],  # optional
+            'dy': [bar width in y],  # optional
+            'colors': [bar colors],   # optional
+            'x_labels': [x tick labels],  # optional
+            'y_labels': [y tick labels]   # optional
+        }
+        """
+        from mpl_toolkits.mplot3d import Axes3D
+        import numpy as np
+        
+        # Remove the old axes and create 3D axes
+        fig = ax.figure
+        ax.remove()
+        ax = fig.add_subplot(111, projection='3d')
+        
+        x = np.array(data.get('x', []))
+        y = np.array(data.get('y', []))
+        z = np.array(data.get('z', []))
+        
+        # Bar dimensions
+        dx = data.get('dx', 0.8)
+        dy = data.get('dy', 0.8)
+        dz = z  # Height is the z value
+        
+        # Base of bars
+        z_base = np.zeros_like(z)
+        
+        # Colors
+        colors = data.get('colors', None)
+        if colors is None:
+            # Generate colors based on height
+            cmap = plt.cm.get_cmap(kwargs.get('cmap', 'viridis'))
+            norm = plt.Normalize(vmin=z.min(), vmax=z.max())
+            colors = [cmap(norm(val)) for val in z]
+        
+        # Plot bars
+        ax.bar3d(x, y, z_base, dx, dy, dz, color=colors, alpha=0.8, 
+                edgecolor='black', linewidth=0.5)
+        
+        # Labels and title
+        ax.set_xlabel(xlabel, fontsize=10, labelpad=10)
+        ax.set_ylabel(ylabel, fontsize=10, labelpad=10)
+        ax.set_zlabel(kwargs.get('zlabel', 'Value'), fontsize=10, labelpad=10)
+        ax.set_title(title, fontsize=14, fontweight='bold', pad=20)
+        
+        # Set tick labels if provided
+        if 'x_labels' in data:
+            unique_x = sorted(set(x))
+            ax.set_xticks(unique_x)
+            ax.set_xticklabels(data['x_labels'][:len(unique_x)], rotation=-15, ha='left')
+        if 'y_labels' in data:
+            unique_y = sorted(set(y))
+            ax.set_yticks(unique_y)
+            ax.set_yticklabels(data['y_labels'][:len(unique_y)], rotation=15, ha='right')
+        
+        # Set viewing angle
+        ax.view_init(elev=kwargs.get('elev', 25), azim=kwargs.get('azim', -60))
+        
+        # Add grid
+        ax.grid(True, alpha=0.3)
+        
     
     def _create_pie_chart(
         self,

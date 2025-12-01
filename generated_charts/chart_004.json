@@ -1,0 +1,36 @@
+{
+  "filename_root": "chart_004",
+  "chart_type": "pie",
+  "title": "Distribution Breakdown",
+  "xlabel": "",
+  "ylabel": "",
+  "data": {
+    "labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "values": [
+      9.0,
+      15.0,
+      25.7,
+      27.5,
+      22.8
+    ],
+    "explode": [
+      0,
+      0,
+      0,
+      0.1,
+      0
+    ]
+  },
+  "generated_at": "2025-12-01T15:17:45.147777",
+  "png_file": "chart_004.png",
+  "metadata": {
+    "generated": "random",
+    "slice_count": 5
+  }
+}

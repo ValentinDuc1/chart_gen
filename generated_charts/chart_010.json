@@ -1,0 +1,42 @@
+{
+  "filename_root": "chart_010",
+  "chart_type": "discrete_distribution",
+  "title": "Dice Roll Distribution",
+  "xlabel": "Probability",
+  "ylabel": "Outcome",
+  "data": {
+    "values": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "probabilities": [
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666,
+      0.16666666666666666
+    ],
+    "labels": [
+      "Roll 1",
+      "Roll 2",
+      "Roll 3",
+      "Roll 4",
+      "Roll 5",
+      "Roll 6"
+    ],
+    "distribution_params": {
+      "type": "dice"
+    }
+  },
+  "generated_at": "2025-12-01T15:17:46.611626",
+  "png_file": "chart_010.png",
+  "metadata": {
+    "generated": "random",
+    "distribution_type": "dice"
+  }
+}

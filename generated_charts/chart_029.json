@@ -1,0 +1,60 @@
+{
+  "filename_root": "chart_029",
+  "chart_type": "heatmap",
+  "title": "Department Performance by Quarterly Period",
+  "xlabel": "Quarterly",
+  "ylabel": "Department",
+  "data": {
+    "values": [
+      [
+        68,
+        68,
+        37,
+        97
+      ],
+      [
+        48,
+        10,
+        66,
+        48
+      ],
+      [
+        25,
+        42,
+        85,
+        73
+      ],
+      [
+        95,
+        100,
+        49,
+        73
+      ],
+      [
+        80,
+        59,
+        95,
+        52
+      ]
+    ],
+    "row_labels": [
+      "Sales",
+      "Marketing",
+      "Engineering",
+      "HR",
+      "Finance"
+    ],
+    "col_labels": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ]
+  },
+  "generated_at": "2025-12-01T15:17:51.533446",
+  "png_file": "chart_029.png",
+  "metadata": {
+    "generated": "random",
+    "dimensions": "5x4"
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "filename_root": "chart_016",
+  "chart_type": "bar3d",
+  "title": "Category Distribution Grid",
+  "xlabel": "Category 1",
+  "ylabel": "Category 2",
+  "data": {
+    "x": [
+      0,
+      0,
+      0,
+      1,
+      1,
+      1,
+      2,
+      2,
+      2,
+      3,
+      3,
+      3,
+      4,
+      4,
+      4
+    ],
+    "y": [
+      0,
+      1,
+      2,
+      0,
+      1,
+      2,
+      0,
+      1,
+      2,
+      0,
+      1,
+      2,
+      0,
+      1,
+      2
+    ],
+    "z": [
+      43,
+      31,
+      97,
+      62,
+      79,
+      41,
+      46,
+      71,
+      92,
+      71,
+      38,
+      20,
+      81,
+      81,
+      97
+    ],
+    "dx": 0.8,
+    "dy": 0.8,
+    "x_labels": [
+      "Product A",
+      "Product B",
+      "Product C",
+      "Product D",
+      "Product E"
+    ],
+    "y_labels": [
+      "North",
+      "South",
+      "East"
+    ]
+  },
+  "generated_at": "2025-12-01T15:17:48.004580",
+  "png_file": "chart_016.png",
+  "metadata": {
+    "generated": "random",
+    "num_x": 5,
+    "num_y": 3
+  }
+}
